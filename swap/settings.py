@@ -36,6 +36,26 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'professionals',
+    'passwords',
+    'users',
+    'investors',
+    'contacts',
+    'follows',
+    'transactions',
+    'typevals',
+    'locations',
+    'comments',
+    'payments',
+    'typerents',
+    'legals',
+    'actives',
+    'vals',
+    'news',
+    'solicitudes',
+    'profiles',
+    'passives',
+    'offerants',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,8 +78,14 @@ WSGI_APPLICATION = 'swap.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ATOMIC_REQUESTS': True,
+        'AUTOCOMMIT': False,
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'prod',
+        'USER': 'ISIS2304031420',
+        'PASSWORD': 'ciertib4789',
+        'HOST': 'prod.oracle.virtual.uniandes.edu.co',
+        'PORT': '1531'
     }
 }
 
