@@ -65,17 +65,22 @@ WSGI_APPLICATION = 'swap.wsgi.application'
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default' : {},
+    'scvalencia': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'prod',
-        'USER': CURRENT_USER[0],
-        'PASSWORD': CURRENT_USER[1],
+        'USER': USER_SC[0],
+        'PASSWORD': USER_SC[1],
         'HOST': 'prod.oracle.virtual.uniandes.edu.co',
         'PORT': '1531',
     },
-    'sqlite': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    'jcbages': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'prod',
+        'USER': USER_JC[0],
+        'PASSWORD': USER_JC[1],
+        'HOST': 'prod.oracle.virtual.uniandes.edu.co',
+        'PORT': '1531',
     },
 }
 
