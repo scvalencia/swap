@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 USER_SC = ('ISIS2304361420', 'entrambac1ddf')
 USER_JC = ('ISIS2304031420', 'ciertib4789')
-CURRENT_USER = None
+CURRENT_USER = USER_JC
 
 ALLOWED_USERS = {'sc.valencia' : USER_SC, 'jc.bages' : USER_JC}
 
