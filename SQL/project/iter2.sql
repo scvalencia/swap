@@ -1,7 +1,22 @@
+begin
+for i in (select * from user_tables) loop
+execute immediate ('drop table ' || i.table_name || ' cascade constraints');
+end loop;
+end;
+/
+
 CREATE TABLE genericuser (
     login VARCHAR2(25) PRIMARY KEY,
     password VARCHAR2(25) NOT NULL,
     time_created TIMESTAMP NOT NULL
+);
+
+CREATE TABLE passive (
+    login VARCHAR2(25) NOT NULL UNIQUE,
+    register VARCHAR(25) PRIMARY KEY,
+    FOREIGN KEY (login)
+    REFERENCES genericuser(login)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE active (
@@ -12,14 +27,6 @@ CREATE TABLE active (
     ON DELETE CASCADE,
     FOREIGN KEY (passive)
     REFERENCES passive(login)
-    ON DELETE CASCADE
-);
-
-CREATE TABLE passive (
-    login VARCHAR2(25) NOT NULL UNIQUE,
-    register VARCHAR(25) PRIMARY KEY,
-    FOREIGN KEY (login)
-    REFERENCES genericuser(login)
     ON DELETE CASCADE
 );
 
@@ -34,7 +41,7 @@ CREATE TABLE val (
 CREATE TABLE solicitude (
     pk_id INTEGER PRIMARY KEY, 
     operation_type VARCHAR2(1) NOT NULL,
-    val_pk INTEGER NOT NULL,
+    val INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     quantity_type VARCHAR2(1) NOT NULL,
     time_created TIMESTAMP NOT NULL,
