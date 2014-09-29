@@ -26,6 +26,14 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#{'ISIS2304361420' : 'entrambac1ddf', 'ISIS2304031420' : 'ciertib4789'}
+
+USER_SC = ('ISIS2304361420', 'entrambac1ddf')
+USER_JC = ('ISIS2304031420', 'ciertib4789')
+CURRENT_USER = None
+
+ALLOWED_USERS = {'sc.valencia' : USER_SC, 'jc.bages' : USER_JC}
+
 
 # Application definition
 
@@ -60,8 +68,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'prod',
-        'USER': 'ISIS2304031420',
-        'PASSWORD': 'ciertib4789',
+        'USER': CURRENT_USER[0],
+        'PASSWORD': CURRENT_USER[1],
         'HOST': 'prod.oracle.virtual.uniandes.edu.co',
         'PORT': '1531',
     },
