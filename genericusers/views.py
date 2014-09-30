@@ -65,14 +65,14 @@ def validate_user(username, password):
     flag = False
     msg = 'Bad coders!!!'
     cursor = connection.cursor()
-    query = "SELECT * FROM genericuser WHERE login = %s", [username]
     result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    dictfetchall(cursor)
     if result_set.rowcount != 1:
         flag = False; msg = 'No existe el usuario ' + username
     else:
-        query = "SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password]
-        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password])
-        if result_set.rowcount != 1:
+        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+        user_password = [itm[1] for itm in result_set][0]
+        if password != str(user_password):
             flag = False; msg = 'Clave invalida'
         else:
             flag = True
@@ -132,3 +132,11 @@ def register_user(username, password, password_again, timestamp):
     connection.comit()
     connection.close()
     return flag, msg
+
+def dictfetchall(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
