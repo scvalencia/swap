@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div id='welcome_user_home'>
+        <h1>
+            Bienvenido {{ user.login }}, es bueno verte por aqui!
+        </h1>
+    </div>
+    <div id='options_user_home'>
+        <h2>
+            Que te gustaria hacer?
+        </h2>
+        <a href='/solicitudes/new_solicitude/'>
+            Crea una nueva solicitud!
+        </a>
+        <a href='/solicitudes/active_solicitudes/'>
+            Mira todas tus solicitudes!
+        </a>
+        <a href='/swaptransactions/active_transactions/'>
+            Mira todas tus transacciones!
+        </a>
+        <a href='/users/logout/'>
+            Cierra tu sesion!
+        </a>
+    </div>
+
+{% endblock %}
