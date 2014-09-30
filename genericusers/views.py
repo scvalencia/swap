@@ -18,7 +18,8 @@ def login(request):
     if request.method == 'POST':
         valid, error = is_valid_login(request.POST)
         if valid:
-            # TODO add user to session.
+            # TODO add user to session. *
+            request.session['username'] = request.POST.get('username') # *
             return redirect('/users/home/')
         else:
             params = {
@@ -28,13 +29,16 @@ def login(request):
             }
             return render(request, 'login.html', params)
     else:
-        # TODO check user existance in session.
-        # if it exist, do the indented below.
-            username = # TODO get the username from session
-            user = get_user(username)
+        # TODO get the username from session *
+        username = request.session.get('username') # *
+        # TODO check user existance in session. *
+        # if it exist, do the indented below. *
+        if username: # *
+            user = get_user('genericuser', username)
             if user:
                 return redirect('/users/home/')
-        # TODO remove the user session in case of a corrupted one
+            # TODO remove the user session in case of a corrupted one *
+            del request.session['username'] # *
         params = {
             'username': '',
             'password': '',
@@ -47,7 +51,8 @@ def signup(request):
     if request.method == 'POST':
         valid, error = is_valid_signup(request.POST)
         if valid:
-            # TODO add user to session.
+            # TODO add user to session. *
+            request.session['username'] = request.POST.get('username') # *
             return redirect('/users/home/')
         else:
             params = {
@@ -56,13 +61,16 @@ def signup(request):
             }
             return render(request, 'signup.html', params)
     else:
-        # TODO check user existance in session
-        # if it exist, do the indented below
-            username = # TODO get the username from session
-            user = get_user(username)
+        # TODO get the username from session *
+        username = request.session.get('username') # *
+        # TODO check user existance in session *
+        # if it exist, do the indented below *
+        if username: # *
+            user = get_user('genericuser', username)
             if user:
                 return redirect('/users/home/')
-        # TODO remove the user session in case of a corrupted one
+            # TODO remove the user session in case of a corrupted one *
+            del request.session['username'] # *
         params = {
             'username': '',
             'error': '',
@@ -71,30 +79,37 @@ def signup(request):
 
 def logout(request):
     '''Returns the respective response to the logout url call.'''
-    username = ''
-    # TODO check user existance in session
-    # if it exist, do the indented below
-        username = ' %s' % # TODO get the username from session
-        # TODO remove the user session
+    name = ''
+    # TODO get the username from session *
+    username = request.session.get('username') # *
+    # TODO check user existance in session *
+    # if it exist, do the indented below *
+    if username: # *
+        name = ' %s' % username
+        # TODO remove the user session *
+        del request.session['username'] # *
     params = {
-        'username': username,
+        'name': name,
     }
     return render(request, 'logout.html', params)
 
 def home(request):
     '''Returns the respective response to the home url call.'''
-    # TODO check user existance in session
-    # if it exist, do the indented below
-        username = # TODO get the username from session
-        user = get_user(username)
+    # TODO get the username from session *
+    username = request.session.get('username') # *
+    # TODO check user existance in session *
+    # if it exist, do the indented below *
+    if username: # *
+        user = get_user('genericuser', username)
         if user:
-            user_type = # TODO get the user type
-            if user_type == 1: # is an active user
+            # TODO get the user type *
+            user_type = get_user_type(username) # *
+            if user_type == 1: # is an active user!
                 return render(request, 'active_home.html')
-            else: # is a passive user
+            elif user_type == 2: # is a passive user!
                 return render(request, 'passive_home.html')
-        else:
-            # TODO remove the user session
+        # TODO remove the user session *
+        del request.session['username'] # *
     return render(request, 'home.html')
 
 
@@ -165,14 +180,14 @@ def register_user(username, password, user_type):
             # TODO es activo, entonce, crea el activo, y revisa la tabla de pasivos
             # si esta vacio, por asignar (dafult). sino, agragar el pasivo con
             # menos activos
-            pass
+            cursor.execute("INSERT INTO active (login, passive) VALUES (%s, %s);", [username, 'pending'])
         elif user_type == 2:
             seed_digits = string.digits
             seed_upper = string.ascii_uppercase
             seed = seed_digits + seed_upper
             generator = lambda s, n : ''.join(random.choice(s) for i in range(n))
             register = generator(seed, 25)
-            # cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
+            cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
             # TODO: Revisar si hay activos pendientes y asignarlo
         flag = True
         msg = 'Transaccion exitosa'
@@ -180,12 +195,20 @@ def register_user(username, password, user_type):
     connection.close()
     return flag, msg
 
-def get_user(username):
+def get_user(table, username):
     ans = None
     cursor = connection.cursor()
-    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
+    result_set = cursor.execute("SELECT * FROM %s WHERE login = %s;", [table, username])
     for item in result_set:
         ans = genericuser.Genericuser(item[0], item[1], item[2])
         break
     connection.close()
     return ans
+
+def get_user_type(username):
+    if get_user('active', username):
+        return 1
+    elif get_user('passive', username):
+        return 2
+    else:
+        return -1
