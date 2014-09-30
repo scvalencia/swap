@@ -9,57 +9,42 @@ from swap.settings import SECRET_KEY
 
 
 def home(request):
-    key = 'username'
-    value = request.COOKIES.get(key)
-    key_check = '%s_check' % key
-    value_check = request.COOKIES.get(key_check)
-    if is_valid_cookie(value, value_check):
-        return render(request, 'user_home.html')
+    user = get_user(request.POST.get('username'))
+    if user:
+        params = {'user': user}
+        return render(request, 'user_home.html', params)
     else:
-        response = render(request, 'home.html')
-        set_cookie(response, key, '')
-        set_cookie(response, key_check, '')
-        return response
+        remove_user_session(request)
+        return render(request, 'home.html')
 
 def login(request):
     if request.method == 'POST':
-        form_data = request.POST
-        username = form_data.get('username')
-        password = form_data.get('password')
-        valid, error = is_valid_form(form_data)
+        valid, error = is_valid_form(request.POST)
         if valid:
-            key = 'username'
-            value = form_data.get(key)
-            key_check = '%s_check' % key
-            value_check = get_cookie_value(value)
-            response = home(request)
-            set_cookie(response, key, value)
-            set_cookie(response, key_check, value_check)
-            return response
+            request.session['username'] = request.POST.get('username')
+            return redirect('/users/home/')
         else:
             params = {
-                'username': username,
-                'password': password,
+                'username': request.POST.get('username'),
+                'password': request.POST.get('password'),
                 'error': error,
             }
             return render(request, 'login.html', params)
     else:
-        key = 'username'
-        value = request.COOKIES.get(key)
-        key_check = '%s_check' % key
-        value_check = request.COOKIES.get(key_check)
-        if is_valid_cookie(value, value_check):
-            return home(request)
-        else:
-            params = {
-                'username': '',
-                'password': '',
-                'error': '',
-            }
-            response = render(request, 'login.html', params)
-            set_cookie(response, key, '')
-            set_cookie(response, key_check, '')
-            return response
+        print 'user', request.session.get('username')
+        if request.session.get('username'):
+            user = get_user(request.POST.get('username'))
+            if user: return redirect('/users/home/')
+        remove_user_session(request)
+        params = {
+            'username': '',
+            'password': '',
+            'error': '',
+        }
+        return render(request, 'login.html', params)
+
+def remove_user_session(request):
+    if 'username' in request: del request.session['username']
 
 def validate_user(username, password):
     flag = False
@@ -92,26 +77,6 @@ def is_valid_form(form_data):
     else:
         return False, 'Los campos no pueden estar vacios.'
 
-def set_cookie(response, key, value, days_expire=7):
-    if days_expire is None:
-        max_age = 365 * 24 * 60 * 60  #one year
-    else:
-        max_age = days_expire * 24 * 60 * 60 
-        expires = datetime.datetime.strftime(datetime.datetime.utcnow() +
-                  datetime.timedelta(seconds=max_age), "%a, %d-%b-%Y %H:%M:%S GMT")
-        domain = settings.SESSION_COOKIE_DOMAIN
-        secure = settings.SESSION_COOKIE_SECURE or None
-    response.set_cookie(key, value, max_age=max_age, expires=expires, domain=domain, secure=secure)
-
-def get_cookie_value(value):
-    value = '%s%s' % (SECRET_KEY, value)
-    value = hashlib.sha512(value).hexdigest()
-    return value
-
-def is_valid_cookie(value, value_check):
-    this_value_check = get_cookie_value(value)
-    return this_value_check == value_check
-
 def register_user(username, password, password_again, timestamp):
     flag = False
     msg = 'Existe un usuario con el mismo username'
@@ -121,7 +86,6 @@ def register_user(username, password, password_again, timestamp):
         # Un usuario con este nombre ya existe
         flag = False
         msg = 'Ya existe un usuario con el mismo nombre de usuario'
-
     else:
         if password != password_again:
             flag = False
@@ -140,3 +104,6 @@ def dictfetchall(cursor):
         dict(zip([col[0] for col in desc], row))
         for row in cursor.fetchall()
     ]
+
+def get_user(username):
+    #TODO
