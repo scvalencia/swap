@@ -1,20 +1,26 @@
-<form method='post'>
-    {% csrf_token %}
-    <input type='text' name='username' placeholder='Usuario' value={{ username }}>
-    <br>
-    <input type='password' name='password' placeholder='Clave' value=''>
-    <br>
-    <input type='password' name='repeat_password' placeholder='Repite clave' value=''>
-    <br>
-    <label for='active'>Activo</label>
-    <input type='radio' name='user_type' value='active' checked='checked'>
-    <label for='passive'>Intermediario</label>
-    <input type='radio' name='user_type' value='passive'> 
-    <br>
-    <input type='submit' value='Registrar ahora'>
-    <br>
-    {{ error }}
-</form>
-{% for k, v in form_data.items %}
-    <p>{{ k }} -> {{ v }}</p> 
-{% endfor %}
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div id='signup_signup'>
+        <form method='post'>
+            {% csrf_token %}
+            <input type='text' name='username' placeholder='Usuario' value={{ username }}>
+            <br>
+            <input type='password' name='password' placeholder='Clave' value=''>
+            <br>
+            <input type='password' name='repeat_password' placeholder='Repite clave' value=''>
+            <br>
+            <label for='1'>Activo</label>
+            <input type='radio' name='user_type' value='1' checked='checked'>
+            <br>
+            <label for='2'>Intermediario</label>
+            <input type='radio' name='user_type' value='2'> 
+            <br>
+            <input type='submit' value='Registrate ahora!'>
+            <br>
+            {{ error }}
+        </form>
+    </div>
+
+{% endblock %}
