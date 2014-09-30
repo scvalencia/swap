@@ -21,7 +21,19 @@ def login(request):
         return render(request, 'login.html', params)
 
 def validate_user(username, password):
-    # TODO: VALIDATE USER AND RETURN TRUE OR FALSE WITH THE RESPECTIVE ERROR
+    cursor = connection.cursor()
+    query = 'SELECT * FROM genericuser WHERE login = %s', [username]
+    result_set = cursor.execute(query)
+    if result_set.rowcount != 1:
+        return False, 'There is not a username with such name'
+    else:
+        query = 'SELECT * FROM genericuser WHERE login = %s and password = %s', [username, password]
+        result_set = cursor.execute(query)
+        if result_set.rowcount != 1:
+            return False, 'Wrong password'
+        else:
+            return True, ''
+    return False, 'Bad coders!!' # Should not happen
 
 def is_valid(form_data):
     username = form_data.get('username')
