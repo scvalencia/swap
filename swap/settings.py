@@ -71,6 +71,7 @@ WSGI_APPLICATION = 'swap.wsgi.application'
 
 DATABASES = {
     'default' : {
+        'AUTOCOMMIT': False,
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'prod',
         'USER': USER_JC[0],
@@ -79,6 +80,7 @@ DATABASES = {
         'PORT': '1531',
     },
     'scvalencia': {
+        'AUTOCOMMIT': False,
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'prod',
         'USER': USER_SC[0],
@@ -87,6 +89,7 @@ DATABASES = {
         'PORT': '1531',
     },
     'jcbages': {
+        'AUTOCOMMIT': False,
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'prod',
         'USER': USER_JC[0],
