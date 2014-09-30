@@ -142,15 +142,16 @@ def is_valid_signup(form_data):
         return False, 'Todos los campos deben estar completos.'
 
 def validate_user(username, password):
+    username = 'luisa'
     flag = False
     msg = 'Bad coders!!!'
     cursor = connection.cursor()
-    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
-    if result_set.rowcount != 1:
+    cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    if len(cursor.fetchall()) == 0:
         flag = False
-        msg = 'No existe el usuario %s.' % cursor.fetchall()
+        msg = 'No existe el usuario %s.' % username
     else:
-        #result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
+        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
         user_password = [itm[1] for itm in result_set][0]
         if password != str(user_password):
             flag = False
