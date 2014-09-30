@@ -118,13 +118,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Session cookie
+# Cache config
 
-SESSION_COOKIE_DOMAIN = '.swap.herokuapp.com'
-SESSION_COOKIE_SECURE = False
-SESSION_COOKIE_HTTPONLY = True
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
-# Session ENGINE
+# Session config
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
-SESSION_SAVE_EVERY_REQUEST=True
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
