@@ -148,7 +148,7 @@ def validate_user(username, password):
     result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
     if result_set.rowcount != 1:
         flag = False
-        msg = 'No existe el usuario %s.' % username
+        msg = 'No existe el usuario %s.' % cursor.fetchall()
     else:
         #result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
         user_password = [itm[1] for itm in result_set][0]
