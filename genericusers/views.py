@@ -4,6 +4,7 @@ import os
 import hashlib
 import datetime
 from django.db import connection
+from swap import settings
 from swap.settings import SECRET_KEY
 
 
@@ -23,8 +24,9 @@ def home(request):
 def login(request):
     if request.method == 'POST':
         form_data = request.POST
+        username = form_data.get('username')
+        password = form_data.get('password')
         valid, error = is_valid_form(form_data)
-        params = {'form_data': form_data, 'error': error}
         if valid:
             key = 'username'
             value = form_data.get(key)
@@ -35,7 +37,11 @@ def login(request):
             set_cookie(response, key_check, value_check)
             return response
         else:
-            params = {'form_data': form_data, 'error': error}
+            params = {
+                'username': username,
+                'password': password,
+                'error': error,
+            }
             return render(request, 'login.html', params)
     else:
         key = 'username'
@@ -45,12 +51,11 @@ def login(request):
         if is_valid_cookie(value, value_check):
             return home(request)
         else:
-            form_data = {
+            params = {
                 'username': '',
                 'password': '',
+                'error': '',
             }
-            error = ''
-            params = {'form_data': form_data, 'error': error}
             response = render(request, 'login.html', params)
             set_cookie(response, key, '')
             set_cookie(response, key_check, '')
@@ -68,7 +73,7 @@ def validate_user(username, password):
         query = "SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password]
         result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password])
         if result_set.rowcount != 1:
-            flag = False; msg = 'Contrasenia invalida'
+            flag = False; msg = 'Clave invalida'
         else:
             flag = True
             msg = 'Best coders ever!!'
