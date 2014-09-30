@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 
 import os
+import random
+import string
 import hashlib
 import datetime
 import genericuser
@@ -108,7 +110,7 @@ def is_valid_form(form_data):
     else:
         return False, 'Los campos no pueden estar vacios.'
 
-def register_user(username, password, password_again):
+def register_user(username, password, password_again, user_type):
     flag = False
     msg = ''
     cursor = connection.cursor()
@@ -124,14 +126,30 @@ def register_user(username, password, password_again):
             flag = False
             msg = 'La clave no puede ser vacia'
         else:
-            values = [username, password]
-            cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp)", values)
             if password != password_again:
                 flag = False
                 msg = 'Las claves no coinciden'
             else:
                 values = [username, password]
-                cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp)", values)
+                # Active -> 1, Passive -> 2
+                cursor.execute("START TRANSACTION;")
+                cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp);", values)
+                if user_type == 1:
+                    # Es activo, entonce, crea el activo, y revisa la rtabla de pasivos
+                    # si esta vacio, por asignar (dafult). sino, agragar el pasivo con
+                    # menos activos
+                    pass
+
+                elif user_type == 2:
+                    seed_digits = string.digits
+                    seed_upper = string.ascii_uppercase
+                    seed = seed_digits + seed_upper
+                    generator = lambda s, n : ''.join(random.choice(s) for i in range(n))
+                    register = generator(seed, 25)
+                    cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
+                    # TODO: Revisar si hay activos pendientes y asignarlo
+                flag = True; msg = 'Transaccion exitosa'
+    cursor.execute("COMMIT;")
     connection.close()
     return flag, msg
 
