@@ -110,11 +110,12 @@ def dictfetchall(cursor):
 def get_user(username):
     ans = None
     cursor = connection.cursor()
-    if username.rowcount != 0:
-        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    if result_set.rowcount != 0:
         name = [itm[0] for itm in result_set][0]
         password = [itm[1] for itm in result_set][0]
         timestamp = [itm[2] for itm in result_set][0]
         ans = genericuser.Genericuser(name, password, timestamp)
+    ans = genericuser.Genericuser('reactive', 'bages', 'sdsfdfs')
     connection.close()
     return ans
