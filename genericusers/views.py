@@ -24,6 +24,7 @@ def login(request):
     if request.method == 'POST':
         form_data = request.POST
         valid, error = is_valid_form(form_data)
+        params = {'form_data': form_data, 'error': error}
         if valid:
             key = 'username'
             value = form_data.get(key)
@@ -56,7 +57,23 @@ def login(request):
             return response
 
 def validate_user(username, password):
-    # TODO: VALIDATE USER AND RETURN TRUE OR FALSE WITH THE RESPECTIVE ERROR
+    flag = False
+    msg = 'Bad coders!!!'
+    cursor = connection.cursor()
+    query = "SELECT * FROM genericuser WHERE login = %s", [username]
+    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    if result_set.rowcount != 1:
+        flag = False; msg = 'No existe el usuario ' + username
+    else:
+        query = "SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password]
+        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password])
+        if result_set.rowcount != 1:
+            flag = False; msg = 'Contrasenia invalida'
+        else:
+            flag = True
+            msg = 'Best coders ever!!'
+    connection.close()
+    return flag, msg # Should not happen
 
 def is_valid_form(form_data):
     username = form_data.get('username')
