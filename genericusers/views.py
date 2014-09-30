@@ -21,19 +21,23 @@ def login(request):
         return render(request, 'login.html', params)
 
 def validate_user(username, password):
+    flag = False
+    msg = 'Bad coders!!!'
     cursor = connection.cursor()
     query = "SELECT * FROM genericuser WHERE login = %s", [username]
     result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
     if result_set.rowcount != 1:
-        return False, 'No existe el usuario ' + username
+        flag = False; msg = 'No existe el usuario ' + username
     else:
         query = "SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password]
         result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password])
         if result_set.rowcount != 1:
-            return False, 'Contrasenia invalida'
+            flag = False; msg = 'Contrasenia invalida'
         else:
-            return True, ''
-    return False, 'Bad coders!!' # Should not happen
+            flag = True
+            msg = 'Best coders ever!!'
+    connection.close()
+    return flag, msg # Should not happen
 
 def is_valid(form_data):
     username = form_data.get('username')
@@ -57,3 +61,6 @@ def set_cookie(response, key, value, days_expire = 7):
         domain = settings.SESSION_COOKIE_DOMAIN
         secure = settings.SESSION_COOKIE_SECURE or None
     response.set_cookie(key, value, max_age=max_age, expires=expires, domain=domain, secure=secure)
+
+def signup(request):
+    # TODO
