@@ -113,17 +113,25 @@ def register_user(username, password, password_again):
     msg = ''
     cursor = connection.cursor()
     usernames = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    print cursor.fetchall()
     if usernames.rowcount != 0:
         # Un usuario con este nombre ya existe
         flag = False
         msg = 'Ya existe un usuario con el mismo nombre de usuario'
+        #return flag, msg
     else:
-        if password != password_again:
+        if password == '':
             flag = False
-            msg = 'Las contrasenias no coinciden'
+            msg = 'La clave no puede ser vacia'
         else:
             values = [username, password]
             cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp)", values)
+            if password != password_again:
+                flag = False
+                msg = 'Las claves no coinciden'
+            else:
+                values = [username, password]
+                cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp)", values)
     connection.close()
     return flag, msg
 
