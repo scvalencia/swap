@@ -106,3 +106,24 @@ def get_cookie_value(value):
 def is_valid_cookie(value, value_check):
     this_value_check = get_cookie_value(value)
     return this_value_check == value_check
+
+def register_user(username, password, password_again, timestamp):
+    flag = False
+    msg = 'Existe un usuario con el mismo username'
+    cursor = connection.cursor()
+    usernames = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    if username.rowcount != 0:
+        # Un usuario con este nombre ya existe
+        flag = False
+        msg = 'Ya existe un usuario con el mismo nombre de usuario'
+
+    else:
+        if password != password_again:
+            flag = False
+            msg = 'Las contrasenias no coinciden'
+        else:
+            values = [username, password, timestamp]
+            cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, %s)", values)
+    connection.comit()
+    connection.close()
+    return flag, msg
