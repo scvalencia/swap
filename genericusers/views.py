@@ -7,7 +7,7 @@ import genericuser
 from django.db import connection
 from swap import settings
 from swap.settings import SECRET_KEY
-
+from datetime import datetime
 
 
 def home(request):
@@ -19,6 +19,34 @@ def home(request):
     else:
         remove_user_session(request)
         return render(request, 'home.html')
+
+def signup(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        password_again = request.POST.get('repeat_password')
+        valid, error = register_user(username, password, password_again)
+        if valid:
+            request.session['username'] = username
+            return redirect('/users/home/')
+        else:
+            params = {
+                'username': username,
+                'error': error,
+            }
+            return render(request, 'signup.html', params)
+    else:
+        print 'user', request.session.get('username')
+        if request.session.get('username'):
+            user = get_user(request.POST.get('username'))
+            if user: return redirect('/users/home/')
+        remove_user_session(request)
+        params = {
+            'username': '',
+            'password': '',
+            'error': '',
+        }
+        return render(request, 'signup.html', params)
 
 def login(request):
     if request.method == 'POST':
@@ -80,12 +108,12 @@ def is_valid_form(form_data):
     else:
         return False, 'Los campos no pueden estar vacios.'
 
-def register_user(username, password, password_again, timestamp):
+def register_user(username, password, password_again):
     flag = False
     msg = ''
     cursor = connection.cursor()
     usernames = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
-    if username.rowcount != 0:
+    if usernames.rowcount != 0:
         # Un usuario con este nombre ya existe
         flag = False
         msg = 'Ya existe un usuario con el mismo nombre de usuario'
@@ -94,9 +122,10 @@ def register_user(username, password, password_again, timestamp):
             flag = False
             msg = 'Las contrasenias no coinciden'
         else:
+            timestamp = datetime.now
             values = [username, password, timestamp]
             cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, %s)", values)
-    connection.comit()
+    cursor.execute("COMMIT;")
     connection.close()
     return flag, msg
 
