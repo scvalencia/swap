@@ -103,97 +103,89 @@ def home(request):
 ################################################################
 
 
-def validate_user(username, password):
-    flag = False
-    msg = 'Bad coders!!!'
-    cursor = connection.cursor()
-    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
-    dictfetchall(cursor)
-    if result_set.rowcount != 1:
-        flag = False; msg = 'No existe el usuario ' + username
-    else:
-        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
-        user_password = [itm[1] for itm in result_set][0]
-        if password != str(user_password):
-            flag = False; msg = 'Clave invalida'
-        else:
-            flag = True
-            msg = 'Best coders ever!!'
-    connection.close()
-    return flag, msg
-
 def is_valid_login(form_data):
     username = form_data.get('username')
     password = form_data.get('password')
     if username and password:
         return validate_user(username, password)
-    elif not username and password:
-        return False, 'El nombre de usuario no puede estar vacio.'
-    elif username and not password:
-        return False, 'La clave no puede estar vacia.'
     else:
-        return False, 'Los campos no pueden estar vacios.'
+        return False, 'Todos los campos deben estar completos.'
 
-def register_user(username, password, password_again, user_type):
-    flag = False
-    msg = ''
-    cursor = connection.cursor()
-    usernames = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
-    print cursor.fetchall()
-    if usernames.rowcount != 0:
-        # Un usuario con este nombre ya existe
-        flag = False
-        msg = 'Ya existe un usuario con el mismo nombre de usuario'
-        #return flag, msg
-    else:
-        if password == '':
-            flag = False
-            msg = 'La clave no puede ser vacia'
+def is_valid_signup(form_data):
+    username = form_data.get('username')
+    password = form_data.get('password')
+    repeat_password = form_data.get('repeat_password')
+    user_type = form_data.get('user_type')
+    if username and password and repeat_password and user_type:
+        if password != repeat_password:
+            return False, 'Las claves deben coincidir.'
+        elif user_type != 1 and user_type != 2:
+            return False, 'El tipo de usuario no es valido.'
         else:
-            if password != password_again:
-                flag = False
-                msg = 'Las claves no coinciden'
-            else:
-                values = [username, password]
-                # Active -> 1, Passive -> 2
-                #cursor.execute("START TRANSACTION")
-                cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp);", values)
-                if user_type == 1:
-                    # Es activo, entonce, crea el activo, y revisa la rtabla de pasivos
-                    # si esta vacio, por asignar (dafult). sino, agragar el pasivo con
-                    # menos activos
-                    pass
+            return register_user(username, password, user_type)
+    else:
+        return False, 'Todos los campos deben estar completos.'
 
-                elif user_type == 2:
-                    seed_digits = string.digits
-                    seed_upper = string.ascii_uppercase
-                    seed = seed_digits + seed_upper
-                    generator = lambda s, n : ''.join(random.choice(s) for i in range(n))
-                    register = generator(seed, 25)
-                    #cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
-                    # TODO: Revisar si hay activos pendientes y asignarlo
-                flag = True; msg = 'Transaccion exitosa'
-    cursor.execute("COMMIT;")
+def validate_user(username, password):
+    flag = False
+    msg = 'Bad coders!!!'
+    cursor = connection.cursor()
+    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
+    dictfetchall(cursor)
+    if result_set.rowcount != 1:
+        flag = False
+        msg = 'No existe el usuario %s.' % username
+    else:
+        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
+        user_password = [itm[1] for itm in result_set][0]
+        if password != str(user_password):
+            flag = False
+            msg = 'Clave invalida.'
+        else:
+            flag = True
+            msg = 'Best coders ever!!!'
     connection.close()
     return flag, msg
 
-def dictfetchall(cursor):
-    "Returns all rows from a cursor as a dict"
-    desc = cursor.description
-    return [
-        dict(zip([col[0] for col in desc], row))
-        for row in cursor.fetchall()
-    ]
+def register_user(username, password, user_type):
+    flag = False
+    msg = ''
+    cursor = connection.cursor()
+    usernames = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
+    if usernames.rowcount != 0:
+        # Un usuario con este nombre ya existe
+        flag = False
+        msg = 'Ya existe un usuario con el mismo nombre de usuario.'
+    else:
+        values = [username, password]
+        # Active -> 1, Passive -> 2
+        # cursor.execute("START TRANSACTION")
+        cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp);", values)
+        if user_type == 1:
+            # TODO es activo, entonce, crea el activo, y revisa la tabla de pasivos
+            # si esta vacio, por asignar (dafult). sino, agragar el pasivo con
+            # menos activos
+            pass
+        elif user_type == 2:
+            seed_digits = string.digits
+            seed_upper = string.ascii_uppercase
+            seed = seed_digits + seed_upper
+            generator = lambda s, n : ''.join(random.choice(s) for i in range(n))
+            register = generator(seed, 25)
+            # cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
+            # TODO: Revisar si hay activos pendientes y asignarlo
+        flag = True
+        msg = 'Transaccion exitosa'
+    # cursor.execute("COMMIT;")
+    connection.close()
+    return flag, msg
 
 def get_user(username):
-    # username = 'scvalencia'
     ans = None
     cursor = connection.cursor()
-    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
     for item in result_set:
-        name = item[0]; password = item[1]; timestamp = item[2]
-        ans = genericuser.Genericuser(name, password, timestamp)
+        ans = genericuser.Genericuser(item[0], item[1], item[2])
         break
-    #ans = genericuser.Genericuser('reactive', 'bages', 'sdsfdfs')
     connection.close()
     return ans
