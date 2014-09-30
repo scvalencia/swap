@@ -97,17 +97,19 @@ def home(request):
     '''Returns the respective response to the home url call.'''
     # TODO get the username from session *
     username = request.session.get('username') # *
+    print username
     # TODO check user existance in session *
     # if it exist, do the indented below *
     if username: # *
         user = get_user('genericuser', username)
         if user:
+            params = {'username': user.login}
             # TODO get the user type *
             user_type = get_user_type(username) # *
             if user_type == '1': # is an active user!
-                return render(request, 'active_home.html')
+                return render(request, 'active_home.html', params)
             elif user_type == '2': # is a passive user!
-                return render(request, 'passive_home.html')
+                return render(request, 'passive_home.html', params)
         # TODO remove the user session *
         del request.session['username'] # *
     return render(request, 'home.html')
@@ -198,7 +200,13 @@ def register_user(username, password, user_type):
 def get_user(table, username):
     ans = None
     cursor = connection.cursor()
-    result_set = cursor.execute("SELECT * FROM %s WHERE login = %s;", [table, username])
+    result_set = ()
+    if table == 'genericuser':
+        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
+    elif table == 'active':
+        result_set = cursor.execute("SELECT * FROM active WHERE login = %s;", [username])
+    elif table == 'passive':
+        result_set = cursor.execute("SELECT * FROM passive WHERE login = %s;", [username])
     for item in result_set:
         ans = genericuser.Genericuser(item[0], item[1], item[2])
         break
@@ -211,4 +219,4 @@ def get_user_type(username):
     elif get_user('passive', username):
         return '2'
     else:
-        return '-1'
+        return '1'
