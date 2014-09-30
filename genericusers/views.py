@@ -27,7 +27,8 @@ def signup(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         password_again = request.POST.get('repeat_password')
-        valid, error = register_user(username, password, password_again)
+        user_type = request.POST.get('user_type')
+        valid, error = register_user(username, password, password_again, user_type)
         if valid:
             request.session['username'] = username
             return redirect('/users/home/')
@@ -132,7 +133,7 @@ def register_user(username, password, password_again, user_type):
             else:
                 values = [username, password]
                 # Active -> 1, Passive -> 2
-                cursor.execute("START TRANSACTION;")
+                #cursor.execute("START TRANSACTION")
                 cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp);", values)
                 if user_type == 1:
                     # Es activo, entonce, crea el activo, y revisa la rtabla de pasivos
@@ -146,7 +147,7 @@ def register_user(username, password, password_again, user_type):
                     seed = seed_digits + seed_upper
                     generator = lambda s, n : ''.join(random.choice(s) for i in range(n))
                     register = generator(seed, 25)
-                    cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
+                    #cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
                     # TODO: Revisar si hay activos pendientes y asignarlo
                 flag = True; msg = 'Transaccion exitosa'
     cursor.execute("COMMIT;")
