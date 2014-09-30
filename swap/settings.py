@@ -115,7 +115,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Session cookie domain and secure
+# Session cookie
 
 SESSION_COOKIE_DOMAIN = '.swap.herokuapp.com'
-SESSION_COOKIE_SECURE = False 
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = True
+
+# Session ENGINE
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_SAVE_EVERY_REQUEST=True
