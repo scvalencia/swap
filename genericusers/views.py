@@ -63,7 +63,7 @@ def validate_user(username, password):
             flag = True
             msg = 'Best coders ever!!'
     connection.close()
-    return flag, msg # Should not happen
+    return flag, msg
 
 def is_valid_form(form_data):
     username = form_data.get('username')
@@ -79,7 +79,7 @@ def is_valid_form(form_data):
 
 def register_user(username, password, password_again, timestamp):
     flag = False
-    msg = 'Existe un usuario con el mismo username'
+    msg = ''
     cursor = connection.cursor()
     usernames = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
     if username.rowcount != 0:
