@@ -104,9 +104,9 @@ def home(request):
         if user:
             # TODO get the user type *
             user_type = get_user_type(username) # *
-            if user_type == 1: # is an active user!
+            if user_type == '1': # is an active user!
                 return render(request, 'active_home.html')
-            elif user_type == 2: # is a passive user!
+            elif user_type == '2': # is a passive user!
                 return render(request, 'passive_home.html')
         # TODO remove the user session *
         del request.session['username'] # *
@@ -134,7 +134,7 @@ def is_valid_signup(form_data):
     if username and password and repeat_password and user_type:
         if password != repeat_password:
             return False, 'Las claves deben coincidir.'
-        elif user_type != 1 and user_type != 2:
+        elif user_type != '1' and user_type != '2':
             return False, 'El tipo de usuario no es valido.'
         else:
             return register_user(username, password, user_type)
@@ -146,12 +146,11 @@ def validate_user(username, password):
     msg = 'Bad coders!!!'
     cursor = connection.cursor()
     result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
-    dictfetchall(cursor)
     if result_set.rowcount != 1:
         flag = False
         msg = 'No existe el usuario %s.' % username
     else:
-        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
+        #result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
         user_password = [itm[1] for itm in result_set][0]
         if password != str(user_password):
             flag = False
@@ -176,12 +175,12 @@ def register_user(username, password, user_type):
         # Active -> 1, Passive -> 2
         # cursor.execute("START TRANSACTION")
         cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp);", values)
-        if user_type == 1:
+        if user_type == '1':
             # TODO es activo, entonce, crea el activo, y revisa la tabla de pasivos
             # si esta vacio, por asignar (dafult). sino, agragar el pasivo con
             # menos activos
             cursor.execute("INSERT INTO active (login, passive) VALUES (%s, %s);", [username, 'pending'])
-        elif user_type == 2:
+        elif user_type == '2':
             seed_digits = string.digits
             seed_upper = string.ascii_uppercase
             seed = seed_digits + seed_upper
@@ -207,8 +206,8 @@ def get_user(table, username):
 
 def get_user_type(username):
     if get_user('active', username):
-        return 1
+        return '1'
     elif get_user('passive', username):
-        return 2
+        return '2'
     else:
-        return -1
+        return '-1'
