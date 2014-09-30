@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div id='goodbye_logout'>
+        <h1>
+            Adios{{ username }}, esperamos vuelvas pronto!
+        </h1>
+        <h2>
+            Por cierto, ten un dia increible :D !!!
+        </h2>
+    </div>
+    <div id='redirect_logout'>
+        <h3>
+            Si lo deseas, vuelve al inicio haciendo
+            <a href='users/home'>click aqui!</a>
+        </h3>
+    </div>
+
+{% endblock %}
