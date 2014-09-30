@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 import genericuser
 from swap import settings
 from swap.settings import SECRET_KEY
+import random, string
 
 
 ################################################################
@@ -168,8 +169,8 @@ def register_user(username, password, user_type):
     flag = False
     msg = ''
     cursor = connection.cursor()
-    usernames = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
-    if usernames.rowcount != 0:
+    cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
+    if len(cursor.fetchall()) != 0:
         # Un usuario con este nombre ya existe
         flag = False
         msg = 'Ya existe un usuario con el mismo nombre de usuario.'
@@ -190,10 +191,13 @@ def register_user(username, password, user_type):
             generator = lambda s, n : ''.join(random.choice(s) for i in range(n))
             register = generator(seed, 25)
             cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
+            cursor.execute("SELECT * FROM passive WHERE login = %s;",  [username])
+            print cursor.fetchall()
             # TODO: Revisar si hay activos pendientes y asignarlo
         flag = True
         msg = 'Transaccion exitosa'
     # cursor.execute("COMMIT;")
+    connection.commit()
     connection.close()
     return flag, msg
 
