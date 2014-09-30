@@ -6,6 +6,11 @@
     <br>
     <input type='password' name='repeat_password' placeholder='Repite clave' value=''>
     <br>
+    <label for='active'>Activo</label>
+    <input type='radio' name='user_type' value='active' checked='checked'>
+    <label for='passive'>Intermediario</label>
+    <input type='radio' name='user_type' value='passive'> 
+    <br>
     <input type='submit' value='Registrar ahora'>
     <br>
     {{ error }}
