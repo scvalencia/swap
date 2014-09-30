@@ -122,9 +122,8 @@ def register_user(username, password, password_again):
             flag = False
             msg = 'Las contrasenias no coinciden'
         else:
-            timestamp = datetime.now
-            values = [username, password, timestamp]
-            cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, %s)", values)
+            values = [username, password]
+            cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp)", values)
     cursor.execute("COMMIT;")
     connection.close()
     return flag, msg
