@@ -3,9 +3,11 @@ from django.shortcuts import render, redirect
 import os
 import hashlib
 import datetime
+import genericuser
 from django.db import connection
 from swap import settings
 from swap.settings import SECRET_KEY
+
 
 
 def home(request):
@@ -106,5 +108,14 @@ def dictfetchall(cursor):
     ]
 
 def get_user(username):
-    #TODO
-    pass
+    ans = None
+    cursor = connection.cursor()
+    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+    if result_set.rowcount != 0:
+        name = [itm[0] for itm in result_set][0]
+        password = [itm[1] for itm in result_set][0]
+        timestamp = [itm[2] for itm in result_set][0]
+        ans = genericuser.Genericuser(name, password, timestamp)
+    ans = genericuser.Genericuser('reactive', 'bages', 'sdsfdfs')
+    connection.close()
+    return ans
