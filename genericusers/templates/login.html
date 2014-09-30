@@ -1,0 +1,13 @@
+<form method='post'>
+    {% csrf_token %}
+    <input type='text' name='username' placeholder='Usuario'>
+    <br>
+    <input type='password' name='password' placeholder='Clave'>
+    <br>
+    <input type='submit' value='Ingresar ahora'>
+    <br>
+    {{ error }}
+</form>
+{% for k, v in form_data.items %}
+    <p>{{ k }} -> {{ v }}</p> 
+{% endfor %}
