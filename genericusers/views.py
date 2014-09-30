@@ -9,7 +9,7 @@ from swap.settings import SECRET_KEY
 
 
 def home(request):
-    user = get_user(request.POST.get('username'))
+    user = get_user(request.session.get('username'))
     if user:
         params = {'user': user}
         return render(request, 'user_home.html', params)
@@ -107,3 +107,4 @@ def dictfetchall(cursor):
 
 def get_user(username):
     #TODO
+    pass
