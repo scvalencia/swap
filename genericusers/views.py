@@ -63,4 +63,5 @@ def set_cookie(response, key, value, days_expire = 7):
     response.set_cookie(key, value, max_age=max_age, expires=expires, domain=domain, secure=secure)
 
 def signup(request):
+    pass
     # TODO
