@@ -1,58 +1,24 @@
+######################## DJANGO IMPORTS ########################
+from django.db import connection
 from django.shortcuts import render, redirect
 
-import os
-import hashlib
-import datetime
+######################## CUSTOM IMPORTS ########################
 import genericuser
-from django.db import connection
 from swap import settings
 from swap.settings import SECRET_KEY
-from datetime import datetime
 
 
-def home(request):
-    user = get_user(request.session.get('username'))
-    print user
-    if user:
-        params = {'user': user}
-        return render(request, 'user_home.html', params)
-    else:
-        remove_user_session(request)
-        return render(request, 'home.html')
+################################################################
+######################## VIEW FUNCTIONS ########################
+################################################################
 
-def signup(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        password_again = request.POST.get('repeat_password')
-        valid, error = register_user(username, password, password_again)
-        if valid:
-            request.session['username'] = username
-            return redirect('/users/home/')
-        else:
-            params = {
-                'username': username,
-                'error': error,
-            }
-            return render(request, 'signup.html', params)
-    else:
-        print 'user', request.session.get('username')
-        if request.session.get('username'):
-            user = get_user(request.POST.get('username'))
-            if user: return redirect('/users/home/')
-        remove_user_session(request)
-        params = {
-            'username': '',
-            'password': '',
-            'error': '',
-        }
-        return render(request, 'signup.html', params)
 
 def login(request):
+    '''Returns the respective response to the login url call.'''
     if request.method == 'POST':
-        valid, error = is_valid_form(request.POST)
+        valid, error = is_valid_login(request.POST)
         if valid:
-            request.session['username'] = request.POST.get('username')
+            # TODO add user to session.
             return redirect('/users/home/')
         else:
             params = {
@@ -62,11 +28,13 @@ def login(request):
             }
             return render(request, 'login.html', params)
     else:
-        print 'user', request.session.get('username')
-        if request.session.get('username'):
-            user = get_user(request.POST.get('username'))
-            if user: return redirect('/users/home/')
-        remove_user_session(request)
+        # TODO check user existance in session.
+        # if it exist, do the indented below.
+            username = # TODO get the username from session
+            user = get_user(username)
+            if user:
+                return redirect('/users/home/')
+        # TODO remove the user session in case of a corrupted one
         params = {
             'username': '',
             'password': '',
@@ -74,8 +42,66 @@ def login(request):
         }
         return render(request, 'login.html', params)
 
-def remove_user_session(request):
-    if 'username' in request: del request.session['username']
+def signup(request):
+    '''Returns the respective response to the signup url call.'''
+    if request.method == 'POST':
+        valid, error = is_valid_signup(request.POST)
+        if valid:
+            # TODO add user to session.
+            return redirect('/users/home/')
+        else:
+            params = {
+                'username': request.POST.get('username'),
+                'error': error,
+            }
+            return render(request, 'signup.html', params)
+    else:
+        # TODO check user existance in session
+        # if it exist, do the indented below
+            username = # TODO get the username from session
+            user = get_user(username)
+            if user:
+                return redirect('/users/home/')
+        # TODO remove the user session in case of a corrupted one
+        params = {
+            'username': '',
+            'error': '',
+        }
+        return render(request, 'signup.html', params)
+
+def logout(request):
+    '''Returns the respective response to the logout url call.'''
+    username = ''
+    # TODO check user existance in session
+    # if it exist, do the indented below
+        username = ' %s' % # TODO get the username from session
+        # TODO remove the user session
+    params = {
+        'username': username,
+    }
+    return render(request, 'logout.html', params)
+
+def home(request):
+    '''Returns the respective response to the home url call.'''
+    # TODO check user existance in session
+    # if it exist, do the indented below
+        username = # TODO get the username from session
+        user = get_user(username)
+        if user:
+            user_type = # TODO get the user type
+            if user_type == 1: # is an active user
+                return render(request, 'active_home.html')
+            else: # is a passive user
+                return render(request, 'passive_home.html')
+        else:
+            # TODO remove the user session
+    return render(request, 'home.html')
+
+
+################################################################
+######################## AUX FUNCTIONS #########################
+################################################################
+
 
 def validate_user(username, password):
     flag = False
@@ -96,7 +122,7 @@ def validate_user(username, password):
     connection.close()
     return flag, msg
 
-def is_valid_form(form_data):
+def is_valid_login(form_data):
     username = form_data.get('username')
     password = form_data.get('password')
     if username and password:
