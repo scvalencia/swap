@@ -9,12 +9,12 @@ def login(request):
     if request.method == 'POST':
         form_data = request.POST
         valid, error = is_valid(form_data)
-        params = {'form_data': form_data, 'error', error}
+        params = {'form_data': form_data, 'error': error}
         if valid:
-            response = #INSERT RESPONSE
+            response = '#INSERT RESPONSE'
             set_cookie(response, key, value, days_expire=7)
         else:
-            return render(request, ) 
+            return render(request, 'login.html', params) 
     else:
         form_data = {}
         params = {'form_data': form_data}
@@ -22,15 +22,15 @@ def login(request):
 
 def validate_user(username, password):
     cursor = connection.cursor()
-    query = 'SELECT * FROM genericuser WHERE login = %s', [username]
-    result_set = cursor.execute(query)
+    query = "SELECT * FROM genericuser WHERE login = %s", [username]
+    result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
     if result_set.rowcount != 1:
-        return False, 'There is not a username with such name'
+        return False, 'No existe el usuario ' + username
     else:
-        query = 'SELECT * FROM genericuser WHERE login = %s and password = %s', [username, password]
-        result_set = cursor.execute(query)
+        query = "SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password]
+        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s and password = %s", [username, password])
         if result_set.rowcount != 1:
-            return False, 'Wrong password'
+            return False, 'Contrasenia invalida'
         else:
             return True, ''
     return False, 'Bad coders!!' # Should not happen
