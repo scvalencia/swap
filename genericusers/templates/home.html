@@ -1,1 +1,27 @@
-home.html
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div id='welcome_home'>
+        <h1>
+            Bienvenido a Swap, la bolsa de valores mas increible del mundo!
+        </h1>
+    </div>
+    <div id='login_home'>
+        <h2>
+            Si ya estas registrado, ingresa ahora haciendo click aqui...
+        </h2>
+        <a href='/users/login/'>
+            Ingresar ahora!
+        </a>
+    </div>
+    <div id='signup_home'>
+        <h2>
+            Si eres nuevo, que esperas, registrate ahora haciendo click aqui...
+        </h2>
+        <a href='/users/signup'>
+            Registrate ahora!
+        </a>
+    </div>
+    
+{% endblock %}
