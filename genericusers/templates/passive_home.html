@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div id='welcome_user_home'>
+        <h1>
+            Bienvenido {{ user.login }}, es bueno verte por aqui!
+        </h1>
+    </div>
+    <div id='options_user_home'>
+        <h2>
+            Que te gustaria hacer?
+        </h2>
+        <a href='/solicitudes/passive_pending_solicitudes/'>
+            Mira las solicitudes pendientes de tus activos!
+        </a>
+        <a href='/solicitudes/passive_solicitudes/'>
+            Mira ofertas disponibles para las solicitudes de tus activos!
+        </a>
+        <a href='/users/logout/'>
+            Cierra tu sesion!
+        </a>
+    </div>
+
+{% endblock %}
