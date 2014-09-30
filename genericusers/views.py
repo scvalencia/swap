@@ -12,6 +12,7 @@ from swap.settings import SECRET_KEY
 
 def home(request):
     user = get_user(request.session.get('username'))
+    print user
     if user:
         params = {'user': user}
         return render(request, 'user_home.html', params)
