@@ -7,5 +7,5 @@ urlpatterns = patterns('',
     # url(r'^$', 'swap.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/', include('genericusers.urls')),
+    url(r'^users/', include('genericusers.urls')),
 )
