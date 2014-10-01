@@ -165,6 +165,7 @@ def populate_value(value_tuple):
     quantity = value_tuple[3]
     offerant = value_tuple[4]
     ans = val.Val(pk_id, name, price, quantity, offerant)
+    return ans
 
 
 def get_passive_pending_solicitudes(username):
