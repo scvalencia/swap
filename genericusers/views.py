@@ -16,7 +16,11 @@ def login(request):
     '''Returns the respective response to the login url call.'''
     if request.method == 'POST':
         valid, error = is_valid_login(request.POST)
+
+
+        
         if valid:
+
             request.session['username'] = request.POST.get('username')
             return redirect('/users/home/')
         else:
@@ -177,22 +181,29 @@ def register_user(username, password, user_type):
         # cursor.execute("START TRANSACTION")
         cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp);", values)
         if user_type == '1':
-            # Es activo
-            pending_value = 'PENDING'
-            cursor.execute("SELECT * FROM passive")
-            if len(cursor.fetchall()) == 0:
-                # Vacio => PENDING
-                cursor.execute("INSERT INTO active (login, passive) VALUES (%s, %s);", [username, pending_value])
-            else:
-                # Agregar el pasivo con menos activos
-                cursor.execute("SELECT login, COUNT(login) AS freq FROM passive GROUP BY login")
-                tuples = cursor.fetchall()
-                minimum = min([freq for (login, freq) in tuples])
-                candidates = filter(lambda a : a[1] == minimum, [i for i in tuples])
-                lazy = random.choice(candidates)
-                lazy_name = lazy[0]
-                my_passive = [i for i in cursor.execute("SELECT register FROM passive WHERE login = %s", [lazy_name])][0][0]
-                cursor.execute("INSERT INTO active (login, passive) VALUES (%s, %s);", [username, my_passive])
+            cursor.execute("SELECT login, COUNT(login) AS freq FROM passive GROUP BY login")
+            tuples = cursor.fetchall()
+            minimum = min([freq for (login, freq) in tuples])
+            candidates = filter(lambda a : a[1] == minimum, [i for i in tuples])
+            lazy = random.choice(candidates)
+            lazy_name = lazy[0]
+            my_passive = [i for i in cursor.execute("SELECT reg_num FROM passive WHERE login = %s", [lazy_name])][0][0]
+            print my_passive
+            a = cursor.execute("SELECT * FROM genericuser WHERE login = %s", [username])
+            print [i for i in a]
+            b = cursor.execute("SELECT * FROM passive WHERE reg_num = %s", [my_passive])
+            print [i for i in b]
+            query = ("INSERT INTO active (login, passive)" 
+                     "SELECT A.login, B.reg_num "
+                     "FROM (SELECT login FROM genericuser WHERE login = %s) A, " 
+                     "(SELECT reg_num FROM passive WHERE reg_num = %s) B")
+            try:
+                cursor.execute(query, [username, my_passive])
+            except Exception, e:
+                print 'Fuck'
+            finally:
+                pass
+            
         elif user_type == '2':
             # Es pasivo
             seed_digits = string.digits
@@ -200,11 +211,8 @@ def register_user(username, password, user_type):
             seed = seed_digits + seed_upper
             generator = lambda s, n : ''.join(random.choice(s) for i in range(n))
             register = generator(seed, 25)
-            cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
+            cursor.execute("INSERT INTO passive (login, reg_num) VALUES (%s, %s);", [username, register])
             cursor.execute("SELECT * FROM passive WHERE login = %s;",  [username])
-            print cursor.fetchall()
-            activos_pendientes = cursor.execute("SELECT * FROM active WHERE passive = 'PENDING'")
-            # TODO: Revisar si hay activos pendientes y asignarlo
         flag = True
         msg = 'Transaccion exitosa'
     # cursor.execute("COMMIT;")
