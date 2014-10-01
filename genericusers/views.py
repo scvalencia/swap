@@ -146,7 +146,6 @@ def is_valid_signup(form_data):
         return False, 'Todos los campos deben estar completos.'
 
 def validate_user(username, password):
-    username = 'luisa'
     flag = False
     msg = 'Bad coders!!!'
     cursor = connection.cursor()
