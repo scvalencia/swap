@@ -3,11 +3,7 @@ from django.db import connection
 from django.shortcuts import render, redirect
 
 ######################## CUSTOM IMPORTS ########################
-from actives import active
 import genericuser
-from passives import passive
-from swap import settings
-from swap.settings import SECRET_KEY
 import random, string
 
 
@@ -21,8 +17,7 @@ def login(request):
     if request.method == 'POST':
         valid, error = is_valid_login(request.POST)
         if valid:
-            # TODO add user to session. *
-            request.session['username'] = request.POST.get('username') # *
+            request.session['username'] = request.POST.get('username')
             return redirect('/users/home/')
         else:
             params = {
@@ -32,16 +27,12 @@ def login(request):
             }
             return render(request, 'login.html', params)
     else:
-        # TODO get the username from session *
-        username = request.session.get('username') # *
-        # TODO check user existance in session. *
-        # if it exist, do the indented below. *
-        if username: # *
+        username = request.session.get('username')
+        if username:
             user = get_user(username)[0]
             if user:
                 return redirect('/users/home/')
-            # TODO remove the user session in case of a corrupted one *
-            del request.session['username'] # *
+            del request.session['username']
         params = {
             'username': '',
             'password': '',
@@ -54,8 +45,7 @@ def signup(request):
     if request.method == 'POST':
         valid, error = is_valid_signup(request.POST)
         if valid:
-            # TODO add user to session. *
-            request.session['username'] = request.POST.get('username') # *
+            request.session['username'] = request.POST.get('username')
             return redirect('/users/home/')
         else:
             params = {
@@ -64,16 +54,12 @@ def signup(request):
             }
             return render(request, 'signup.html', params)
     else:
-        # TODO get the username from session *
-        username = request.session.get('username') # *
-        # TODO check user existance in session *
-        # if it exist, do the indented below *
-        if username: # *
+        username = request.session.get('username')
+        if username:
             user = get_user(username)[0]
             if user:
                 return redirect('/users/home/')
-            # TODO remove the user session in case of a corrupted one *
-            del request.session['username'] # *
+            del request.session['username']
         params = {
             'username': '',
             'error': '',
@@ -83,14 +69,10 @@ def signup(request):
 def logout(request):
     '''Returns the respective response to the logout url call.'''
     name = ''
-    # TODO get the username from session *
-    username = request.session.get('username') # *
-    # TODO check user existance in session *
-    # if it exist, do the indented below *
-    if username: # *
+    username = request.session.get('username')
+    if username:
         name = ' %s' % username
-        # TODO remove the user session *
-        del request.session['username'] # *
+        del request.session['username']
     params = {
         'name': name,
     }
@@ -98,31 +80,32 @@ def logout(request):
 
 def home(request):
     '''Returns the respective response to the home url call.'''
-    # TODO get the username from session *
-    username = request.session.get('username') # *
-    # TODO check user existance in session *
-    # if it exist, do the indented below *
-    if username: # *
+    username = request.session.get('username')
+    if username:
         user = get_user(username)[0]
         if user:
             params = {'username': user.login}
-            # TODO get the user type *
-            user_type = get_user_type(username) # *
+            user_type = get_user_type(username)
             if user_type == '1': # is an active user!
                 return render(request, 'active_home.html', params)
             elif user_type == '2': # is a passive user!
                 return render(request, 'passive_home.html', params)
-        # TODO remove the user session *
-        del request.session['username'] # *
+        del request.session['username']
     return render(request, 'home.html')
+
+def search(request):
+    pass
+    #TODO
 
 
 ################################################################
-######################## AUX FUNCTIONS #########################
+################## HIGH LEVEL AUX FUNCTIONS ####################
 ################################################################
 
 
 def is_valid_login(form_data):
+    '''Validates the login form returning true or false, and if
+    it's the case, the corresponding error message.'''
     username = form_data.get('username')
     password = form_data.get('password')
     if username and password:
@@ -131,6 +114,8 @@ def is_valid_login(form_data):
         return False, 'Todos los campos deben estar completos.'
 
 def is_valid_signup(form_data):
+    '''Validates the signup form returning true or false, and if
+    it's the case, the corresponding error message.'''
     username = form_data.get('username')
     password = form_data.get('password')
     repeat_password = form_data.get('repeat_password')
@@ -145,7 +130,16 @@ def is_valid_signup(form_data):
     else:
         return False, 'Todos los campos deben estar completos.'
 
+
+################################################################
+################### LOW LEVEL AUX FUNCTIONS ####################
+################################################################
+
+
 def validate_user(username, password):
+    '''Validates the login user checking it's existante in the
+    database and checking that the values are legit, it returns
+    a boolean, and if it's the case, it's corresponding message.'''
     flag = False
     msg = 'Bad coders!!!'
     cursor = connection.cursor()
@@ -166,6 +160,9 @@ def validate_user(username, password):
     return flag, msg
 
 def register_user(username, password, user_type):
+    '''Validates the signingup user checking it's not already in
+    the database, and checking that the values are legit, it returns
+    a boolean, and if it's the case, it's corresponding message.'''
     flag = False
     msg = ''
     cursor = connection.cursor()
@@ -201,6 +198,9 @@ def register_user(username, password, user_type):
     return flag, msg
 
 def get_user(username):
+    '''Get the corresponding user for the database that match
+    the given username PK, it returns a user object with it's
+    respective user's type.'''
     ans = None
     user_type = ''
     cursor = connection.cursor()
@@ -208,7 +208,7 @@ def get_user(username):
     uname, password, timestamp = None, None, None
     cursor.execute("SELECT * FROM genericuser WHERE login = %s;", lst)
     if len(cursor.fetchall()) == 0:
-        # No existe
+        # not exist!
         return None, '0'
     else:
         cursor.execute("SELECT * FROM genericuser WHERE login = %s;", lst)
@@ -219,16 +219,16 @@ def get_user(username):
         real_user = genericuser.Genericuser(uname, password, timestamp)
         cursor.execute("SELECT * FROM passive WHERE login = %s", lst)
         if len(cursor.fetchall()) != 0:
-            # Es pasivo
+            # is passive!
             return  real_user, '2'
         cursor.execute("SELECT * FROM active WHERE login = %s", lst)
         if len(cursor.fetchall()) != 0:
-            # Es activo
+            # is active!
             return real_user, '1'
         else:
             return None, '0'
     connection.close()
-    return ans, user_type # Non-reacheable code!!!
+    return ans, user_type # non-reacheable code!!!
 
 def get_user_type(username):
     return get_user(username)[1]
