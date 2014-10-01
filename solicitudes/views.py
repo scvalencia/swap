@@ -96,12 +96,12 @@ def check_username(request):
     if username:
         user, user_type = get_user(username)
         if user:
-            return username
+            return username, user_type
         else:
             del request.session['username']
-            return None
+            return None, '0'
     else:
-        return None
+        return None, '0'
 
 def is_valid_new_solicitude(form_data):
     # TODO jcbages
