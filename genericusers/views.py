@@ -177,11 +177,24 @@ def register_user(username, password, user_type):
         # cursor.execute("START TRANSACTION")
         cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp);", values)
         if user_type == '1':
-            # TODO es activo, entonce, crea el activo, y revisa la tabla de pasivos
-            # si esta vacio, por asignar (dafult). sino, agragar el pasivo con
-            # menos activos
-            cursor.execute("INSERT INTO active (login, passive) VALUES (%s, %s);", [username, 'pending'])
+            # Es activo
+            pending_value = 'PENDING'
+            cursor.execute("SELECT * FROM passive")
+            if len(cursor.fetchall()) == 0:
+                # Vacio => PENDING
+                cursor.execute("INSERT INTO active (login, passive) VALUES (%s, %s);", [username, pending_value])
+            else:
+                # Agregar el pasivo ocn menos activos
+                cursor.execute("SELECT login, COUNT(login) AS freq FROM passive GROUP BY login")
+                tuples = cursor.fetchall()
+                minimum = min([freq for (login, freq) in tuples])
+                candidates = filter(lambda a : a[1] == minimum, [i for i in tuples])
+                lazy = random.choice(candidates)
+                lazy_name = lazy[0]
+                my_passive = [i for i in cursor.execute("SELECT register FROM passive WHERE login = %s", [lazy_name])][0][0]
+                cursor.execute("INSERT INTO active (login, passive) VALUES (%s, %s);", [username, my_passive])
         elif user_type == '2':
+            # Es pasivo
             seed_digits = string.digits
             seed_upper = string.ascii_uppercase
             seed = seed_digits + seed_upper
@@ -189,6 +202,8 @@ def register_user(username, password, user_type):
             register = generator(seed, 25)
             cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
             cursor.execute("SELECT * FROM passive WHERE login = %s;",  [username])
+            print cursor.fetchall()
+            activos_pendientes = cursor.execute("SELECT * FROM active WHERE passive = 'PENDING'")
             # TODO: Revisar si hay activos pendientes y asignarlo
         flag = True
         msg = 'Transaccion exitosa'
