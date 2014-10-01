@@ -188,7 +188,7 @@ def register_user(username, password, user_type):
                 # Vacio => PENDING
                 cursor.execute("INSERT INTO active (login, passive) VALUES (%s, %s);", [username, pending_value])
             else:
-                # Agregar el pasivo ocn menos activos
+                # Agregar el pasivo con menos activos
                 cursor.execute("SELECT login, COUNT(login) AS freq FROM passive GROUP BY login")
                 tuples = cursor.fetchall()
                 minimum = min([freq for (login, freq) in tuples])
