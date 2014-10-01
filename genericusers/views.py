@@ -3,7 +3,9 @@ from django.db import connection
 from django.shortcuts import render, redirect
 
 ######################## CUSTOM IMPORTS ########################
+from actives import active
 import genericuser
+from passives import passive
 from swap import settings
 from swap.settings import SECRET_KEY
 import random, string
@@ -35,7 +37,7 @@ def login(request):
         # TODO check user existance in session. *
         # if it exist, do the indented below. *
         if username: # *
-            user = get_user('genericuser', username)
+            user = get_user(username)[0]
             if user:
                 return redirect('/users/home/')
             # TODO remove the user session in case of a corrupted one *
@@ -67,7 +69,7 @@ def signup(request):
         # TODO check user existance in session *
         # if it exist, do the indented below *
         if username: # *
-            user = get_user('genericuser', username)
+            user = get_user(username)[0]
             if user:
                 return redirect('/users/home/')
             # TODO remove the user session in case of a corrupted one *
@@ -102,7 +104,7 @@ def home(request):
     # TODO check user existance in session *
     # if it exist, do the indented below *
     if username: # *
-        user = get_user('genericuser', username)
+        user = get_user(username)[0]
         if user:
             params = {'username': user.login}
             # TODO get the user type *
@@ -201,26 +203,36 @@ def register_user(username, password, user_type):
     connection.close()
     return flag, msg
 
-def get_user(table, username):
+def get_user(username):
     ans = None
+    user_type = ''
     cursor = connection.cursor()
-    result_set = ()
-    if table == 'genericuser':
-        result_set = cursor.execute("SELECT * FROM genericuser WHERE login = %s;", [username])
-    elif table == 'active':
-        result_set = cursor.execute("SELECT * FROM active WHERE login = %s;", [username])
-    elif table == 'passive':
-        result_set = cursor.execute("SELECT * FROM passive WHERE login = %s;", [username])
-    for item in result_set:
-        ans = genericuser.Genericuser(item[0], item[1], item[2])
-        break
+    lst = [username]
+    uname, password, timestamp = None, None, None
+    cursor.execute("SELECT * FROM genericuser WHERE login = %s;", lst)
+    if len(cursor.fetchall()) == 0:
+        # No existe
+        return None, '0'
+    else:
+        cursor.execute("SELECT * FROM genericuser WHERE login = %s;", lst)
+        user_object = cursor.fetchone()
+        print user_object[0]
+        uname = user_object[0]
+        password = user_object[1]
+        timestamp = user_object[2]
+        real_user = genericuser.Genericuser(uname, password, timestamp)
+        cursor.execute("SELECT * FROM passive WHERE login = %s", lst)
+        if len(cursor.fetchall()) != 0:
+            # Es pasivo
+            return  real_user, '2'
+        cursor.execute("SELECT * FROM active WHERE login = %s", lst)
+        if len(cursor.fetchall()) != 0:
+            # Es activo
+            return real_user, '1'
+        else:
+            return None, '0'
     connection.close()
-    return ans
+    return ans, user_type # Non-reacheable code!!!
 
 def get_user_type(username):
-    if get_user('active', username):
-        return '1'
-    elif get_user('passive', username):
-        return '2'
-    else:
-        return '1'
+    return get_user(username)[1]
