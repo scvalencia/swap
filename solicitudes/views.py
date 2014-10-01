@@ -25,7 +25,7 @@ def new_solicitude(request):
         'message': '',
     }
     if request.method == 'POST':
-        valid, error = is_valid_new_solicitude(request.POST)
+        valid, error = is_valid_new_solicitude(username, request.POST)
         params['pk_id'] = request.POST.get('pk_id')
         params['val'] = request.POST.get('val')
         params['quantity'] = request.POST.get('quantity')
@@ -42,7 +42,6 @@ def active_solicitudes(request):
     if not username or user_type != '1':
         return redirect('/users/home/')
     solicitudes = get_active_solicitudes(username)
-    print solicitudes
     params = {
         'solicitudes': solicitudes,
         'message': ''
@@ -104,13 +103,28 @@ def check_username(request):
     else:
         return None, '0'
 
-def is_valid_new_solicitude(form_data):
-    # TODO jcbages
-    return True
+def is_valid_new_solicitude(username, form_data):
+    operation_type = form_data.get('operation_type')
+    val = form_data.get('val')
+    quantity = form_data.get('quantity')
+    quantity_type = form_data.get('quantity_type')
+    if operation_type and val and quantity and quantity_type:
+        if operation_type != '1' and operation_type != '2':
+            return False, 'El tipo de operacion no es valido'
+        elif quantity_type != '1' and quantity_type != '2':
+            return False, 'El tipo de cantidad no es valido'
+        else:
+            return insert_solicitude(username, operation_type, val,
+                                    quantity, quantity_type)
+    else:
+        return False, 'Todos los campos deben estar completos'
 
 def is_valid_pending_solicitudes(form_data):
-    # TODO jcbages
-    return True, ''
+    to_aprove = form_data.get('to_aprove')
+    if to_aprove and len(to_aprove) > 0:
+        return activate_pending_solicitudes(to_aprove)
+    else:
+        return False, 'Debes seleccionar al menos una solicitud'
 
 
 ################################################################
@@ -192,3 +206,12 @@ def get_passive_solicitudes(username):
     # un arreglo de objectos tipo solicitud osea usando la
     # clase de solicitud.py.
     return []
+
+def activate_pending_solicitudes(to_aprove):
+    # TODO scvalencia
+    # Necesito que dado ese to_aprove que es un arreglo de
+    # pk_id de las solicitudes, les ponga IS ACTIVE en 1,
+    # es decir en verdadero, si todo sale bien retorne True
+    # y el mensaje de error vacio, en caso de algun error,
+    # retorne False y el mensaje de error correpondiente
+    return True, ''
