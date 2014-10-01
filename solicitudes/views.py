@@ -116,7 +116,7 @@ def is_valid_pending_solicitudes(form_data):
 ################################################################
 
 
-def insert_solicitude():
+def insert_solicitude(username, operation_type, val, quantity, quantity_type):
     # TODO scvalencia
     # Necesito que inserte la nueva solicitud a la tabla, en caso
     # de problemas como por ejemplo una PK duplicada, retornaria 
