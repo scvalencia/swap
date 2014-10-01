@@ -100,7 +100,6 @@ def home(request):
     '''Returns the respective response to the home url call.'''
     # TODO get the username from session *
     username = request.session.get('username') # *
-    print username
     # TODO check user existance in session *
     # if it exist, do the indented below *
     if username: # *
@@ -194,7 +193,6 @@ def register_user(username, password, user_type):
             register = generator(seed, 25)
             cursor.execute("INSERT INTO passive (login, register) VALUES (%s, %s);", [username, register])
             cursor.execute("SELECT * FROM passive WHERE login = %s;",  [username])
-            print cursor.fetchall()
             # TODO: Revisar si hay activos pendientes y asignarlo
         flag = True
         msg = 'Transaccion exitosa'
@@ -216,7 +214,6 @@ def get_user(username):
     else:
         cursor.execute("SELECT * FROM genericuser WHERE login = %s;", lst)
         user_object = cursor.fetchone()
-        print user_object[0]
         uname = user_object[0]
         password = user_object[1]
         timestamp = user_object[2]
