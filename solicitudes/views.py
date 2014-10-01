@@ -16,7 +16,7 @@ from vals import val
 def new_solicitude(request):
     '''Returns the respective response to the new_solicitude url call.'''
     username, user_type = check_username(request)
-    if not username or user_type != 1:
+    if not username or user_type != '1':
         return redirect('/users/home/')
     params = {
         'pk_id': '',
@@ -39,9 +39,10 @@ def new_solicitude(request):
 def active_solicitudes(request):
     '''Returns the respective response to the active_solicitudes url call.'''
     username, user_type = check_username(request)
-    if not username or user_type != 1:
+    if not username or user_type != '1':
         return redirect('/users/home/')
     solicitudes = get_active_solicitudes(username)
+    print solicitudes
     params = {
         'solicitudes': solicitudes,
         'message': ''
@@ -53,7 +54,7 @@ def active_solicitudes(request):
 def passive_pending_solicitudes(request):
     '''Returns the respective response to the passive_pending_solicitudes url call.'''
     username, user_type = check_username(request)
-    if not username or user_type != 2:
+    if not username or user_type != '2':
         return redirect('/users/home/')
     params = {
         'solicitudes': [],
@@ -74,7 +75,7 @@ def passive_pending_solicitudes(request):
 def passive_solicitudes(request):
     '''Returns the respective response to the passive_pending_solicitudes url call.'''
     username, user_type = check_username(request)
-    if not username or user_type != 2:
+    if not username or user_type != '2':
         return redirect('/users/home/')
     solicitudes = get_passive_solicitudes(username)
     params = {
