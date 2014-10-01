@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 
 ######################## CUSTOM IMPORTS ########################
 from genericusers.views import get_user
-from solicitude import Solicitude
+import solicitude
+from vals import val
 
 
 ################################################################
@@ -119,7 +120,39 @@ def get_active_solicitudes(username):
     # idea es mostrarlas en la parte de transactions, pero debe
     # retornar un arreglo de objectos tipo solicitud osea usando
     # la clase de solicitud.py.
-    return []
+    ans = []
+    query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s"
+    collection = cursor.execute(query, [username, "0"])
+    for itm in collection:
+        assert len(itm) == 9
+        pk = itm[0]
+        operation_type = itm[1]
+        val = itm[2]
+        query = "SELECT * FROM val WHERE pk_id = %s"        
+        cursor.execute(query, [val])
+        value = cursor.fetchone()
+        value_object = populate_value(value)
+        quantity = itm[3]
+        quantity_type = itm[4]
+        time_created = itm[5]
+        active_login = itm[6]
+        solved = itm[7]
+        is_active = itm[8]        
+        element = solicitude.Solicitude(pk, operation_type, value_object, quantity,
+            quantity_type, time_created, active_login, solved, is_active)
+        ans.append(to_add)
+
+    return ans
+
+def populate_value(value_tuple):
+    ans = None
+    pk_id = value_tuple[0]
+    name = value_tuple[1]
+    price = value_tuple[2]
+    quantity = value_tuple[3]
+    offerant = value_tuple[4]
+    ans = val.Val(pk_id, name, price, quantity, offerant)
+
 
 def get_passive_pending_solicitudes(username):
     # TODO scvalencia
