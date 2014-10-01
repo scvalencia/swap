@@ -33,7 +33,7 @@ def new_solicitude(request):
             params['message'] = 'Tu solicitud fue creada satisfactoriamente!'
         return render(request, 'new_solicitude.html', params)
     else:
-        return render(request, 'new_solicitude', params)
+        return render(request, 'new_solicitude.html', params)
 
 def active_solicitudes(request):
     '''Returns the respective response to the active_solicitudes url call.'''
@@ -54,16 +54,19 @@ def passive_pending_solicitudes(request):
     username = check_username(request)
     if not username:
         return redirect('/users/home/')
-    params = {}
+    params = {
+        'solicitudes': [],
+        'message': '',
+    }
     if request.method == 'POST':
         valid, error = is_valid_pending_solicitudes(request.POST)
         if valid:
             params['message'] = 'Solicitudes activadas correctamente!'
         else:
             params['message'] = error
-    solicitudes = get_passive_pending_solicitudes(username)
-    params['solicitudes'] = solicitudes
-    if len(solicitudes) == 0:
+    pending_solicitudes = get_passive_pending_solicitudes(username)
+    params['solicitudes'] = pending_solicitudes
+    if len(pending_solicitudes) == 0:
         params['message'] = 'No tienes solicitudes pendientes!'
     return render(request, 'active_solicitudes.html', params)
 
@@ -72,6 +75,14 @@ def passive_solicitudes(request):
     username = check_username(request)
     if not username:
         return redirect('/users/home/')
+    solicitudes = get_passive_solicitudes(username)
+    params = {
+    'solicitudes': solicitudes,
+    'message': '',
+    }
+    if len(solicitudes) == 0:
+        params['message'] = 'No tienes solicitudes de tus activos!'
+    return render(request, 'passive_solicitudes.html', params)
 
 
 ################################################################
