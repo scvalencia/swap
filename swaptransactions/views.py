@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def active_transactions(request):
+	pass
+	#TODO
