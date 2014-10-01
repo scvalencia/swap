@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 
 ######################## CUSTOM IMPORTS ########################
 from genericusers.views import get_user
-import random, string
+from solicitude import Solicitude
 
 
 ################################################################
@@ -68,7 +68,7 @@ def passive_pending_solicitudes(request):
     params['solicitudes'] = pending_solicitudes
     if len(pending_solicitudes) == 0:
         params['message'] = 'No tienes solicitudes pendientes!'
-    return render(request, 'active_solicitudes.html', params)
+    return render(request, 'passive_pending_solicitudes.html', params)
 
 def passive_solicitudes(request):
     '''Returns the respective response to the passive_pending_solicitudes url call.'''
@@ -102,8 +102,43 @@ def check_username(request):
     else:
         return None
 
+def is_valid_pending_solicitudes(form_data):
+    # TODO jcbages
+    return True, ''
+
 
 ################################################################
 ################### LOW LEVEL AUX FUNCTIONS ####################
 ################################################################
 
+
+def get_active_solicitudes(username):
+    # TODO scvalencia
+    # Necesito todas las solicitudes que ha hecho este activo
+    # que figuran como NOT SOLVED porque si estan en SOLVED la
+    # idea es mostrarlas en la parte de transactions, pero debe
+    # retornar un arreglo de objectos tipo solicitud osea usando
+    # la clase de solicitud.py.
+    return []
+
+def get_passive_pending_solicitudes(username):
+    # TODO scvalencia
+    # Necesito todas las solicitudes que han hecho los activos
+    # que tienen asignado a este pasivo y que ademas figuran
+    # como NOT IS ACTIVE pues son las que los oferentes 
+    # hicieron al intermediario y este las tiene pendientes por
+    # activar, por ende ademas deben aparecer como NOT SOLVED,
+    # pero debe retornar un arreglo de objectos tipo solicitud
+    # osea usando la clase de solicitud.py.
+    return []
+
+def get_passive_solicitudes(username):
+    # TODO scvalencia
+    # Necesito todas las solicitudes han hecho los activos
+    # que tienen asignado a este pasivo y que ademas figuran
+    # como IS ACTIVE pues son las que ya estan activadas, por
+    # ende ademas deben aparecer como NOT SOLVED pues son las
+    # que queremos negociar por asi decirlo, pero debe retornar
+    # un arreglo de objectos tipo solicitud osea usando la
+    # clase de solicitud.py.
+    return []
