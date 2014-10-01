@@ -133,6 +133,7 @@ def get_active_solicitudes(username):
     # idea es mostrarlas en la parte de transactions, pero debe
     # retornar un arreglo de objectos tipo solicitud osea usando
     # la clase de solicitud.py.
+    cursor = connection.cursor()
     ans = []
     query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s"
     collection = cursor.execute(query, [username, "0"])
@@ -155,6 +156,7 @@ def get_active_solicitudes(username):
             quantity_type, time_created, active_login, solved, is_active)
         ans.append(to_add)
 
+    connection.close()
     return ans
 
 def populate_value(value_tuple):
