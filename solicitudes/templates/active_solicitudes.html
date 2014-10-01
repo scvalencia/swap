@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div id='all_active_solicitudes'>
+        {% for s in solicitudes %}
+            <p>
+                Solicitud con PK_ID #: {{ s.pk_id }}
+            </p>
+            <p>
+                Tipo de operacion: {{ s.operation_type }}
+            </p>
+            <p>
+                Valor: {{ s.val.name }}
+            </p>
+            <p>
+                Cantidad({{ s.quantity_type }}): {{ s.quantity }}
+            </p>
+            <p>
+                Creado: {{ s.time_created }}
+            </p>
+            <p>
+                Esta activada: {{ s.is_active }}
+            </p>
+            <br>
+        {% endfor %}
+    </div>
+
+{% endblock %}

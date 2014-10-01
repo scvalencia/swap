@@ -2,6 +2,28 @@
 
 {% block content %}
 
-    <h2>Nueva solicitud</h2>
+    <div id='new_new_solicitude'>
+        <form method='post'>
+            <input type='text' name='pk_id' placeholder='pk' value='{{ pk_id }}'>
+            <br>
+            <label for='1'>Comprar</label>
+            <input type='radio' name='operation_type' value='1' checked='checked'>
+            <br>
+            <label for='2'>Vender</label>
+            <input type='radio' name='operation_type' value='2'>
+            <br>
+            <input type='text' name='val' placeholder='ID Valor' value='{{ val }}'>
+            <br>
+            <input type='text' name='quantity' value='{{ quantity }}'>
+            <br>
+            <label for='1'>Pesos</label>
+            <input type='radio' name='quantity_type' value='1' checked='checked'>
+            <br>
+            <label for='2'>Unidades</label>
+            <input type='radio' name='quantity_type' value='2'>
+            <input type='submit' value='Crear solicitud!'>
+            <p>{{ message }}</p>
+        </form>
+    </div>
 
 {% endblock %}
