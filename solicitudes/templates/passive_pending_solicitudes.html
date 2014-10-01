@@ -4,6 +4,7 @@
 
     <div id='all_pending_passive_solicitudes'>
         <form method='post'>
+        {% csrf_token %}
         {% for s in solicitudes %}
             <p>
                 Solicitud con PK_ID #: {{ s.pk_id }}

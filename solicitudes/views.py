@@ -15,8 +15,8 @@ from vals import val
 
 def new_solicitude(request):
     '''Returns the respective response to the new_solicitude url call.'''
-    username = check_username(request)
-    if not username:
+    username, user_type = check_username(request)
+    if not username or user_type != 1:
         return redirect('/users/home/')
     params = {
         'pk_id': '',
@@ -38,8 +38,8 @@ def new_solicitude(request):
 
 def active_solicitudes(request):
     '''Returns the respective response to the active_solicitudes url call.'''
-    username = check_username(request)
-    if not username:
+    username, user_type = check_username(request)
+    if not username or user_type != 1:
         return redirect('/users/home/')
     solicitudes = get_active_solicitudes(username)
     params = {
@@ -52,8 +52,8 @@ def active_solicitudes(request):
 
 def passive_pending_solicitudes(request):
     '''Returns the respective response to the passive_pending_solicitudes url call.'''
-    username = check_username(request)
-    if not username:
+    username, user_type = check_username(request)
+    if not username or user_type != 2:
         return redirect('/users/home/')
     params = {
         'solicitudes': [],
@@ -73,8 +73,8 @@ def passive_pending_solicitudes(request):
 
 def passive_solicitudes(request):
     '''Returns the respective response to the passive_pending_solicitudes url call.'''
-    username = check_username(request)
-    if not username:
+    username, user_type = check_username(request)
+    if not username or user_type != 2:
         return redirect('/users/home/')
     solicitudes = get_passive_solicitudes(username)
     params = {
@@ -103,6 +103,10 @@ def check_username(request):
     else:
         return None
 
+def is_valid_new_solicitude(form_data):
+    # TODO jcbages
+    return True
+
 def is_valid_pending_solicitudes(form_data):
     # TODO jcbages
     return True, ''
@@ -112,6 +116,15 @@ def is_valid_pending_solicitudes(form_data):
 ################### LOW LEVEL AUX FUNCTIONS ####################
 ################################################################
 
+
+def insert_solicitude(username, operation_type, val, quantity, quantity_type):
+    # TODO scvalencia
+    # Necesito que inserte la nueva solicitud a la tabla, en caso
+    # de problemas como por ejemplo una PK duplicada, retornaria 
+    # False y un mensaje de error, si todo sale bien, retorne 
+    # True y mensaje de error vacio.
+    boolean, error = True, ''
+    return boolean, error
 
 def get_active_solicitudes(username):
     # TODO scvalencia

@@ -3,12 +3,12 @@
 {% block content %}
 
     <div id='new_new_solicitude'>
+        <h2>Nueva solicitud</h2>
         <form method='post'>
-            <input type='text' name='pk_id' placeholder='pk' value='{{ pk_id }}'>
-            <br>
+            {% csrf_token %}
             <label for='1'>Comprar</label>
             <input type='radio' name='operation_type' value='1' checked='checked'>
-            <br>
+            <label>|</label>
             <label for='2'>Vender</label>
             <input type='radio' name='operation_type' value='2'>
             <br>
@@ -18,7 +18,7 @@
             <br>
             <label for='1'>Pesos</label>
             <input type='radio' name='quantity_type' value='1' checked='checked'>
-            <br>
+            <label>|</label>
             <label for='2'>Unidades</label>
             <input type='radio' name='quantity_type' value='2'>
             <br>

@@ -15,10 +15,7 @@ import random, string
 def login(request):
     '''Returns the respective response to the login url call.'''
     if request.method == 'POST':
-        valid, error = is_valid_login(request.POST)
-
-
-        
+        valid, error = is_valid_login(request.POST)        
         if valid:
 
             request.session['username'] = request.POST.get('username')

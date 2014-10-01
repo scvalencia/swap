@@ -3,6 +3,7 @@
 {% block content %}
 
     <div id='login_login'>
+        <h2>Iniciar sesion</h2>
         <form method='post'>
             {% csrf_token %}
             <input type='text' name='username' placeholder='Usuario' value='{{ username }}'>
