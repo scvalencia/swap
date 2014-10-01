@@ -3,7 +3,7 @@ from django.db import connection
 from django.shortcuts import render, redirect
 
 ######################## CUSTOM IMPORTS ########################
-import genericuser
+from genericusers.views import get_user
 import random, string
 
 
@@ -13,27 +13,27 @@ import random, string
 
 
 def new_solicitude(request):
-	'''Returns the respective response to the new_solicitude url call.'''
-	username = check_username(request)
-	if not username:
-		return redirect('/users/home/')
+    '''Returns the respective response to the new_solicitude url call.'''
+    username = check_username(request)
+    if not username:
+        return redirect('/users/home/')
     if request.method == 'POST':
-    	valid, error = is_valid_new_solicitude(request.POST)
-    	params = {
-    		#TODO insert post form inputs
-    		'message': error,
-    	}
-    	if valid:
-    		params = {
-    			#TODO insert blank form inputs
-    			'message': 'Tu solicitud fue creada satisfactoriamente!',
-    		}
-    	return render(request, 'new_solicitude.html', params)
+        valid, error = is_valid_new_solicitude(request.POST)
+        params = {
+            #TODO insert post form inputs
+            'message': error,
+        }
+        if valid:
+            params = {
+                #TODO insert blank form inputs
+                'message': 'Tu solicitud fue creada satisfactoriamente!',
+            }
+        return render(request, 'new_solicitude.html', params)
     else:
-    	params = {
-    		#TODO insert blank form inputs
-    	}
-    	return render(request, 'new_solicitude', params)
+        params = {
+            #TODO insert blank form inputs
+        }
+        return render(request, 'new_solicitude', params)
 
 def active_solicitudes(request):
     pass
@@ -54,16 +54,16 @@ def passive_solicitudes(request):
 
 
 def check_username(request):
-	username = request.session.get('username')
-	if username:
-		user = get_user(username)[0]
-		if user:
-			return username
-		else:
-			del request.session['username']
-			return None
-	else:
-		return None
+    username = request.session.get('username')
+    if username:
+        user = get_user(username)[0]
+        if user:
+            return username
+        else:
+            del request.session['username']
+            return None
+    else:
+        return None
 
 
 ################################################################
