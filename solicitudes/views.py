@@ -274,7 +274,7 @@ def get_passive_solicitudes(username):
         for i in lst:
             pk_id = i[0]
             operation_type = i[1]
-            val = i[2]
+            val = populate_value(i[2])
             quantity = i[3]
             quantity_type = i[4]
             time_created = i[5]
