@@ -151,7 +151,7 @@ def get_active_solicitudes(username):
     cursor = connection.cursor()
     ans = []
     query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s"
-    collection = cursor.execute(query, [username, "1"])
+    collection = cursor.execute(query, [username, "0"])
     print username, ('*' * 9), collection
     lst = [i for i in cursor.fetchall()]
     for itm in lst:
