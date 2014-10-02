@@ -6,7 +6,7 @@ def search(request):
 	pass
 	#TODO
 
-def get_all_vals(request):
+def get_all_vals():
 	# TODO scvalencia
 	# Necesito que retorne una lista de objetos de clase val
 	# con todos los valores de la tabla val.
@@ -16,7 +16,7 @@ def get_all_vals(request):
 	cursor.execute(query)
 	values = [itm for itm in cursor.fetchall()]
 	for itm in values:
-		pk = itm[0]
+		pk_id = itm[0]
 		name = itm[1]
 		price = itm[2]
 		quantity = itm[3]
