@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.bd import connection
+from django.db import connection
 import val
 
 def search(request):
