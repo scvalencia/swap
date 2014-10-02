@@ -173,7 +173,7 @@ def get_active_solicitudes(username):
     # la clase de solicitud.py.
     cursor = connection.cursor()
     ans = []
-    query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s"
+    query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s ORDER BY time_created DESC"
     collection = cursor.execute(query, [username, "0"])
     lst = [i for i in cursor.fetchall()]
     for itm in lst:
