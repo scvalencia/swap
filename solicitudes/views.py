@@ -42,7 +42,6 @@ def active_solicitudes(request):
     if not username or user_type != '1':
         return redirect('/users/home/')
     solicitudes = get_active_solicitudes(username)
-    print solicitudes
     params = {
         'solicitudes': solicitudes,
         'message': ''
@@ -137,8 +136,11 @@ def get_active_solicitudes(username):
     cursor = connection.cursor()
     ans = []
     query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s"
-    collection = cursor.execute(query, [username, "0"])
-    for itm in collection:
+    collection = cursor.execute(query, [username, "1"])
+    print username, ('*' * 9), collection
+    lst = [i for i in cursor.fetchall()]
+    for itm in lst:
+        print 'a'
         assert len(itm) == 9
         pk = itm[0]
         operation_type = itm[1]
@@ -155,7 +157,7 @@ def get_active_solicitudes(username):
         is_active = itm[8]        
         element = solicitude.Solicitude(pk, operation_type, value_object, quantity,
             quantity_type, time_created, active_login, solved, is_active)
-        ans.append(to_add)
+        ans.append(element)
 
     connection.close()
     return ans
