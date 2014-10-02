@@ -15,7 +15,12 @@
             <br>
             <label for='val'>ID Valor</label>
             <br>
-            <input type='text' name='val' value='{{ val }}'>
+            <select name='val'>
+                <option value='-1'>Ninguno</option>
+                {% for v in vals %}
+                <option value='{{ v.pk_id }}'>{{ v.name }}, {{ v.offerant }}</option>
+                {% endfor %}
+            </select>
             <br>
             <label for='quantity'>Cantidad</label>
             <br>

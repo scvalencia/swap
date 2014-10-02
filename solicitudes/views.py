@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from genericusers.views import get_user
 import solicitude
 from vals import val
+from vals.views import get_all_vals
 import random
 
 
@@ -19,9 +20,10 @@ def new_solicitude(request):
     username, user_type = check_username(request)
     if not username or user_type != '1':
         return redirect('/users/home/')
+    vals = get_all_vals()
     params = {
         'pk_id': '',
-        'val': '',
+        'vals': vals,
         'quantity': '',
         'message': '',
     }
@@ -31,7 +33,6 @@ def new_solicitude(request):
             params['message'] = 'Tu solicitud fue creada satisfactoriamente!'
         else:
             params['pk_id'] = request.POST.get('pk_id')
-            params['val'] = request.POST.get('val')
             params['quantity'] = request.POST.get('quantity')
             params['message'] = error
         return render(request, 'new_solicitude.html', params)
@@ -113,6 +114,8 @@ def is_valid_new_solicitude(username, form_data):
     if operation_type and val and quantity and quantity_type:
         if operation_type != '1' and operation_type != '2':
             return False, 'El tipo de operacion no es valido'
+        elif val == '-1':
+            return False, 'Debe seleccional algun valor'
         elif quantity_type != '1' and quantity_type != '2':
             return False, 'El tipo de cantidad no es valido'
         else:
