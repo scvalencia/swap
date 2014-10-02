@@ -144,7 +144,7 @@ def insert_solicitude(username, operation_type, val, quantity, quantity_type):
     pk = random.choice(range(5, 30000))
     is_invalid = True;
     while is_invalid:
-        cursor.execute("SELECT * FROM solicitud WHERE  pk_id = %s", [pk])
+        cursor.execute("SELECT * FROM solicitude WHERE  pk_id = %s", [pk])
         lst = [i for i in cursor.fetchall()]
         if len(lst) == 0:
             is_invalid = False 
