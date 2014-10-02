@@ -27,12 +27,13 @@ def new_solicitude(request):
     }
     if request.method == 'POST':
         valid, error = is_valid_new_solicitude(username, request.POST)
-        params['pk_id'] = request.POST.get('pk_id')
-        params['val'] = request.POST.get('val')
-        params['quantity'] = request.POST.get('quantity')
-        params['message'] = error
         if valid:
             params['message'] = 'Tu solicitud fue creada satisfactoriamente!'
+        else:
+            params['pk_id'] = request.POST.get('pk_id')
+            params['val'] = request.POST.get('val')
+            params['quantity'] = request.POST.get('quantity')
+            params['message'] = error
         return render(request, 'new_solicitude.html', params)
     else:
         return render(request, 'new_solicitude.html', params)
