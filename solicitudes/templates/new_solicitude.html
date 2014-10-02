@@ -6,22 +6,28 @@
         <h2>Nueva solicitud</h2>
         <form method='post'>
             {% csrf_token %}
-            <label for='1'>Comprar</label>
-            <input type='radio' name='operation_type' value='1' checked='checked'>
-            <label>|</label>
-            <label for='2'>Vender</label>
-            <input type='radio' name='operation_type' value='2'>
+            <label for='operation_type'>Tipo de solicitud</label>
             <br>
-            <input type='text' name='val' placeholder='ID Valor' value='{{ val }}'>
+            <select name='operation_type'>
+                <option value='1'>Comprar</option>
+                <option value='2'>Vender</option>
+            </select>
             <br>
-            <input type='text' name='quantity' placeholder='Cantidad' value='{{ quantity }}'>
+            <label for='val'>ID Valor</label>
             <br>
-            <label for='1'>Pesos</label>
-            <input type='radio' name='quantity_type' value='1' checked='checked'>
-            <label>|</label>
-            <label for='2'>Unidades</label>
-            <input type='radio' name='quantity_type' value='2'>
+            <input type='text' name='val' value='{{ val }}'>
             <br>
+            <label for='quantity'>Cantidad</label>
+            <br>
+            <input type='text' name='quantity' value='{{ quantity }}'>
+            <br>
+            <label for='quantity_type'>Tipo de unidad</label>
+            <br>
+            <select name='quantity_type'>
+                <option value='1'>Pesos</option>
+                <option value='2'>Unidades</option>
+            </select>
+            <br><br>
             <input type='submit' value='Crear solicitud!'>
             <p>{{ message }}</p>
         </form>
