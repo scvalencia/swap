@@ -13,7 +13,7 @@ CREATE TABLE genericuser (
 
 CREATE TABLE passive (
     login VARCHAR2(25) NOT NULL UNIQUE,
-    register VARCHAR(25) PRIMARY KEY,
+    reg_num VARCHAR(25) PRIMARY KEY,
     FOREIGN KEY (login)
     REFERENCES genericuser(login)
     ON DELETE CASCADE
@@ -51,7 +51,7 @@ CREATE TABLE solicitude (
     FOREIGN KEY (val)
     REFERENCES val(pk_id)
     ON DELETE CASCADE,
-    FOREIGN KEY (active_login)
+    aFOREIGN KEY (active_login)
     REFERENCES active(login)
     ON DELETE CASCADE
 );
