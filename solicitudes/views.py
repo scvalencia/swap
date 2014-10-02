@@ -220,8 +220,8 @@ def get_passive_pending_solicitudes(username):
     cursor = connection.cursor()
     query = ("SELECT DISTINCT * FROM solicitude INNER JOIN active ON "
              "active.login = solicitude.active_login "
-             "WHERE passive = %s")
-    cursor.execute(query, [username])
+             "WHERE passive = %s AND is_active = %s")
+    cursor.execute(query, [username, '0'])
     lst = [i for i in cursor.fetchall()]
     if len(lst) != 0:
         for i in lst:
