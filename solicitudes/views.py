@@ -280,4 +280,12 @@ def activate_pending_solicitudes(to_aprove):
     # es decir en verdadero, si todo sale bien retorne True
     # y el mensaje de error vacio, en caso de algun error,
     # retorne False y el mensaje de error correpondiente
+    cursor = connection.cursor()
+    for pk in to_aprove:
+        query = ("UPDATE solicitude "
+                 "SET is_Active = %s "
+                 "WHERE pk_id = %s")
+        lst = ['1', pk]
+        cursor.execute(query, lst)
+    connection.close()
     return True, ''
