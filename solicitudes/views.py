@@ -232,14 +232,21 @@ def get_passive_pending_solicitudes(username):
             parameters = [value]
             cursor.execute(query, parameters)
             dependant_values = [j for j in cursor.fetchall()]
-            print dependant_values
+            val_ = None
+            for dp_val in dependant_values:
+                val_id = dp_val[0]
+                name = dp_val[1]
+                price = dp_val[2]
+                quantity = dp_val[3]
+                offerant = dp_val[4]
+                val_ = val.Val(val_id, name, price, quantity, offerant)
             quantity = i[3]
             quantity_type = i[4]
             time_created = i[5]
             active_login = i[6]
             solved = i[7]
             is_active = i[8]
-            itm = solicitude.Solicitude(pk_id, operation_type, val, quantity, 
+            itm = solicitude.Solicitude(pk_id, operation_type, val_, quantity, 
                 quantity_type, time_created, active_login, solved, is_active)
             ans.append(itm)
     connection.close()             
