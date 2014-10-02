@@ -140,10 +140,6 @@ def is_valid_pending_solicitudes(form_data):
 
 def insert_solicitude(username, operation_type, val, quantity, quantity_type):
     flag, error_message = False, ''
-    # Necesito que inserte la nueva solicitud a la tabla, en caso
-    # de problemas como por ejemplo una PK duplicada, retornaria 
-    # False y un mensaje de error, si todo sale bien, retorne 
-    # True y mensaje de error vacio.
     cursor = connection.cursor()
     pk = random.choice(range(5, 30000))
     is_invalid = True;
@@ -211,11 +207,6 @@ def populate_value(value_tuple):
 
 
 def get_passive_pending_solicitudes(username):
-    # Necesito todas las solicitudes que han hecho los activos
-    # que tienen asignado a este pasivo y que ademas figuran
-    # como NOT IS ACTIVE,
-    # pero debe retornar un arreglo de objectos tipo solicitud
-    # osea usando la clase de solicitud.py.
     ans = []
     cursor = connection.cursor()
     query = ("SELECT DISTINCT * FROM solicitude INNER JOIN active ON "
@@ -255,14 +246,6 @@ def get_passive_pending_solicitudes(username):
     return ans
 
 def get_passive_solicitudes(username):
-    # TODO scvalencia
-    # Necesito todas las solicitudes han hecho los activos
-    # que tienen asignado a este pasivo y que ademas figuran
-    # como IS ACTIVE pues son las que ya estan activadas, por
-    # ende ademas deben aparecer como NOT SOLVED pues son las
-    # que queremos negociar por asi decirlo, pero debe retornar
-    # un arreglo de objectos tipo solicitud osea usando la
-    # clase de solicitud.py.
     ans = []
     cursor = connection.cursor()
     query = ("SELECT DISTINCT * FROM solicitude INNER JOIN active ON "
@@ -300,10 +283,6 @@ def activate_pending_solicitudes(to_aprove):
     # retorne False y el mensaje de error correpondiente
     cursor = connection.cursor()
     for pk in to_aprove:
-        query = ("UPDATE solicitude "
-                 "SET is_Active = %s "
-                 "WHERE pk_id = %s")
-        lst = ['1', pk]
-        cursor.execute(query, lst)
+        cursor.execute("UPDATE solicitude SET is_active = %s WHERE pk_id = %s", ['1', pk])
     connection.close()
     return True, ''
