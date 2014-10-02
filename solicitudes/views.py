@@ -250,6 +250,27 @@ def get_passive_solicitudes(username):
     # un arreglo de objectos tipo solicitud osea usando la
     # clase de solicitud.py.
     ans = []
+    cursor = connection.cursor()
+    query = ("SELECT DISTINCT * FROM solicitude INNER JOIN active ON "
+             "active.login = solicitude.active_login "
+             "WHERE passive = %s AND solved = %s AND is_active = %s")
+    cursor.execute(query, [username, '0', '1'])
+    lst = [i for i in cursor.fetchall()]
+    if len(lst) != 0:
+        for i in lst:
+            pk_id = i[0]
+            operation_type = i[1]
+            val = i[2]
+            quantity = i[3]
+            quantity_type = i[4]
+            time_created = i[5]
+            active_login = i[6]
+            solved = i[7]
+            is_active = i[8]
+            itm = solicitude.Solicitude(pk_id, operation_type, val, quantity, 
+                quantity_type, time_created, active_login, solved, is_active)
+            ans.append(itm)
+    connection.close()             
     return ans
 
 def activate_pending_solicitudes(to_aprove):
