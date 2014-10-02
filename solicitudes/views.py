@@ -166,11 +166,6 @@ def insert_solicitude(username, operation_type, val, quantity, quantity_type):
     return flag, error_message
 
 def get_active_solicitudes(username):
-    # Necesito todas las solicitudes que ha hecho este activo
-    # que figuran como NOT SOLVED porque si estan en SOLVED la
-    # idea es mostrarlas en la parte de transactions, pero debe
-    # retornar un arreglo de objectos tipo solicitud osea usando
-    # la clase de solicitud.py.
     cursor = connection.cursor()
     ans = []
     query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s ORDER BY time_created DESC"
