@@ -23,6 +23,9 @@
                 Creado: {{ s.time_created }}
             </p>
         {% endfor %}
+        {% if solicitudes %}
+            <input type='submit' value='Activar solicitudes!'>
+        {% endif %}
         <p>{{ message }}</p>
         </form>
     </div>
