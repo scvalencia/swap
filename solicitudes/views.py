@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from genericusers.views import get_user
 import solicitude
 from vals import val
+import random
 
 
 ################################################################
@@ -133,7 +134,6 @@ def is_valid_pending_solicitudes(form_data):
 
 
 def insert_solicitude(username, operation_type, val, quantity, quantity_type):
-    import random
     flag, error_message = False, ''
     # TODO scvalencia
     # Necesito que inserte la nueva solicitud a la tabla, en caso
