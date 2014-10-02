@@ -230,7 +230,7 @@ def get_passive_pending_solicitudes(username):
             value = i[2]
             query = "SELECT * FROM val WHERE pk_id = %s"
             parameters = [value]
-            cursor.execute(query, params)
+            cursor.execute(query, parameters)
             dependant_values = [j for j in cursor.fetchall()]
             print dependant_values
             quantity = i[3]
