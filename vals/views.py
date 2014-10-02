@@ -1,15 +1,33 @@
+######################## DJANGO IMPORTS ########################
 from django.shortcuts import render
 from django.db import connection
+
+######################## CUSTOM IMPORTS ########################
 import val
+
+
+################################################################
+######################## VIEW FUNCTIONS ########################
+################################################################
+
 
 def search(request):
 	pass
 	#TODO
 
+
+################################################################
+################## HIGH LEVEL AUX FUNCTIONS ####################
+################################################################
+
+
+
+################################################################
+################### LOW LEVEL AUX FUNCTIONS ####################
+################################################################
+
+
 def get_all_vals():
-	# TODO scvalencia
-	# Necesito que retorne una lista de objetos de clase val
-	# con todos los valores de la tabla val.
 	ans = []
 	cursor = connection.cursor()
 	query = "SELECT * FROM val"
@@ -24,6 +42,3 @@ def get_all_vals():
 		to_Add = val.Val(pk_id, name, price, quantity, offerant)
 		ans.append(to_Add)
 	return ans
-
-
-

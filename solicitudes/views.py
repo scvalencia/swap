@@ -70,6 +70,7 @@ def passive_pending_solicitudes(request):
             params['message'] = error
     pending_solicitudes = get_passive_pending_solicitudes(username)
     params['solicitudes'] = pending_solicitudes
+    print pending_solicitudes
     if len(pending_solicitudes) == 0:
         params['message'] = 'No tienes solicitudes pendientes!'
     return render(request, 'passive_pending_solicitudes.html', params)

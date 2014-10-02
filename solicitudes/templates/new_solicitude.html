@@ -12,7 +12,7 @@
                 <option value='1'>Comprar</option>
                 <option value='2'>Vender</option>
             </select>
-            <br>
+            <br><br>
             <label for='val'>Valor</label>
             <br>
             <select name='val'>
@@ -21,11 +21,11 @@
                 <option value='{{ v.pk_id }}'>{{ v.name }}, {{ v.offerant }}</option>
                 {% endfor %}
             </select>
-            <br>
+            <br><br>
             <label for='quantity'>Cantidad</label>
             <br>
             <input type='text' name='quantity' value='{{ quantity }}'>
-            <br>
+            <br><br>
             <label for='quantity_type'>Tipo de unidad</label>
             <br>
             <select name='quantity_type'>
