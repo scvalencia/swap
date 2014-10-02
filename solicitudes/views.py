@@ -274,14 +274,18 @@ def get_passive_solicitudes(username):
         for i in lst:
             pk_id = i[0]
             operation_type = i[1]
-            val = populate_value(i[2])
+            query = "SELECT * FROM val WHERE pk_id = %s"
+            parameters = [i[2]]
+            cursor.execute(query, parameters)
+            dependant_values = [j for j in cursor.fetchall()]
+            val_ = populate_value(dependant_values[0])
             quantity = i[3]
             quantity_type = i[4]
             time_created = i[5]
             active_login = i[6]
             solved = i[7]
             is_active = i[8]
-            itm = solicitude.Solicitude(pk_id, operation_type, val, quantity, 
+            itm = solicitude.Solicitude(pk_id, operation_type, val_, quantity, 
                 quantity_type, time_created, active_login, solved, is_active)
             ans.append(itm)
     connection.close()             
