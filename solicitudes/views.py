@@ -218,22 +218,22 @@ def get_passive_pending_solicitudes(username):
     # osea usando la clase de solicitud.py.
     ans = []
     cursor = connection.cursor()
-    query = ("SELECT * FROM solicitude INNER JOIN active ON "
-             "active.passive = solicitude.active_login "
+    query = ("SELECT DISTINCT * FROM solicitude INNER JOIN active ON "
+             "active.login = solicitude.active_login "
              "WHERE passive = %s")
     cursor.execute(query, [username])
     lst = [i for i in cursor.fetchall()]
     if len(lst) != 0:
         for i in lst:
-            pk_id = lst[0]
-            operation_type = lst[1]
-            val = lst[2]
-            quantity = last[3]
-            quantity_type = lst[4]
-            time_created = lst[5]
-            active_login = lst[6]
-            solved = lst[7]
-            is_active = lst[8]
+            pk_id = i[0]
+            operation_type = i[1]
+            val = i[2]
+            quantity = i[3]
+            quantity_type = i[4]
+            time_created = i[5]
+            active_login = i[6]
+            solved = i[7]
+            is_active = i[8]
             itm = solicitude.Solicitude(pk_id, operation_type, val, quantity, 
                 quantity_type, time_created, active_login, solved, is_active)
             ans.append(itm)
