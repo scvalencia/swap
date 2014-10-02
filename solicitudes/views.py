@@ -196,6 +196,7 @@ def get_active_solicitudes(username):
         ans.append(element)
 
     connection.close()
+    print ans
     return ans
 
 def populate_value(value_tuple):
