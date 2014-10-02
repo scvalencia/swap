@@ -227,7 +227,12 @@ def get_passive_pending_solicitudes(username):
         for i in lst:
             pk_id = i[0]
             operation_type = i[1]
-            val = i[2]
+            value = i[2]
+            query = "SELECT * FROM val WHERE pk_id = %s"
+            parameters = [value]
+            cursor.execute(query, params)
+            dependant_values = [j for j in cursor.fetchall()]
+            print dependant_values
             quantity = i[3]
             quantity_type = i[4]
             time_created = i[5]
