@@ -136,7 +136,6 @@ def is_valid_pending_solicitudes(form_data):
 
 def insert_solicitude(username, operation_type, val, quantity, quantity_type):
     flag, error_message = False, ''
-    # TODO scvalencia
     # Necesito que inserte la nueva solicitud a la tabla, en caso
     # de problemas como por ejemplo una PK duplicada, retornaria 
     # False y un mensaje de error, si todo sale bien, retorne 
@@ -167,7 +166,6 @@ def insert_solicitude(username, operation_type, val, quantity, quantity_type):
     return flag, error_message
 
 def get_active_solicitudes(username):
-    # TODO scvalencia
     # Necesito todas las solicitudes que ha hecho este activo
     # que figuran como NOT SOLVED porque si estan en SOLVED la
     # idea es mostrarlas en la parte de transactions, pero debe
@@ -177,7 +175,6 @@ def get_active_solicitudes(username):
     ans = []
     query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s"
     collection = cursor.execute(query, [username, "0"])
-    print username, ('*' * 9), collection
     lst = [i for i in cursor.fetchall()]
     for itm in lst:
         print 'a'
@@ -214,15 +211,34 @@ def populate_value(value_tuple):
 
 
 def get_passive_pending_solicitudes(username):
-    # TODO scvalencia
     # Necesito todas las solicitudes que han hecho los activos
     # que tienen asignado a este pasivo y que ademas figuran
-    # como NOT IS ACTIVE pues son las que los oferentes 
-    # hicieron al intermediario y este las tiene pendientes por
-    # activar, por ende ademas deben aparecer como NOT SOLVED,
+    # como NOT IS ACTIVE,
     # pero debe retornar un arreglo de objectos tipo solicitud
     # osea usando la clase de solicitud.py.
-    return []
+    ans = []
+    cursor = connection.cursor()
+    query = ("SELECT * FROM solicitude INNER JOIN active ON "
+             "active.passive = solicitude.active_login "
+             "WHERE passive = %s")
+    cursor.execute(query, [username])
+    lst = [i for i in cursor.fetchall()]
+    if len(lst) != 0:
+        for i in lst:
+            pk_id = lst[0]
+            operation_type = lst[1]
+            val = lst[2]
+            quantity = last[3]
+            quantity_type = lst[4]
+            time_created = lst[5]
+            active_login = lst[6]
+            solved = lst[7]
+            is_active = lst[8]
+            itm = solicitude.Solicitude(pk_id, operation_type, val, quantity, 
+                quantity_type, time_created, active_login, solved, is_active)
+            ans.append(itm)
+    connection.close()             
+    return ans
 
 def get_passive_solicitudes(username):
     # TODO scvalencia
@@ -233,7 +249,8 @@ def get_passive_solicitudes(username):
     # que queremos negociar por asi decirlo, pero debe retornar
     # un arreglo de objectos tipo solicitud osea usando la
     # clase de solicitud.py.
-    return []
+    ans = []
+    return ans
 
 def activate_pending_solicitudes(to_aprove):
     # TODO scvalencia
