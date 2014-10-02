@@ -232,7 +232,8 @@ def get_passive_pending_solicitudes(username):
             parameters = [value]
             cursor.execute(query, parameters)
             dependant_values = [j for j in cursor.fetchall()]
-            val_ = None
+            val_ = populate_value(dependant_values[0])
+            '''
             for dp_val in dependant_values:
                 val_id = dp_val[0]
                 name = dp_val[1]
@@ -240,6 +241,7 @@ def get_passive_pending_solicitudes(username):
                 quantity = dp_val[3]
                 offerant = dp_val[4]
                 val_ = val.Val(val_id, name, price, quantity, offerant)
+            '''
             quantity = i[3]
             quantity_type = i[4]
             time_created = i[5]
