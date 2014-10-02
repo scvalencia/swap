@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "genericusers/home.css" %}">
+
+{% endblock %}
+
 {% block content %}
 
     <div id='welcome_home'>
