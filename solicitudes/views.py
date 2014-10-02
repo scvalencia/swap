@@ -150,12 +150,20 @@ def insert_solicitude(username, operation_type, val, quantity, quantity_type):
             is_invalid = False 
         else:
              pk = random.choice(range(5, 30000))
-    default_value = '0'
-    params = [pk, operation_type, val, quantity, quantity_type, username, default_value, default_value]
-    query = "INSERT INTO solicitude VALUES (%s, %s, %s, %s, %s, Current_Timestamp, %s, %s, %s)"
-    cursor.execute(query, [pk, operation_type, val, quantity, quantity_type, username, default_value, default_value])
-    connection.close()
-    return True, ''
+    cursor.execute("SELECT * FROM val WHERE pk_id = %s", [val])
+    lst = [i for i in cursor.fetchall()]
+    if len(lst) == 0:
+        flag = False
+        error_message = 'El valor no existe'
+    else:
+        default_value = '0'
+        params = [pk, operation_type, val, quantity, quantity_type, username, default_value, default_value]
+        query = "INSERT INTO solicitude VALUES (%s, %s, %s, %s, %s, Current_Timestamp, %s, %s, %s)"
+        cursor.execute(query, [pk, operation_type, val, quantity, quantity_type, username, default_value, default_value])
+        connection.close()
+        flag = True
+        error_message = ''
+    return flag, error_message
 
 def get_active_solicitudes(username):
     # TODO scvalencia
