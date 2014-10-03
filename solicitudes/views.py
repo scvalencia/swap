@@ -124,6 +124,7 @@ def solicitude(request, sol_id):
 
 
 def check_username(request):
+    ''' Revisa la validez de un usuario '''
     username = request.session.get('username')
     if username:
         user, user_type = get_user(username)
@@ -136,6 +137,7 @@ def check_username(request):
         return None, '0'
 
 def is_valid_new_solicitude(username, form_data):
+    ''' Revisa la validez de una solicitud nueva '''
     operation_type = form_data.get('operation_type')
     val = form_data.get('val')
     quantity = form_data.get('quantity')
@@ -154,6 +156,7 @@ def is_valid_new_solicitude(username, form_data):
         return False, 'Todos los campos deben estar completos'
 
 def is_valid_pending_solicitudes(form_data):
+    ''' Revisa si es valida la seleccion '''
     to_aprove = form_data.getlist('to_aprove')
     if to_aprove and len(to_aprove) > 0:
         return activate_pending_solicitudes(to_aprove)
@@ -161,6 +164,7 @@ def is_valid_pending_solicitudes(form_data):
         return False, 'Debes seleccionar al menos una solicitud'
 
 def is_valid_cancel(form_data):
+    ''' Revisa la validez dela cancelacion '''
     to_cancel = form_data.getlist('to_cancel')
     if to_cancel and len(to_cancel) > 0:
         return cancel_pending_solicitude(to_cancel)
@@ -168,6 +172,7 @@ def is_valid_cancel(form_data):
         return False, 'Debes seleccionar al menos una solicitud'
 
 def is_valid_transaction(sol_id, form_data):
+    ''' Revisa la validez de la transaccion '''
     other_id = form_data.get('other_id')
     if sol_id and other_id:
         return create_transaction(sol_id, other_id)
@@ -183,6 +188,7 @@ def is_valid_transaction(sol_id, form_data):
 
 
 def insert_solicitude(username, operation_type, val, quantity, quantity_type):
+    ''' Inserta una nueva solicitud dados los parametros de insercion '''
     flag, error_message = False, ''
     cursor = connection.cursor()
     pk = random.choice(range(5, 30000))
@@ -210,6 +216,7 @@ def insert_solicitude(username, operation_type, val, quantity, quantity_type):
     return flag, error_message
 
 def get_active_solicitudes(username):
+    ''' Obtiene una lista de objetos solicitudo cuyo estado este activo '''
     cursor = connection.cursor()
     ans = []
     query = "SELECT * FROM solicitude WHERE active_login = %s AND solved = %s ORDER BY time_created DESC"
@@ -238,6 +245,7 @@ def get_active_solicitudes(username):
     return ans
 
 def populate_value(value_tuple):
+    ''' Crea un valor a partir de una tupla de una relacion '''
     ans = None
     pk_id = value_tuple[0]
     name = value_tuple[1]
@@ -248,6 +256,7 @@ def populate_value(value_tuple):
     return ans
 
 def get_passive_pending_solicitudes(username):
+    ''' Obtiene las solicitudes pendientes de un usuario intermediario '''
     ans = []
     cursor = connection.cursor()
     query = ("SELECT DISTINCT * FROM solicitude INNER JOIN active ON "
@@ -287,6 +296,7 @@ def get_passive_pending_solicitudes(username):
     return ans
 
 def get_passive_solicitudes(username):
+    ''' Obtiene todas las solicitudes de un intermediario '''
     ans = []
     cursor = connection.cursor()
     query = ("SELECT DISTINCT * FROM solicitude INNER JOIN active ON "
@@ -316,6 +326,7 @@ def get_passive_solicitudes(username):
     return ans
 
 def activate_pending_solicitudes(to_aprove):
+    ''' Activa las solicitudes pendientes, dada una lista de identificadores '''
     cursor = connection.cursor()
     for pk in to_aprove:
         cursor.execute("UPDATE solicitude SET is_active = %s WHERE pk_id = %s", ['1', pk])
@@ -379,6 +390,7 @@ def filter_values(value_type, rent_type, id_offerant, id_passive, id_active,
     return ans, 'Proceso exitoso'
 
 def cancel_pending_solicitude(to_remove):
+    ''' Cacela las solicitudes dada una lisa de identificadores de solicitudes '''
     cursor = connection.cursor()
     for pk in to_remove:
         query = "DELETE FROM solicitude WHERE (pk_id = %s AND solved = %s)"
@@ -388,6 +400,7 @@ def cancel_pending_solicitude(to_remove):
     return True, 'Solicitud cancelada'
 
 def create_transaction(sol_id, other_id):
+    ''' Crea una transaccion entre dos solicitudes '''
     # TODO scvalencia
     # Necesito que dados estos dos ids de solicitudes verifique
     # primero que ninguna este resuelta, luego de esto, si ambas
@@ -412,8 +425,8 @@ def create_transaction(sol_id, other_id):
         if first_state != '0' or secnd_state != '0':
             return False, 'Alguna de las transacciones ya fue resuelta'
         else:
-            minimum = lambda a, b : a if a[3] < b[3] else b
-            maximum = lambda a, b : b if a[3] < b[3] else a
+            minimum = lambda a, b : a if a[3] < b[3] else b # With minimum quantity
+            maximum = lambda a, b : b if a[3] < b[3] else a # With maximum quantity
             minimum_object = minimum(first_solicitude_tuple, secnd_solicitude_tuple)
             maximum_object = maximum(first_solicitude_tuple, secnd_solicitude_tuple)
             first_quant_type = first_solicitude_tuple[4]
@@ -421,23 +434,29 @@ def create_transaction(sol_id, other_id):
             if first_quant_type == secnd_solicitude_tuple:
                 final_quantity = maximum_object[3] - minimum_object[3]
                 query_1 = ("UPDATE solicitude "
-                           "SET solved = %s AND quantity = %s "
+                           "SET solved = %s, quantity = %s "
                            "WHERE pk_id = %s")
                 params_1 = ['1', final_quantity, maximum_object[0]]
                 query_2 = ("UPDATE solicitude "
-                           "SET solved = %s AND quantity = %s "
+                           "SET solved = %s, quantity = %s "
                            "WHERE pk_id = %s")
                 params_2 = ['0', 0, minimum_object[0]]
                 cursor.execute(query_1, params_1)
                 cursor.execute(query_2, params_2)
 
             else:
-                pass
-                # TODO (si el tipo es distinto)
+                standard_type_1 = standard_type(first_solicitude_tuple[4])
+                standard_type_2 = standard_type(secnd_solicitude_tuple[4])
+                # TODO (si el tipo es distinto, pasar todo a una estandar)
     connection.close()
     return True, 'Transaccion exitosa'
 
+def standard_type(sol_type):
+    # Must return quantity_type equivalence
+    pass
+
 def get_all_possible_transactions(solicitude_pk):
+    ''' Obtiene todas las solicitudes que pueden llegar a ser transacciones '''
     # TODO scvalencia
     # Necesito que dado el pk de una solicitud,
     # me regrese todas las solicitudes sin resolver
@@ -502,6 +521,7 @@ def get_all_possible_transactions(solicitude_pk):
     return ans, msg
 
 def get_solicitude(sol_id):
+    ''' Devuelve un objeto solicitud dado un identificador '''
     # TODO scvalencia
     # Igual que el get_user, necesito que compruebe si ese 
     # pk esta asignado a una solicitud, es decir, si esa 
@@ -529,3 +549,46 @@ def get_solicitude(sol_id):
         break   
 
     return True, sol_object, ""
+
+def get_best_values_date_range(date1, date2, sorting_criteria = 'DESC'):
+    ''' Obtiene una lista de valores transados en un rango de fecha '''
+    # date format : YYYY-MON-DD '2008-JUN-01'
+    objects = []
+    values_types = []
+    message = ''
+    ans = (objects, values_types, message)
+    cursor = connection.cursor()
+    # Possible bug, timestamp comparisson
+    query = ("SELECT val.pk_id, val.name, val.price, val.quantity, val.offerant, "
+             "val.rent_type, val.val_type, COUNT(val.pk_id) AS freq "
+             "FROM solicitude INNER JOIN val ON solicitude.val = val.pk_id "
+             "WHERE solicitude.time_created BETWEEN TO_DATE(%s, 'YYYY-MON-DD') "
+             "AND TO_DATE(%s, 'YYYY-MON-DD') "
+             "GROUP BY freq "
+             "ORDER BY val.val_type, val.name ")
+    query += sorting_criteria
+    parameters = [date1, date2]
+    cursor.execute(query, parameters)
+    ans = [i for i in cursor.fetchall()]
+    if len(ans) == 0:
+        objects = None
+        message = 'Lo sentimos, la busqueda no produjo resultados'
+    else:
+        for item in ans:
+            pk_id = item[0]
+            name = item[1]
+            price = item[2] 
+            quantity = item[3] 
+            offerant = item[4]
+            rent_type = item[5]
+            val_type = item[6]
+            to_add = val.Val(pk_id, name, price, quantity, offerant)
+
+            objects.append(to_add)
+            values_types.append(val_type)
+
+
+    ans = (objects, values_types, message)
+    return ans
+
+

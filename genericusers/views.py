@@ -254,4 +254,5 @@ def get_user(username):
     return ans, user_type # non-reacheable code!!!
 
 def get_user_type(username):
+    ''' Retorna el tipo del usuario '''
     return get_user(username)[1]

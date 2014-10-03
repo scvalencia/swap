@@ -1,9 +1,17 @@
 RFC1  --> Consultar valores filtrados por tipo valor, tipo rentabilidad, si hay solicitudes de esos valores, id oferente, id intermediario, id inversionista, ordenar respuesta segun intereses del usuario que consulta
+
 RFC2  --> Consultar operaciones usuario filtradas por tipo usuario, tipo transaccion, rango fechas, costo, mostrar fecha, producto, cantidad solicitada, y costo, ordenar respuestas segun intereses del usuario que consulta
+
 RFC3* --> Consultar los valores con mayor numero de transacciones realizadas en un rango de fechas, ordenar resultado por id del tipo de valos y nombre de valor
+
 RFC4* --> Obtener datos de intermediarios con el mayor numero de transacciones para un tipo de valor o un valor especificado
+
 DONE: RF8   --> Hacer solicitud
+
 DONE: RF9   --> Cancelar solicitud
+
 RF10  --> Realizar transaccion
+
 DONE: RNF1  --> Persistencia
+
 DONE: RNF2  --> Concurrencia
