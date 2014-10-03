@@ -463,9 +463,31 @@ def get_all_possible_transactions(solicitude_pk):
 
     return ans, msg
 
-
 def get_solicitude(sol_id):
     # TODO scvalencia
     # Igual que el get_user, necesito que compruebe si ese 
     # pk esta asignado a una solicitud, es decir, si esa 
     # solicitud existe
+    cursor = connection.cursor()
+    lst = [sol_id]
+    cursor.execute("SELECT * FROM solicitude WHERE pk_id = %s;", lst)
+    ans = [i for i in cursor.fetchall()]
+    if len(ans) == 0:
+        return False, None, 'No existen solicitudes con tal ID'
+    sol_object = None
+    for i in ans:
+        pk_id = i[0]
+        operation_type = i[1]
+        val = i[2]
+        quantity = i[3]
+        quantity_type = i[4] 
+        time_created = i[5] 
+        active_login = i[6] 
+        solved = i[7]
+        is_active = i[8]
+
+        sol_object = solicitude.Solicitude(pk_id, operation_type, val, 
+                quantity, quantity_type, time_created, active_login, solved, is_active)
+        break   
+
+    return True, sol_object, ""
