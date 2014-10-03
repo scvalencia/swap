@@ -13,7 +13,7 @@ CREATE TABLE genericuser (
 
 CREATE TABLE passive (
     login VARCHAR2(25) NOT NULL UNIQUE,
-    reg_num VARCHAR(25) PRIMARY KEY,
+    reg_numa VARCHAR(25) PRIMARY KEY,
     FOREIGN KEY (login)
     REFERENCES genericuser(login)
     ON DELETE CASCADE
@@ -35,7 +35,9 @@ CREATE TABLE val (
     name VARCHAR2(25) NOT NULL,
     price INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
-    offerant VARCHAR2(25) NOT NULL
+    offerant VARCHAR2(25) NOT NULL, 
+    rent_type VARCHAR2(25),
+    val_type VARCHAR2(25) 
 );
 
 CREATE TABLE solicitude (
@@ -51,8 +53,20 @@ CREATE TABLE solicitude (
     FOREIGN KEY (val)
     REFERENCES val(pk_id)
     ON DELETE CASCADE,
-    aFOREIGN KEY (active_login)
+    FOREIGN KEY (active_login)
     REFERENCES active(login)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE ownerval (
+    val INTEGER NOT NULL,
+    owner VARCHAR(25) NOT NULL,
+    PRIMARY KEY (val, owner)
+    FOREIGN KEY (val)
+    PREFERENCES val(pk_id)
+    ON DELETE CASCADE
+    FOREIGN KEY (owner)
+    PREFERENCES active(login)
     ON DELETE CASCADE
 );
 
