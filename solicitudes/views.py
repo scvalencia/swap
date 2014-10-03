@@ -140,8 +140,8 @@ def is_valid_pending_solicitudes(form_data):
 
 def is_valid_cancel(form_data):
     to_cancel = form_data.getlist('to_cancel')
-    if to_cancel and len(to_aprove) > 0:
-        return cancel_pending_solicitudes(to_cancel)
+    if to_cancel and len(to_cancel) > 0:
+        return cancel_pending_solicitude(to_cancel)
     else:
         return False, 'Debes seleccionar al menos una solicitud'
 
