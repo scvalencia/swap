@@ -63,6 +63,7 @@ def passive_pending_solicitudes(request):
         'message': '',
     }
     if request.method == 'POST':
+        print 'reqs', request.POST.getlist('to_aprove')
         valid, error = is_valid_pending_solicitudes(request.POST)
         if valid:
             params['message'] = 'Solicitudes activadas correctamente!'
@@ -70,7 +71,6 @@ def passive_pending_solicitudes(request):
             params['message'] = error
     pending_solicitudes = get_passive_pending_solicitudes(username)
     params['solicitudes'] = pending_solicitudes
-    print pending_solicitudes
     if len(pending_solicitudes) == 0:
         params['message'] = 'No tienes solicitudes pendientes!'
     return render(request, 'passive_pending_solicitudes.html', params)
@@ -126,7 +126,7 @@ def is_valid_new_solicitude(username, form_data):
         return False, 'Todos los campos deben estar completos'
 
 def is_valid_pending_solicitudes(form_data):
-    to_aprove = form_data.get('to_aprove')
+    to_aprove = form_data.getlist('to_aprove')
     if to_aprove and len(to_aprove) > 0:
         return activate_pending_solicitudes(to_aprove)
     else:
@@ -172,7 +172,6 @@ def get_active_solicitudes(username):
     collection = cursor.execute(query, [username, "0"])
     lst = [i for i in cursor.fetchall()]
     for itm in lst:
-        print 'a'
         assert len(itm) == 9
         pk = itm[0]
         operation_type = itm[1]
@@ -192,7 +191,6 @@ def get_active_solicitudes(username):
         ans.append(element)
 
     connection.close()
-    print ans
     return ans
 
 def populate_value(value_tuple):
