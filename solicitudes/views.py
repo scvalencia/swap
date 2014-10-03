@@ -355,6 +355,21 @@ def cancel_pending_solicitude(to_remove):
         lst = [pk, '0']
         cursor.execute(query, lst)
     connection.close()
+    return True, 'Solicitud cancelada'
+
+def create_transaction(transaction_pk):
+    cursor = connection.cursor()
+    query = "SELECT * FROM solicitude WHERE pk_id = %s"
+    cursor.execute(query, [transaction_pk])
+    result_set = [i for i in cursor.fetchall()]
+    if len(result_set) == 0:
+        return False, 'No existe tal solicitud'
+    else:
+        query = "UPDATE solicitude SET solved = %s WHERE pk_id = %s"
+        cursor.execute(query, ['1', transaction_pk])
+    connection.close()
+    return True, 'Transaccion exitosa'
+
 
 
 
