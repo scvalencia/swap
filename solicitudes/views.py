@@ -370,6 +370,11 @@ def create_transaction(transaction_pk):
     connection.close()
     return True, 'Transaccion exitosa'
 
-
-
-
+def get_all_possible_transactions(solicitude_pk):
+    # TODO scvalencia
+    # Necesito que dado el pk de una solicitud,
+    # me regrese todas las solicitudes sin resolver
+    # que tengan el tipo de operacion contrario al de la 
+    # solicitud que le di, tengan el mismo valor, y una
+    # cantidad mayor o igual de valores a la del a solicitud
+    # dada.

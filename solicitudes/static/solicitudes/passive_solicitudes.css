@@ -35,6 +35,14 @@ body {
     border-radius: 5px;
 }
 
+.passive_solicitude a {
+    color: white;
+}
+
+.passive_solicitude a:hover {
+    color: #444444;
+}
+
 #redirect_logout {
     width: 100%;
     float: left;

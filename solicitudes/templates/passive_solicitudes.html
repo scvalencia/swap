@@ -18,7 +18,7 @@
         {% for s in solicitudes %}
         <div class='passive_solicitude'>
             <p>
-                Solicitud #{{ s.pk_id }}
+                <a href={{ s.pk_id }}>Solicitud #{{ s.pk_id }}</a>
             </p>
             <p>
                 Tipo de operacion: {{ s.operation_type }}
