@@ -378,3 +378,60 @@ def get_all_possible_transactions(solicitude_pk):
     # solicitud que le di, tengan el mismo valor, y una
     # cantidad mayor o igual de valores a la del a solicitud
     # dada.
+    ans = []
+    cursor = connection.cursor()
+    query = "SELECT * FROM solicitude WHERE pk_id = %s"
+    cursor.execute(query, [transaction_pk])
+    result_set = [i for i in cursor.fetchall()]
+    current_solicitude = None
+    for i in result_set:
+        pk_id = i[0]
+        operation_type = i[1]
+        val = i[2]
+        quantity = i[3]
+        quantity_type = i[4]
+        time_created = i[5]
+        active_login = i[6]
+        solved = i[7]
+        is_active = i[8]
+        current_solicitude = solicitude.Solicitude(pk_id, operation_type, val, quantity,
+         quantity_type, time_created, active_login, solved, is_active)
+
+    # Sin resolver
+    current_operation_type = current_solicitude.operation_type
+    current_value = current_solicitude.val
+    current_quantity = current_solicitude.quantity
+
+    params = ['0', current_operation_type, current_value, current_quantity]
+    query = ("SELECT * FROM solicitude "
+             "WHERE (solved = %s AND operation_type <> %s AND val = %s AND quantity >= %s)")
+    cursor.execute(query, params)
+    result_solicitudes = [i for i in cursor.fetchall()]
+    if len(result_set) != 0:
+        for itm in result_set:
+            pk_id = itm[0] 
+            operation_type = itm[1]
+            val = itm[2] 
+            quantity = itm[3]
+            quantity_type = itm[4]
+            time_created = itm[5]
+            active_login = itm[6] 
+            solved = itm[7] 
+            is_active = itm[8]
+
+            solicitude_object = solicitude.Solicitude(pk_id, operation_type, val, 
+                quantity, quantity_type, time_created, active_login, solved, is_active)
+            ans.append(solicitude_object)
+
+
+    connection.close()
+    msg = ''
+    flag = len(ans) != 0
+    if flag:
+        msg = 'Transaccion exitosa'
+    else:
+        msg ='Error en transaccion'
+
+    return ans, msg
+
+
