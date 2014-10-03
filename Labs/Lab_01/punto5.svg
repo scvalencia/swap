@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg height="500" version="1.1" width="608" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#ffffff" height="139" stroke="#ffffff" stroke-width="1" width="136" x="434" y="14"/>
+<rect fill="none" height="139" stroke="#000000" stroke-width="1" width="136" x="434" y="14"/>
+<text font-family="Lucida Grande" font-size="13" x="492" y="28">
+Bar</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="136" x="434" y="38"/>
+<text font-family="Lucida Grande" font-size="13" x="438" y="53">
+ID : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="438" y="70">
+nombre : String</text>
+<text font-family="Lucida Grande" font-size="13" x="438" y="87">
+ciudad : String</text>
+<text font-family="Lucida Grande" font-size="13" x="438" y="104">
+presupuesto : String</text>
+<text font-family="Lucida Grande" font-size="13" x="438" y="121">
+cantSedes : Integer</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="136" x="434" y="131"/>
+<rect fill="#ffffff" height="122" stroke="#ffffff" stroke-width="1" width="137" x="42" y="14"/>
+<rect fill="none" height="122" stroke="#000000" stroke-width="1" width="137" x="42" y="14"/>
+<text font-family="Lucida Grande" font-size="13" x="85" y="28">
+Bebedor</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="137" x="42" y="38"/>
+<text font-family="Lucida Grande" font-size="13" x="46" y="53">
+ID : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="46" y="70">
+nombre : String</text>
+<text font-family="Lucida Grande" font-size="13" x="46" y="87">
+presupuesto : String</text>
+<text font-family="Lucida Grande" font-size="13" x="46" y="104">
+ciudad : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="137" x="42" y="114"/>
+<rect fill="#ffffff" height="122" stroke="#ffffff" stroke-width="1" width="141" x="42" y="230"/>
+<rect fill="none" height="122" stroke="#000000" stroke-width="1" width="141" x="42" y="230"/>
+<text font-family="Lucida Grande" font-size="13" x="92" y="244">
+Bebida</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="141" x="42" y="254"/>
+<text font-family="Lucida Grande" font-size="13" x="46" y="269">
+ID : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="46" y="286">
+nombre : String</text>
+<text font-family="Lucida Grande" font-size="13" x="46" y="303">
+gradAlcohol : Integer</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="141" x="42" y="321"/>
+<polyline fill="none" points="178,75 434,75" stroke="#333399" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="262" y="55">
+frecuenta</text>
+<text font-family="Lucida Grande" font-size="13" x="409" y="69">
+1..*</text>
+<ellipse cx="306" cy="73" fill="#000000" rx="0.5" ry="0.5" stroke="#000000" stroke-width="1"/>
+<ellipse cx="307" cy="74" fill="#ffffff" rx="-0.5" ry="-0.5" stroke="#ffffff" stroke-width="1"/>
+<polyline fill="none" points="106,230 106,135" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="15" y="188">
+gustan</text>
+<text font-family="Lucida Grande" font-size="13" x="78" y="213">
+1..*</text>
+<polyline fill="none" points="182,294 498,294 498,152" stroke="#000000" stroke-width="1"/>
+<text font-family="Lucida Grande" font-size="13" x="361" y="272">
+Sirven</text>
+<text font-family="Lucida Grande" font-size="13" x="186" y="289">
+1..*</text>
+<ellipse cx="411" cy="292" fill="#000000" rx="0.5" ry="0.5" stroke="#000000" stroke-width="1"/>
+<ellipse cx="412" cy="293" fill="#ffffff" rx="-0.5" ry="-0.5" stroke="#ffffff" stroke-width="1"/>
+<rect fill="#ffffff" height="88" stroke="#ffffff" stroke-width="1" width="131" x="42" y="398"/>
+<rect fill="none" height="88" stroke="#000000" stroke-width="1" width="131" x="42" y="398"/>
+<text font-family="Lucida Grande" font-size="13" x="73" y="412">
+TipoBebida</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="131" x="42" y="422"/>
+<text font-family="Lucida Grande" font-size="13" x="46" y="437">
+ID : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="46" y="454">
+tipo_bebida : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="131" x="42" y="464"/>
+<polyline fill="none" points="106,351 106,398" stroke="#000000" stroke-width="1"/>
+<rect fill="#ffffff" height="88" stroke="#ffffff" stroke-width="1" width="159" x="226" y="78"/>
+<rect fill="none" height="88" stroke="#000000" stroke-width="1" width="159" x="226" y="78"/>
+<text font-family="Lucida Grande" font-size="13" x="271" y="92">
+Frecuentan</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="159" x="226" y="102"/>
+<text font-family="Lucida Grande" font-size="13" x="230" y="117">
+horario : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="230" y="134">
+fechaUltimaVisita : Date</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="159" x="226" y="144"/>
+<rect fill="#ffffff" height="72" stroke="#ffffff" stroke-width="1" width="168" x="426" y="302"/>
+<rect fill="none" height="72" stroke="#000000" stroke-width="1" width="168" x="426" y="302"/>
+<text font-family="Lucida Grande" font-size="13" x="491" y="316">
+Sirven</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="168" x="426" y="326"/>
+<text font-family="Lucida Grande" font-size="13" x="430" y="341">
+horario : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="168" x="426" y="351"/>
+</svg>
