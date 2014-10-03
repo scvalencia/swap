@@ -273,14 +273,67 @@ def get_passive_solicitudes(username):
     return ans
 
 def activate_pending_solicitudes(to_aprove):
-    # TODO scvalencia
-    # Necesito que dado ese to_aprove que es un arreglo de
-    # pk_id de las solicitudes, les ponga IS ACTIVE en 1,
-    # es decir en verdadero, si todo sale bien retorne True
-    # y el mensaje de error vacio, en caso de algun error,
-    # retorne False y el mensaje de error correpondiente
     cursor = connection.cursor()
     for pk in to_aprove:
         cursor.execute("UPDATE solicitude SET is_active = %s WHERE pk_id = %s", ['1', pk])
     connection.close()
     return True, ''
+
+def filter_values(value_type, rent_type, id_offerant, id_passive, id_active, 
+    ordering_flag, active_solicitude = True, desc = True):
+    
+    '''
+    Consultar valores filtrados por tipo valor, tipo rentabilidad, 
+    si hay solicitudes de esos valores, id oferente, id intermediario, 
+    id inversionista, ordenar respuesta segun intereses del usuario que consulta
+    '''
+
+    ordering_parameters = ['name', 'price', 'quantity', 'offerant', 'rent_type', 'value_type']
+    sorting_parameters = ['ASC', 'DESC']
+
+    
+    cursor = connection.cursor()
+    general_query = ("SELECT DISTINCT pk_id, name, price, quantity, offerant, rent_type, val_type FROM "
+                     "      (SELECT * FROM ownerval INNER JOIN val ON val.pk_id = ownerval.val) owners "
+                     "  INNER JOIN "
+                     "      (SELECT * FROM active WHERE passive = %s) employees "
+                     "  ON owners.owner = employees.login "
+                     "WHERE "
+                     "  (val_type = %s OR rent_type = %s OR offerant = %s OR login = %s)"
+                     "ORDER BY "
+                    )
+    params = [id_passive, value_type, rent_type, id_offerant, id_active]
+    params = map(lambda a : "NULL" if a == None else a , params)
+    if ordering_flag not in ordering_parameters:
+        return [], 'Error en la solicitud'
+    else:
+        ans = []
+        general_query += ordering_flag + ' '
+        if desc:
+            general_query += sorting_parameters[1] #DESC
+        else:
+            general_query += sorting_parameters[0] #ASC
+        cursor.execute(general_query, params)
+        resulting_set = [i for i in cursor.fetchall()]
+        for value_ in resulting_set:
+            pk_id = value[0] 
+            name = value[1] 
+            price = value[2] 
+            quantity = value[3]
+            offerant = value[4]
+            value_object = val.Val(pk_id, name, price, quantity, offerant)
+            new_query = "SELECT * FROM solicitude WHERE val = %s AND is_Active = %s"
+            cursor.execute(new_query, [pk_id, '1'])
+            length = len([i for i in cursor.fetchall()])
+            if active_solicitude:
+                if length != 0:
+                    ans.append(value_object)
+            else:
+                if length == 0:
+                    ans.append(value_object)
+
+    connection.close()
+    return ans, 'Proceso exitoso'
+
+
+
