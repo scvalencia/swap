@@ -350,7 +350,7 @@ def filter_values(value_type, rent_type, id_offerant, id_passive, id_active,
 
 def cancel_pending_solicitude(to_remove):
     cursor = connection.cursor()
-    for pk in to_aprove:
+    for pk in to_remove:
         query = "DELETE FROM solicitude WHERE (pk_id = %s AND solved = %s)"
         lst = [pk, '0']
         cursor.execute(query, lst)
