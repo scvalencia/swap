@@ -399,14 +399,41 @@ def create_transaction(sol_id, other_id):
     # pues tiene que convertir de una unidad a otra con el costo del valor
     # regreseme true y mensaje vacio o false con mensaje de error.
     cursor = connection.cursor()
-    query = "SELECT * FROM solicitude WHERE pk_id = %s"
-    cursor.execute(query, [transaction_pk])
+    query = "SELECT * FROM solicitude WHERE pk_id = %s OR pk_id = %s"
+    cursor.execute(query, [sol_id, other_id])
     result_set = [i for i in cursor.fetchall()]
-    if len(result_set) == 0:
-        return False, 'No existe tal solicitud'
+    if len(result_set) != 2:
+        return False, 'No por lo menos alguna de las transacciones'
     else:
-        query = "UPDATE solicitude SET solved = %s WHERE pk_id = %s"
-        cursor.execute(query, ['1', transaction_pk])
+        first_solicitude_tuple = result_set[0]
+        secnd_solicitude_tuple = result_set[1]
+        first_state = first_solicitude_tuple[7]
+        secnd_state = secnd_solicitude_tuple[7]
+        if first_state != '0' or secnd_state != '0':
+            return False, 'Alguna de las transacciones ya fue resuelta'
+        else:
+            minimum = lambda a, b : a if a[3] < b[3] else b
+            maximum = lambda a, b : b if a[3] < b[3] else a
+            minimum_object = minimum(first_solicitude_tuple, secnd_solicitude_tuple)
+            maximum_object = maximum(first_solicitude_tuple, secnd_solicitude_tuple)
+            first_quant_type = first_solicitude_tuple[4]
+            secnd_quant_Type = secnd_solicitude_tuple[4]
+            if first_quant_type == secnd_solicitude_tuple:
+                final_quantity = maximum_object[3] - minimum_object[3]
+                query_1 = ("UPDATE solicitude "
+                           "SET solved = %s AND quantity = %s "
+                           "WHERE pk_id = %s")
+                params_1 = ['1', final_quantity, maximum_object[0]]
+                query_2 = ("UPDATE solicitude "
+                           "SET solved = %s AND quantity = %s "
+                           "WHERE pk_id = %s")
+                params_2 = ['0', 0, minimum_object[0]]
+                cursor.execute(query_1, params_1)
+                cursor.execute(query_2, params_2)
+
+            else:
+                pass
+                # TODO (si el tipo es distinto)
     connection.close()
     return True, 'Transaccion exitosa'
 
