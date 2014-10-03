@@ -44,11 +44,18 @@ def active_solicitudes(request):
     username, user_type = check_username(request)
     if not username or user_type != '1':
         return redirect('/users/home/')
-    solicitudes = get_active_solicitudes(username)
     params = {
-        'solicitudes': solicitudes,
+        'solicitudes': [],
         'message': ''
     }
+    if request.method == 'POST':
+        valid, error = is_valid_cancel(request.POST)
+        if valid:
+            params['message'] = 'Solicitudes canceladas correctamente'
+        else:
+            params['message'] = error
+    solicitudes = get_active_solicitudes(username)
+    params['solicitudes'] = solicitudes
     if len(solicitudes) == 0:
         params['message'] = 'Actualemente no tienes solicitudes, vuelve mas tarde!'
     return render(request, 'active_solicitudes.html', params)
@@ -63,7 +70,6 @@ def passive_pending_solicitudes(request):
         'message': '',
     }
     if request.method == 'POST':
-        print 'reqs', request.POST.getlist('to_aprove')
         valid, error = is_valid_pending_solicitudes(request.POST)
         if valid:
             params['message'] = 'Solicitudes activadas correctamente!'
@@ -129,6 +135,13 @@ def is_valid_pending_solicitudes(form_data):
     to_aprove = form_data.getlist('to_aprove')
     if to_aprove and len(to_aprove) > 0:
         return activate_pending_solicitudes(to_aprove)
+    else:
+        return False, 'Debes seleccionar al menos una solicitud'
+
+def is_valid_cancel(form_data):
+    to_cancel = form_data.getlist('to_cancel')
+    if to_cancel and len(to_aprove) > 0:
+        return cancel_pending_solicitudes(to_cancel)
     else:
         return False, 'Debes seleccionar al menos una solicitud'
 

@@ -35,6 +35,25 @@ body {
     border-radius: 5px;
 }
 
+#cancel_button {
+    padding: 5%;
+}
+
+#cancel_button input[type=submit] {
+    font-size: 1.2em;
+    text-decoration: none;
+    background: #69ACA5;
+    color: white;
+    padding: 2% 9%;
+    border: 2px solid #69ACA5;
+    border-radius: 5px;
+}
+
+#cancel_button input[type=submit]:hover {
+    background: #222222;
+    color: #69ACA5;
+}
+
 #redirect_logout {
     width: 100%;
     float: left;
