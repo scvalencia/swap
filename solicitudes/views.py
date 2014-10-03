@@ -411,6 +411,8 @@ def create_transaction(sol_id, other_id):
     # estar resuelta, tenga cuidado restar el ismo tipo de unidades, sino
     # pues tiene que convertir de una unidad a otra con el costo del valor
     # regreseme true y mensaje vacio o false con mensaje de error.
+    PESOS = '1'
+    UNIDADES = '2'
     cursor = connection.cursor()
     query = "SELECT * FROM solicitude WHERE pk_id = %s OR pk_id = %s"
     cursor.execute(query, [sol_id, other_id])
@@ -431,7 +433,7 @@ def create_transaction(sol_id, other_id):
             maximum_object = maximum(first_solicitude_tuple, secnd_solicitude_tuple)
             first_quant_type = first_solicitude_tuple[4]
             secnd_quant_Type = secnd_solicitude_tuple[4]
-            if first_quant_type == secnd_solicitude_tuple:
+            if first_quant_type == secnd_solicitude_tuple == PESOS:
                 final_quantity = maximum_object[3] - minimum_object[3]
                 query_1 = ("UPDATE solicitude "
                            "SET solved = %s, quantity = %s "
@@ -452,7 +454,8 @@ def create_transaction(sol_id, other_id):
     return True, 'Transaccion exitosa'
 
 def standard_type(sol_type):
-    # Must return quantity_type equivalence
+    PESOS = '1'
+    UNIDADES = '2'
     pass
 
 def get_all_possible_transactions(solicitude_pk):
@@ -504,10 +507,11 @@ def get_all_possible_transactions(solicitude_pk):
             active_login = itm[6] 
             solved = itm[7] 
             is_active = itm[8]
-
-            solicitude_object = Solicitude(pk_id, operation_type, val, 
-                quantity, quantity_type, time_created, active_login, solved, is_active)
-            ans.append(solicitude_object)
+            
+            if current_solicitude.active_login != active_login:
+                solicitude_object = Solicitude(pk_id, operation_type, val, 
+                    quantity, quantity_type, time_created, active_login, solved, is_active)
+                ans.append(solicitude_object)
 
 
     connection.close()
@@ -556,7 +560,6 @@ def get_best_values_date_range(date1, date2, sorting_criteria = 'DESC'):
     objects = []
     values_types = []
     message = ''
-    ans = (objects, values_types, message)
     cursor = connection.cursor()
     # Possible bug, timestamp comparisson
     query = ("SELECT val.pk_id, val.name, val.price, val.quantity, val.offerant, "
@@ -590,5 +593,34 @@ def get_best_values_date_range(date1, date2, sorting_criteria = 'DESC'):
 
     ans = (objects, values_types, message)
     return ans
+
+def best_employees(value_type, value_name):
+    objects = []
+    msg = ''
+    cursor = connection.cursor()
+    sell_query = ("SELECT DISTINCT pk_id, name, price, quantity, offerant, rent_type, val_type FROM "
+                     "      (SELECT * FROM ownerval INNER JOIN val ON val.pk_id = ownerval.val) owners "
+                     "  INNER JOIN "
+                     "      (SELECT * FROM active WHERE passive = %s) employees "
+                     "  ON owners.owner = employees.login "
+                     "WHERE "
+                     "  (val_type = %s OR rent_type = %s OR offerant = %s OR login = %s)"
+                     "ORDER BY "
+                 )
+
+    buy_query = ("SELECT DISTINCT pk_id, name, price, quantity, offerant, rent_type, val_type FROM "
+                     "      (SELECT * FROM ownerval INNER JOIN val ON val.pk_id = ownerval.val) owners "
+                     "  INNER JOIN "
+                     "      (SELECT * FROM active WHERE passive = %s) employees "
+                     "  ON owners.owner = employees.login "
+                     "WHERE "
+                     "  (val_type = %s OR rent_type = %s OR offerant = %s OR login = %s)"
+                     "ORDER BY "
+                 )
+
+    connection.close()
+    ans = (objects, msg)
+    return ans
+
 
 
