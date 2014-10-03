@@ -17,7 +17,7 @@ def search(request):
     #          active_solicitude = True, desc = True)
     '''Returns the respective response to the search url call.'''
     ordering_parameters = ['name', 'price', 'quantity', 'offerant', 'rent_type', 'value_type']
-    results = filter_values(None, None, None, 'lulu', 'wer', 'name',
+    results = filter_values('bono', 'renta', 'Pepsi', 'lulu', 'wer', 'name',
               active_solicitude = True, desc = True)
     params = { 'results': results }
     print results
@@ -88,7 +88,7 @@ def filter_values(value_type, rent_type, id_offerant, id_passive, id_active,
         cursor.execute(general_query, params)
         resulting_set = [i for i in cursor.fetchall()]
         print resulting_set
-        for value_ in resulting_set:
+        for value in resulting_set:
             pk_id = value[0] 
             name = value[1] 
             price = value[2] 
