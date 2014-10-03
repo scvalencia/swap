@@ -178,6 +178,7 @@ def register_user(username, password, user_type):
         # cursor.execute("START TRANSACTION")
         cursor.execute("INSERT INTO genericuser (login, password, time_created) VALUES (%s, %s, Current_Timestamp);", values)
         if user_type == '1':
+            print 'Active'
             cursor.execute("SELECT login, COUNT(login) AS freq FROM passive GROUP BY login")
             tuples = cursor.fetchall()
             minimum = min([freq for (login, freq) in tuples])
