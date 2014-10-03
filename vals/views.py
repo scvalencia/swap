@@ -65,7 +65,7 @@ def filter_values(value_type, rent_type, id_offerant, id_passive, id_active,
 
     
     cursor = connection.cursor()
-    general_query1 = ("SELECT DISTINCT pk_id, name, price, quantity, offerant, rent_type, val_type FROM "
+    general_query = ("SELECT DISTINCT pk_id, name, price, quantity, offerant, rent_type, val_type FROM "
                      "      (SELECT * FROM ownerval INNER JOIN val ON val.pk_id = ownerval.val) owners "
                      "  INNER JOIN "
                      "      (SELECT * FROM active WHERE passive = %s) employees "
@@ -74,7 +74,6 @@ def filter_values(value_type, rent_type, id_offerant, id_passive, id_active,
                      "  (val_type = %s OR rent_type = %s OR offerant = %s OR login = %s)"
                      "ORDER BY "
                     )
-    general_query = ("SELECT DISTINCT pk_id, name, price, quantity, offerant, rent_type, val_type FROM val")
     params = [id_passive, value_type, rent_type, id_offerant, id_active]
     params = map(lambda a : "NULL" if a == None else a , params)
     if ordering_flag not in ordering_parameters:
@@ -87,7 +86,6 @@ def filter_values(value_type, rent_type, id_offerant, id_passive, id_active,
         else:
             general_query += sorting_parameters[0] #ASC
         cursor.execute(general_query, params)
-        cursor.execute(general_query1)
         resulting_set = [i for i in cursor.fetchall()]
         print resulting_set
         for value_ in resulting_set:
