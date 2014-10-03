@@ -5,6 +5,8 @@ from django.db import connection
 ######################## CUSTOM IMPORTS ########################
 import val
 from genericusers.views import get_user
+from passives.passive import Passive
+from active.active import Active
 
 
 ################################################################
@@ -161,3 +163,43 @@ def filter_values(value_type, rent_type, id_offerant, id_passive, id_active,
 
     connection.close()
     return ans, 'Proceso exitoso'
+
+def get_passives():
+    ans = []
+    cursor = connection.cursor()
+    query = "SELECT * FROM passive"
+    cursor.execute(query)
+    result_set = [i for i in cursor.fechall()]
+    for itm in result_set:
+        login = itm[0]
+        register = itm[1]
+        obj = Passive(login, register)
+        ans.append(obj)
+    connection.close()
+    return ans
+
+
+def get_actives():
+    ans = []
+    cursor = connection.cursor()
+    query = "SELECT * FROM active"
+    cursor.execute(query)
+    result_set = [i for i in cursor.fechall()]
+    for itm in result_set:
+        login = itm[0]
+        passive = itm[1]
+        obj = Active(login, passive)
+        ans.append(obj)
+    connection.close()
+    return ans
+
+def get_offerants():
+    ans = []
+    cursor = connection.cursor()
+    query = "SELECT offerant FROM val"
+    cursor.execute(query)
+    result_set = [i for i in cursor.fechall()]
+    for itm in result_set:
+        ans.append(itm[0])
+    connection.close()
+    return ans

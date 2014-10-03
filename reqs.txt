@@ -1,4 +1,4 @@
-RFC1  --> Consultar valores filtrados por tipo valor, tipo rentabilidad, si hay solicitudes de esos valores, id oferente, id intermediario, id inversionista, ordenar respuesta segun intereses del usuario que consulta
+DONE: RFC1  --> Consultar valores filtrados por tipo valor, tipo rentabilidad, si hay solicitudes de esos valores, id oferente, id intermediario, id inversionista, ordenar respuesta segun intereses del usuario que consulta
 
 RFC2  --> Consultar operaciones usuario filtradas por tipo usuario, tipo transaccion, rango fechas, costo, mostrar fecha, producto, cantidad solicitada, y costo, ordenar respuestas segun intereses del usuario que consulta
 
