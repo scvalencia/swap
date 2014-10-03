@@ -121,6 +121,8 @@ def is_valid_signup(form_data):
     password = form_data.get('password')
     repeat_password = form_data.get('repeat_password')
     user_type = form_data.get('user_type')
+    print username, password, repeat_password, user_type
+    print username and password and repeat_password and user_type
     if username and password and repeat_password and user_type:
         if password != repeat_password:
             return False, 'Las claves deben coincidir.'
