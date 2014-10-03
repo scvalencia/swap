@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "genericusers/active_home.css" %}">
+
+{% endblock %}
+
 {% block content %}
 
     <div id='welcome_user_home'>
@@ -11,26 +18,27 @@
         <h2>
             Que te gustaria hacer?
         </h2>
+        <br>
         <a href='/solicitudes/new_solicitude/'>
             Crea una nueva solicitud!
         </a>
-        <br>
+        <br><br>
         <a href='/solicitudes/active_solicitudes/'>
             Mira todas tus solicitudes!
         </a>
-        <br>
+        <br><br>
         <a href='/swaptransactions/active_transactions/'>
             Mira todas tus transacciones!
         </a>
-        <br>
+        <br><br>
         <a href='/vals/search/'>
             Consulta los valores existentes en Swap!
         </a>
-        <br>
+        <br><br>
         <a href='/users/search/'>
             Consulta operaciones de otros usuarios en Swap!
         </a>
-        <br>
+        <br><br>
         <a href='/users/logout/'>
             Cierra tu sesion!
         </a>

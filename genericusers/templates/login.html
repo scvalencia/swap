@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "genericusers/login.css" %}">
+
+{% endblock %}
+
 {% block content %}
 
+    <div id='login_message'>
+        <h1>Iniciar sesion</h1>
+    </div>
     <div id='login_login'>
-        <h2>Iniciar sesion</h2>
         <form method='post'>
             {% csrf_token %}
             <label for='username'>Usuario</label>

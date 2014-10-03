@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "solicitudes/new_solicitude.css" %}">
+
+{% endblock %}
+
 {% block content %}
 
+    <div id='new_solicitude_message'>
+        <h1>
+            Nueva solicitud
+        </h1>
+    </div>
     <div id='new_new_solicitude'>
-        <h2>Nueva solicitud</h2>
         <form method='post'>
             {% csrf_token %}
             <label for='operation_type'>Tipo de solicitud</label>

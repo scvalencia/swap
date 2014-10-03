@@ -1,13 +1,26 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "solicitudes/passive_pending_solicitudes.css" %}">
+
+{% endblock %}
+
 {% block content %}
 
+    <div id='pending_passive_solicitudes_message'>
+        <h1>
+            Solicitudes pendientes por activar
+        </h1>
+    </div>
     <div id='all_pending_passive_solicitudes'>
         <form method='post'>
         {% csrf_token %}
         {% for s in solicitudes %}
+        <div class='pending_solicitude'>
             <p>
-                Solicitud con PK_ID #: {{ s.pk_id }}
+                Solicitud #{{ s.pk_id }}
                 <input type='checkbox' name='to_aprove' value='{{ s.pk_id }}'>
             </p>
             <p>
@@ -17,11 +30,12 @@
                 Valor: {{ s.val.name }}
             </p>
             <p>
-                Cantidad({{ s.quantity_type }}): {{ s.quantity }}
+                Cantidad: {{ s.quantity }} {{ s.quantity_type }}
             </p>
             <p>
                 Creado: {{ s.time_created }}
             </p>
+        </div>
         {% endfor %}
         {% if solicitudes %}
             <input type='submit' value='Activar solicitudes!'>
