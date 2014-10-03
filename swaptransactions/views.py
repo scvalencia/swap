@@ -17,7 +17,7 @@ def active_transactions(request):
     username, user_type = check_username(request)
     if not username or user_type != '1':
         return redirect('/users/home/')
-    transactions = get_active_transactions(username)
+    transactions, message = get_active_transactions(username)
     params = {
         'transactions': transactions,
         'message': ''

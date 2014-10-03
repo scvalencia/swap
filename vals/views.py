@@ -6,7 +6,7 @@ from django.db import connection
 import val
 from genericusers.views import get_user
 from passives.passive import Passive
-from active.active import Active
+from actives.active import Active
 
 
 ################################################################
@@ -18,10 +18,12 @@ def search(request):
     username, user_type = check_username(request)
     if not username or (user_type != '1' and user_type != '2'):
         return redirect('/users/home/')
+    offerants = get_offerants()
     passives = get_passives()
     actives = get_actives()
     ordering_parameters = ['name', 'price', 'quantity', 'offerant', 'rent_type', 'value_type']
     params = {
+        'offerants': offerants,
         'passives': passives,
         'actives': actives,
         'ordering_parameters': ordering_parameters,
@@ -29,9 +31,11 @@ def search(request):
         'message': '',
     }
     if request.method == 'POST':
-        request.POST['active_solicitude'] = False if '0' else True
-        request.POST['desc'] = False if '0' else True
-        results, error = is_valid_search(request.POST)
+        form_data = {}
+        for itm in request.POST: form_data[itm] = request.POST[itm]
+        form_data['active_solicitude'] = False if '0' else True
+        form_data['desc'] = False if '0' else True
+        results, error = is_valid_search(form_data)
         if results:
             params['results'] = results
         else:
@@ -64,13 +68,17 @@ def is_valid_search(form_data):
     search_params = [value_type, rent_type, id_offerant, id_passive,
                     id_active, ordering_flag, active_solicitude, desc]
     if (not_null(search_params)):
-        return filter_values(*search_params)
+        results, error = filter_values(*search_params)
+        if len(results) > 0:
+            return results, error
+        else:
+            return None, 'No hay resultados!'
     else:
-        return 'False', 'Todos los campos deben ser validos'
+        return None, 'Todos los campos deben ser validos!'
 
 def not_null(search_params):
     for itm in search_params:
-        if not itm:
+        if itm is None:
             return False
     return True
 
@@ -169,7 +177,7 @@ def get_passives():
     cursor = connection.cursor()
     query = "SELECT * FROM passive"
     cursor.execute(query)
-    result_set = [i for i in cursor.fechall()]
+    result_set = [i for i in cursor.fetchall()]
     for itm in result_set:
         login = itm[0]
         register = itm[1]
@@ -184,7 +192,7 @@ def get_actives():
     cursor = connection.cursor()
     query = "SELECT * FROM active"
     cursor.execute(query)
-    result_set = [i for i in cursor.fechall()]
+    result_set = [i for i in cursor.fetchall()]
     for itm in result_set:
         login = itm[0]
         passive = itm[1]
@@ -198,7 +206,7 @@ def get_offerants():
     cursor = connection.cursor()
     query = "SELECT offerant FROM val"
     cursor.execute(query)
-    result_set = [i for i in cursor.fechall()]
+    result_set = [i for i in cursor.fetchall()]
     for itm in result_set:
         ans.append(itm[0])
     connection.close()

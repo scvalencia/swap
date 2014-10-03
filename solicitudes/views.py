@@ -102,19 +102,19 @@ def solicitude(request, sol_id):
     if not username or user_type != '2' or not solicitude:
         return redirect('/users/home/')
     params = {
+        'solicitude': solicitude[1],
         'possible_transactions': [],
         'message': '',
     }
-    if request.method == 'POST':
-        valid, error = is_valid_transaction(sol_id, request.POST)
-        if valid:
-            params['message'] = 'Transaccion realizada correctamente'
-        else:
-            params['message'] = error
-    possible_transactions = get_all_possible_transactions(sol_id)
+    if request.method == 'POST' and request.POST.get('other_id'):
+            valid, error = is_valid_transaction(sol_id, request.POST)
+            if valid:
+                params['message'] = 'Transaccion realizada correctamente'
+            else:
+                params['message'] = error
+    possible_transactions, error = get_all_possible_transactions(sol_id)
     params['possible_transactions'] = possible_transactions
-    if len(possible_transactions) == 0:
-        params['message'] = 'No hay solicitudes negociables!'
+    params['message'] = error
     return render(request, 'solicitude.html', params)
 
 
@@ -174,7 +174,9 @@ def is_valid_cancel(form_data):
 def is_valid_transaction(sol_id, form_data):
     ''' Revisa la validez de la transaccion '''
     other_id = form_data.get('other_id')
-    if sol_id and other_id:
+    split = other_id.split('#')
+    if sol_id and other_id and len(split) > 1:
+        other_id = split[1]
         return create_transaction(sol_id, other_id)
     elif not other_id:
         return False, 'Debes seleccionar una solicitud'
@@ -320,7 +322,8 @@ def get_passive_solicitudes(username):
             solved = i[7]
             is_active = i[8]
             itm = Solicitude(pk_id, operation_type, val_, quantity, 
-                quantity_type, time_created, active_login, solved, is_active)
+                            quantity_type, time_created, active_login,
+                            solved, is_active)
             ans.append(itm)
     connection.close()             
     return ans
@@ -487,7 +490,7 @@ def get_all_possible_transactions(solicitude_pk):
         quantity_type, time_created, active_login, solved, is_active)
 
     # Sin resolver
-    current_operation_type = current_solicitude.operation_type
+    current_operation_type = '1' if current_solicitude.operation_type == 'Comprar' else '2'
     current_value = current_solicitude.val
     current_quantity = current_solicitude.quantity
 
@@ -496,8 +499,8 @@ def get_all_possible_transactions(solicitude_pk):
              "WHERE (solved = %s AND operation_type <> %s AND val = %s AND quantity >= %s)")
     cursor.execute(query, params)
     result_solicitudes = [i for i in cursor.fetchall()]
-    if len(result_set) != 0:
-        for itm in result_set:
+    if len(result_solicitudes) != 0:
+        for itm in result_solicitudes:
             pk_id = itm[0] 
             operation_type = itm[1]
             val = itm[2] 
@@ -508,6 +511,8 @@ def get_all_possible_transactions(solicitude_pk):
             solved = itm[7] 
             is_active = itm[8]
             
+            print current_solicitude.active_login
+            print active_login
             if current_solicitude.active_login != active_login:
                 solicitude_object = Solicitude(pk_id, operation_type, val, 
                     quantity, quantity_type, time_created, active_login, solved, is_active)
@@ -520,7 +525,7 @@ def get_all_possible_transactions(solicitude_pk):
     if flag:
         msg = 'Transaccion exitosa'
     else:
-        msg ='Error en transaccion'
+        msg ='No hay solicitudes para negociar!'
 
     return ans, msg
 
