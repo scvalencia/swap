@@ -95,6 +95,28 @@ def passive_solicitudes(request):
         params['message'] = 'No tienes solicitudes de tus activos!'
     return render(request, 'passive_solicitudes.html', params)
 
+def solicitude(request, sol_id):
+    '''Returns the respective response to the solicitude url call.'''
+    username, user_type = check_username(request)
+    solicitude = get_solicitude(sol_id)
+    if not username or user_type != '2' or not solicitude:
+        return redirect('/users/home/')
+    params = {
+        'possible_transactions': [],
+        'message': '',
+    }
+    if request.method == 'POST':
+        valid, error = is_valid_transaction(request.POST)
+        if valid:
+            params['message'] = 'Transaccion realizada correctamente'
+        else:
+            params['message'] = error
+    possible_transactions = get_all_possible_transactions(sol_id)
+    params['possible_transactions'] = possible_transactions
+    if len(possible_transactions) == 0:
+        params['message'] = 'No hay solicitudes negociables!'
+    return render(request, 'solicitude.html', params)
+
 
 ################################################################
 ################## HIGH LEVEL AUX FUNCTIONS ####################
@@ -144,6 +166,13 @@ def is_valid_cancel(form_data):
         return cancel_pending_solicitude(to_cancel)
     else:
         return False, 'Debes seleccionar al menos una solicitud'
+
+def is_valid_transaction(sol_id, form_data):
+    other_id = form_data.get('other_id')
+    if other_id:
+        return create_transaction(sol_id, other_id)
+    else:
+        return False, 'Debes seleccionar una solicitud'
 
 
 ################################################################
@@ -378,3 +407,9 @@ def get_all_possible_transactions(solicitude_pk):
     # solicitud que le di, tengan el mismo valor, y una
     # cantidad mayor o igual de valores a la del a solicitud
     # dada.
+
+def get_solicitude(sol_id):
+    # TODO scvalencia
+    # Igual que el get_user, necesito que compruebe si ese 
+    # pk esta asignado a una solicitud, es decir, si esa 
+    # solicitud existe
