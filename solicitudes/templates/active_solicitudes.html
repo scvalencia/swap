@@ -16,33 +16,37 @@
     </div>
     <div id='all_active_solicitudes'>
         <form method='post'>
-            {% for s in solicitudes %}
-            <div class='active_solicitude'>
-                <p>
-                    Solicitud #{{ s.pk_id }}
-                </p>
-                <p>
-                    Tipo de operacion: {{ s.operation_type }}
-                </p>
-                <p>
-                    Valor: {{ s.val.name }}, {{ s.val.offerant }}
-                </p>
-                <p>
-                    Cantidad: {{ s.quantity }} {{ s.quantity_type }}
-                </p>
-                <p>
-                    Creado: {{ s.time_created }}
-                </p>
-                <p>
-                    Esta activada: {{ s.is_active }}
-                </p>
-                <p>
-                    <label for='{{ s.pk_id }}'>Seleccionar</label>
-                    <input type='checkbox' name='to_aprove' value='{{ s.pk_id }}'>
-                </p>
-            </div>
-            {% endfor %}
+        {% csrf_token %}
+        {% for s in solicitudes %}
+        <div class='active_solicitude'>
+            <p>
+                Solicitud #{{ s.pk_id }}
+            </p>
+            <p>
+                Tipo de operacion: {{ s.operation_type }}
+            </p>
+            <p>
+                Valor: {{ s.val.name }}, {{ s.val.offerant }}
+            </p>
+            <p>
+                Cantidad: {{ s.quantity }} {{ s.quantity_type }}
+            </p>
+            <p>
+                Creado: {{ s.time_created }}
+            </p>
+            <p>
+                Esta activada: {{ s.is_active }}
+            </p>
+            <p>
+                <label for='{{ s.pk_id }}'>Seleccionar</label>
+                <input type='checkbox' name='to_cancel' value='{{ s.pk_id }}'>
+            </p>
+        </div>
+        {% endfor %}
+        <br>
+        <div id='cancel_button'>
             <input type='submit' value='Cancelar seleccionadas!'>
+        </div>
         </form>
         <p>{{ message }}</p>
     </div>
