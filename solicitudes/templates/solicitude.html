@@ -9,6 +9,14 @@
 
 {% block content %}
 
-<h1>yes</h1>
+	<div id='all_possible_transactions'>
+		{% for itm in possible_transactions %}
+		<div id='possible_transaction'>
+			<p>
+				{{ itm.pk_id }}
+			</p>
+		</div>
+		{% endfor %}
+	</div>
 
 {% endblock %}

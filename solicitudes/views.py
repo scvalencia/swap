@@ -106,7 +106,7 @@ def solicitude(request, sol_id):
         'message': '',
     }
     if request.method == 'POST':
-        valid, error = is_valid_transaction(request.POST)
+        valid, error = is_valid_transaction(sol_id, request.POST)
         if valid:
             params['message'] = 'Transaccion realizada correctamente'
         else:
@@ -169,10 +169,12 @@ def is_valid_cancel(form_data):
 
 def is_valid_transaction(sol_id, form_data):
     other_id = form_data.get('other_id')
-    if other_id:
+    if sol_id and other_id:
         return create_transaction(sol_id, other_id)
-    else:
+    elif not other_id:
         return False, 'Debes seleccionar una solicitud'
+    else:
+        return False, 'Solicitud no valida'
 
 
 ################################################################
@@ -244,7 +246,6 @@ def populate_value(value_tuple):
     offerant = value_tuple[4]
     ans = val.Val(pk_id, name, price, quantity, offerant)
     return ans
-
 
 def get_passive_pending_solicitudes(username):
     ans = []
@@ -386,7 +387,17 @@ def cancel_pending_solicitude(to_remove):
     connection.close()
     return True, 'Solicitud cancelada'
 
-def create_transaction(transaction_pk):
+def create_transaction(sol_id, other_id):
+    # TODO scvalencia
+    # Necesito que dados estos dos ids de solicitudes verifique
+    # primero que ninguna este resuelta, luego de esto, si ambas
+    # son validas, restele las unidades de la solicitud con menos
+    # unidades a la que tiene mayor numero de unidades y a la de menor
+    # dejela en 0, la o las solicitudes que queden en 0, marquelas como
+    # resueltas, mientras que si la otra no queda en 0 pues sigue sin
+    # estar resuelta, tenga cuidado restar el ismo tipo de unidades, sino
+    # pues tiene que convertir de una unidad a otra con el costo del valor
+    # regreseme true y mensaje vacio o false con mensaje de error.
     cursor = connection.cursor()
     query = "SELECT * FROM solicitude WHERE pk_id = %s"
     cursor.execute(query, [transaction_pk])
