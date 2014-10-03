@@ -484,7 +484,7 @@ def get_all_possible_transactions(solicitude_pk):
         solved = i[7]
         is_active = i[8]
         current_solicitude = Solicitude(pk_id, operation_type, val, quantity,
-         quantity_type, time_created, active_login, solved, is_active)
+        quantity_type, time_created, active_login, solved, is_active)
 
     # Sin resolver
     current_operation_type = current_solicitude.operation_type
