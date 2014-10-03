@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 
 ######################## CUSTOM IMPORTS ########################
 from genericusers.views import get_user
-import solicitude
+from solicitude import Solicitude
 from vals import val
 from vals.views import get_all_vals
 import random
@@ -228,7 +228,7 @@ def get_active_solicitudes(username):
         active_login = itm[6]
         solved = itm[7]
         is_active = itm[8]        
-        element = solicitude.Solicitude(pk, operation_type, value_object, quantity,
+        element = Solicitude(pk, operation_type, value_object, quantity,
             quantity_type, time_created, active_login, solved, is_active)
         ans.append(element)
 
@@ -279,7 +279,7 @@ def get_passive_pending_solicitudes(username):
             active_login = i[6]
             solved = i[7]
             is_active = i[8]
-            itm = solicitude.Solicitude(pk_id, operation_type, val_, quantity, 
+            itm = Solicitude(pk_id, operation_type, val_, quantity, 
                 quantity_type, time_created, active_login, solved, is_active)
             ans.append(itm)
     connection.close()             
@@ -308,7 +308,7 @@ def get_passive_solicitudes(username):
             active_login = i[6]
             solved = i[7]
             is_active = i[8]
-            itm = solicitude.Solicitude(pk_id, operation_type, val_, quantity, 
+            itm = Solicitude(pk_id, operation_type, val_, quantity, 
                 quantity_type, time_created, active_login, solved, is_active)
             ans.append(itm)
     connection.close()             
@@ -423,7 +423,7 @@ def get_all_possible_transactions(solicitude_pk):
         active_login = i[6]
         solved = i[7]
         is_active = i[8]
-        current_solicitude = solicitude.Solicitude(pk_id, operation_type, val, quantity,
+        current_solicitude = Solicitude(pk_id, operation_type, val, quantity,
          quantity_type, time_created, active_login, solved, is_active)
 
     # Sin resolver
@@ -448,7 +448,7 @@ def get_all_possible_transactions(solicitude_pk):
             solved = itm[7] 
             is_active = itm[8]
 
-            solicitude_object = solicitude.Solicitude(pk_id, operation_type, val, 
+            solicitude_object = Solicitude(pk_id, operation_type, val, 
                 quantity, quantity_type, time_created, active_login, solved, is_active)
             ans.append(solicitude_object)
 
@@ -486,7 +486,7 @@ def get_solicitude(sol_id):
         solved = i[7]
         is_active = i[8]
 
-        sol_object = solicitude.Solicitude(pk_id, operation_type, val, 
+        sol_object = Solicitude(pk_id, operation_type, val, 
                 quantity, quantity_type, time_created, active_login, solved, is_active)
         break   
 
