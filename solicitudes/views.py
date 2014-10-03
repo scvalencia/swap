@@ -410,7 +410,7 @@ def get_all_possible_transactions(solicitude_pk):
     ans = []
     cursor = connection.cursor()
     query = "SELECT * FROM solicitude WHERE pk_id = %s"
-    cursor.execute(query, [transaction_pk])
+    cursor.execute(query, [solicitude_pk])
     result_set = [i for i in cursor.fetchall()]
     current_solicitude = None
     for i in result_set:
