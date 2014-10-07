@@ -80,7 +80,7 @@ def main():
 				try:
 					cursor = connection.cursor()
 					if transact:
-						make_transaction(cursor, 132, 175, 67, 13, 14) # MODIFICAR ESTO
+						make_transaction(cursor, 143, 107, 237, 243, 35) # MODIFICAR ESTO
 					else:
 						
 						query = "SELECT * FROM Reservas"
