@@ -8,15 +8,44 @@
 {% endblock %}
 
 {% block content %}
-
-	<div id='all_possible_transactions'>
-		{% for itm in possible_transactions %}
-		<div id='possible_transaction'>
-			<p>
-				{{ itm.pk_id }}
-			</p>
-		</div>
-		{% endfor %}
+	<div id='solicitude_message'>
+		<h1>Solicitude #{{ solicitude.pk_id }}</h1>
 	</div>
+	<div id='all_possible_transactions'>
+		<form method='post'>
+			{% csrf_token %}
+			{% for s in possible_transactions %}
+			<div class='possible_transaction'>
+				<p>
+	                Solicitud #{{ s.pk_id }}</a>
+	            </p>
+	            <p>
+	                Tipo de operacion: {{ s.operation_type }}
+	            </p>
+	            <p>
+	                Valor: {{ s.val.name }}
+	            </p>
+	            <p>
+	                Cantidad: {{ s.quantity }} {{ s.quantity_type }}
+	            </p>
+	            <p>
+	                Creado: {{ s.time_created }}
+	            </p>
+				<p>
+					<div class='negociate_button'>
+						<input type='submit' name='other_id' value='Negociar #{{ itm.pk_id }}'>
+					</div>
+				</p>
+			</div>
+			{% endfor %}
+		</form>
+		<p>{{ message }}</p>
+	</div>
+	<div id='redirect_logout'>
+        <h3>
+            Si lo deseas, vuelve a las solicitudes de tus activos haciendo
+            <a href='/solicitudes/passive_solicitudes/'>click aqui!</a>
+        </h3>
+    </div>
 
 {% endblock %}

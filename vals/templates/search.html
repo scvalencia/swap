@@ -14,20 +14,29 @@
     </div>
     <div id='search_search'>
         <form method='post'>
+            {% csrf_token %}
             <label for='value_type'>Tipo de valor</label>
             <br>
             <select name='value_type'>
                 <option value='bono'>Bono</option>
                 <option value='accion'>Accion</option>
             </select>
-            <br>
+            <br><br>
             <label for='rent_type'>Tipo de renta</label>
             <br>
             <select name='rent_type'>
                 <option value='variable'>Variable</option>
                 <option value='fija'>Fija</option>
             </select>
+            <br><br>
+            <label for='id_offerant'>Oferente</label>
             <br>
+            <select name='id_offerant'>
+                {% for itm in offerants %}
+                <option value='{{ itm }}'>{{ itm }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
             <label for='id_passive'>Login pasivo</label>
             <br>
             <select name='id_passive'>
@@ -35,7 +44,7 @@
                 <option value='{{ itm.login }}'>{{ itm.login }}</option>
                 {% endfor %}
             </select>
-            <br>
+            <br><br>
             <label for='id_active'>Login activo</label>
             <br>
             <select name='id_active'>
@@ -43,7 +52,7 @@
                 <option value='{{ itm.login }}'>{{ itm.login }}</option>
                 {% endfor %}
             </select>
-            <br>
+            <br><br>
             <label for='ordering_flag'>Ordenamiento por</label>
             <br>
             <select name='ordering_flag'>
@@ -51,14 +60,14 @@
                 <option value='{{ itm }}'>{{ itm }}</option>
                 {% endfor %}
             </select>
-            <br>
+            <br><br>
             <label for='active_solicitude'>Tiene solicitudes activas</label>
             <br>
             <select name='active_solicitude'>
                 <option value='1'>Si</option>
                 <option value='0'>No</option>
             </select>
-            <br>
+            <br><br>
             <label for='desc'>Tipo de ordenamiento</label>
             <br>
             <select name='desc'>
@@ -75,6 +84,13 @@
             <p>{{ itm.name }}</p>
         </div>
         {% endfor %}
+        <p>{{ message }}</p>
+    </div>
+    <div id='redirect_logout'>
+        <h3>
+            Si lo deseas, vuelve al inicio haciendo
+            <a href='/users/home/'>click aqui!</a>
+        </h3>
     </div>
 
 {% endblock %}
