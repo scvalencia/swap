@@ -80,10 +80,19 @@ def main():
 				try:
 					cursor = connection.cursor()
 					if transact:
-						make_transaction(cursor, 143, 107, 237, 243, 35) # MODIFICAR ESTO
+						idReserva2 = 81
+						idCliente2 = 578
+						idFuncion1 = 67
+						idS1 = 13
+						idS2 = 14
+						sys.sleep(20)
+						make_transaction(cursor, idReserva2, idCliente2
+						, idFuncion1, idS1, idS2) # MODIFICAR ESTO
+						sys.sleep(20)
+						print 'Deadlock'
 					else:
 						
-						query = "SELECT * FROM Reservas"
+						query = "SELECT * FROM reservas"
 						params = []
 						if params == []:
 							cursor.execute(query)
@@ -94,7 +103,10 @@ def main():
 							print 'Empty relation'
 						else:
 							print 'Result'
-							for i in result_set: print i					
+							for i in result_set: print i
+				except Exception:
+					print 'Deadlock'
+
 				finally:
 					cursor.close()
 			finally:

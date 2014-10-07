@@ -622,5 +622,23 @@ def best_employees(value_type, value_name):
     ans = (objects, msg)
     return ans
 
+def test():
+    cursor = connection.cursor()
+    ans1 = "INSERT INTO solicitude VALUES (%s, %s, %s, %s, %s, Current_Timestamp, %s, %s, %s)"
+    p1 = [5476, '1', 2, 10, '1', 'wer', '0', '0']
+    ans2 = "INSERT INTO solicitude VALUES (%s, %s, %s, %s, %s, Current_Timestamp, %s, %s, %s)"
+    p2 = p1
+    try:
+        cursor.execute(ans1, p1)
+        print 'Insercion 1 exitosa'
+    except Exception, e:
+        print 'PK repetida'
+    try:
+        cursor.execute(ans2, p2)
+        print 'Insercion 2 exitosa'
+    except Exception, e:
+        print 'PK repetida ' + str(5476)
+    
+
 
 
