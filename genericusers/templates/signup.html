@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "genericusers/signup.css" %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <div id='signup_message'>
+        <h1>Registrar usuario</h1>
+    </div>
+    <div id='signup_signup'>
+        <form method='post'>
+            {% csrf_token %}
+            <label for='username'>Usuario</label>
+            <br>
+            <input type='text' name='username' value={{ username }}>
+            <br><br>
+            <label for='password'>Clave</label>
+            <br>
+            <input type='password' name='password' value=''>
+            <br><br>
+            <label for='repeat_password'>Repetir clave</label>
+            <br>
+            <input type='password' name='repeat_password' value=''>
+            <br><br>
+            <label for='user_type'>Tipo de usuario</label>
+            <br>
+            <select name='user_type'>
+                <option value='1'>Activo</option>
+                <option value='2'>Intermediario</option>
+            </select>
+            <br><br>
+            <input type='submit' value='Registrate ahora!'>
+            <br>
+            {{ error }}
+        </form>
+    </div>
+    <div id='redirect_logout'>
+        <h3>
+            Si lo deseas, vuelve al inicio haciendo
+            <a href='/users/home/'>click aqui!</a>
+        </h3>
+    </div>
+
+{% endblock %}

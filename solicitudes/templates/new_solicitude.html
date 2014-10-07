@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "solicitudes/new_solicitude.css" %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <div id='new_solicitude_message'>
+        <h1>
+            Nueva solicitud
+        </h1>
+    </div>
+    <div id='new_new_solicitude'>
+        <form method='post'>
+            {% csrf_token %}
+            <label for='operation_type'>Tipo de solicitud</label>
+            <br>
+            <select name='operation_type'>
+                <option value='1'>Comprar</option>
+                <option value='2'>Vender</option>
+            </select>
+            <br><br>
+            <label for='val'>Valor</label>
+            <br>
+            <select name='val'>
+                <option value='-1'>Ninguno</option>
+                {% for v in vals %}
+                <option value='{{ v.pk_id }}'>{{ v.name }}, {{ v.offerant }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <label for='quantity'>Cantidad</label>
+            <br>
+            <input type='text' name='quantity' value='{{ quantity }}'>
+            <br><br>
+            <label for='quantity_type'>Tipo de unidad</label>
+            <br>
+            <select name='quantity_type'>
+                <option value='1'>Pesos</option>
+                <option value='2'>Unidades</option>
+            </select>
+            <br><br>
+            <input type='submit' value='Crear solicitud!'>
+            <p>{{ message }}</p>
+        </form>
+    </div>
+    <div id='redirect_logout'>
+        <h3>
+            Si lo deseas, vuelve al inicio haciendo
+            <a href='/users/home/'>click aqui!</a>
+        </h3>
+    </div>
+
+{% endblock %}

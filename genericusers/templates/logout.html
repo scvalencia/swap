@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "genericusers/logout.css" %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <div id='goodbye_logout'>
+        <h1>
+            Adios{{ name }}, esperamos vuelvas pronto!
+        </h1>
+        <h2>
+            Por cierto, ten un dia increible :D !!!
+        </h2>
+    </div>
+    <div id='redirect_logout'>
+        <h3>
+            Si lo deseas, vuelve al inicio haciendo
+            <a href='/users/home/'>click aqui!</a>
+        </h3>
+    </div>
+
+{% endblock %}

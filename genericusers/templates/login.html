@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "genericusers/login.css" %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <div id='login_message'>
+        <h1>Iniciar sesion</h1>
+    </div>
+    <div id='login_login'>
+        <form method='post'>
+            {% csrf_token %}
+            <label for='username'>Usuario</label>
+            <br>
+            <input type='text' name='username' value='{{ username }}'>
+            <br><br>
+            <label for='password'>Clave</label>
+            <br>
+            <input type='password' name='password' value='{{ password }}'>
+            <br><br>
+            <input type='submit' value='Ingresar ahora!'>
+            <br>
+            <p>{{ error }}</p>
+        </form>
+    </div>
+    <div id='redirect_logout'>
+        <h3>
+            Si lo deseas, vuelve al inicio haciendo
+            <a href='/users/home/'>click aqui!</a>
+        </h3>
+    </div>
+
+{% endblock %}

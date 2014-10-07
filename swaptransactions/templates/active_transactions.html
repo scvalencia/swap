@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "swaptransactions/active_transactions.css" %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <div id='active_transactions_message'>
+        <h1>
+            Tus transacciones
+        </h1>
+    </div>
+    <div id='all_active_transactions'>
+        {% for t in transactions %}
+        <div class='active_transaction'>
+            <p>
+                Transaccion #{{ t.pk_id }}
+            </p>
+            <p>
+                Creado: {{ t.time_created }}
+            </p>
+            <div class='transaction_sell_solicitude'>
+            	<p>Pending to add</p>
+            </div>
+            <div class='transaction_buy_solicitude'>
+            	<p>Pending to add</p>
+            </div>
+        </div>
+        {% endfor %}
+        <br>
+        <p>{{ message }}</p>
+    </div>
+    <div id='redirect_logout'>
+        <h3>
+            Si lo deseas, vuelve al inicio haciendo
+            <a href='/users/home/'>click aqui!</a>
+        </h3>
+    </div>
+
+{% endblock %}
