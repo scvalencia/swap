@@ -1,0 +1,48 @@
+{% extends "util/base.html" %}
+
+{% block head %}
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "genericusers/css/userzone.css" %}">
+    <script src="{% static "genericusers/js/userzone.js" %}"></script>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid" ng-app="userzone">
+        <div class="row">
+            <div class="nav">
+                {% include "util/nav.html" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="banner" id="welcome">
+                {% include "genericusers/banner.html" %}
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="login" class="form" ng-controller="LoginController as loginCtrl">
+                        {% include "genericusers/login.html" %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="signup" class="form" ng-controller="SignupController as signupCtrl">
+                        {% include "genericusers/signup.html" %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <hr>
+            </div>
+            <div class="row">
+                <div class="footer">
+                    {% include "util/footer.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

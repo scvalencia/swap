@@ -1,0 +1,22 @@
+.banner {
+	background: #18BC9C;
+
+	border-bottom: 1px solid #07AB8B;
+}
+
+.banner span {
+	margin-right: 10px;
+}
+
+.banner h1 {
+    text-align: center;
+    color: black;
+    padding: 10% 10% 7% 10%;
+    color: #FFF;
+}
+
+.footer h4 {
+	text-align: center;
+	padding-top: 4%;
+	padding-bottom: 5%;
+}

@@ -1,0 +1,28 @@
+<h2>Si eres nuevo por aca, registrate ahora...</h2>
+<form name="signupForm" ng-submit="signupForm.$valid" novalidate>
+    <div class="form-group">
+        <label for="signupUser">Nombre de usuario</label>
+        <input type="text" class="form-control" id="signupUser" placeholder="Nombre de usuario" maxlength="15" required ng-model="signup.user">
+    </div>
+    <div class="form-group">
+        <label for="signupPassword">Contrasena</label>
+        <input type="password" class="form-control" id="signupPassword" placeholder="Contrasena" maxlength="15" required ng-model="signup.password">
+    </div>
+    <div class="form-group">
+        <label for="signupRepeatPassword">Repetir contrasena</label>
+        <input type="password" class="form-control" id="signupRepeatPassword" placeholder="Repetir contrasena" maxlength="15" required ng-model="signup.repeatPassword">
+    </div>
+    <div class="form-group">
+        <label for="signupUserType">Tipo de usuario</label>
+        <select class="form-control" id="signupUserType" ng-init="signup.userType = '1'" ng-model="signup.userType">
+            <option value="1">Inversionista</option>
+            <option value="2">Oferente</option>
+            <option value="3">Intermediario</option>
+        </select>
+    </div>
+    <div class="form-group" ng-show="signup.userType == '3'">
+        <label for="signupRegister">Numero de registro</label>
+        <input type="text" class="form-control" id="signupRegister" placeholder="Numero de registro" maxlength="25" ng-model="signup.register" ng-required="signup.userType == '3'">
+    </div>
+    <button ng-disabled="!signupForm.$valid" class="btn btn-default">Registrar usuario</button>
+</form>

@@ -1,0 +1,12 @@
+<h2>Si ya estas registrado, inicia sesion ahora...</h2>
+<form name="loginForm" ng-submit="loginForm.$valid" novalidate>
+    <div class="form-group">
+        <label for="loginUser">Nombre de usuario</label>
+        <input type="text" class="form-control" id="loginUser" placeholder="Nombre de usuario" maxlength="15" required ng-model="login.user">
+    </div>
+    <div class="form-group">
+        <label for="loginPassword">Contrasena</label>
+        <input type="password" class="form-control" id="loginPassword" placeholder="Contrasena" maxlength="15" required ng-model="login.password">
+    </div>
+    <button ng-disabled="!loginForm.$valid" class="btn btn-default">Ingresar ahora</button>
+</form>
