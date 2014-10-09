@@ -12,6 +12,11 @@ import random, string
 ################################################################
 
 
+def home(request):
+    '''Returns the respective response to the home url call.'''
+    return render(request, 'home.html')
+
+
 def login(request):
     '''Returns the respective response to the login url call.'''
     if request.method == 'POST':
@@ -79,7 +84,7 @@ def logout(request):
     }
     return render(request, 'logout.html', params)
 
-def home(request):
+def home_old(request):
     '''Returns the respective response to the home url call.'''
     username = request.session.get('username')
     if username:
