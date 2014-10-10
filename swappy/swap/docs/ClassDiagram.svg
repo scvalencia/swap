@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg height="1143" version="1.1" width="1572" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#ffffff" height="258" stroke="#ffffff" stroke-width="1" width="232" x="358" y="128"/>
+<rect fill="none" height="258" stroke="#000000" stroke-width="1" width="232" x="358" y="128"/>
+<text font-family="Lucida Grande" font-size="13" x="450" y="142">
+Usuario</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="232" x="358" y="152"/>
+<text font-family="Lucida Grande" font-size="13" x="362" y="167">
+login_PK : String</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="184">
+password : String</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="201">
+ID : BigInteger</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="218">
+name : String</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="235">
+pais : CodPais</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="252">
+contacto : String</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="269">
+dir_fisica : String</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="286">
+email : String</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="303">
+phone : BigInteger</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="320">
+ciudad : CodCiudad</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="337">
+depto : CodDepto</text>
+<text font-family="Lucida Grande" font-size="13" x="362" y="354">
+zipCode : Integer</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="232" x="358" y="364"/>
+<rect fill="#ffffff" height="190" stroke="#ffffff" stroke-width="1" width="168" x="758" y="136"/>
+<rect fill="none" height="190" stroke="#000000" stroke-width="1" width="168" x="758" y="136"/>
+<text font-family="Lucida Grande" font-size="13" x="826" y="150">
+Valor</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="168" x="758" y="160"/>
+<text font-family="Lucida Grande" font-size="13" x="762" y="175">
+ID_PK : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="762" y="192">
+name : String</text>
+<text font-family="Lucida Grande" font-size="13" x="762" y="209">
+descripcion : String</text>
+<text font-family="Lucida Grande" font-size="13" x="762" y="226">
+tipo : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="762" y="243">
+cantidad : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="762" y="260">
+disponibilidad : Boolean</text>
+<text font-family="Lucida Grande" font-size="13" x="762" y="277">
+precio : Double</text>
+<text font-family="Lucida Grande" font-size="13" x="762" y="294">
+tipoRentabilidad : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="168" x="758" y="304"/>
+<rect fill="#ffffff" height="92" stroke="#ffffff" stroke-width="1" width="178" x="734" y="448"/>
+<rect fill="none" height="92" stroke="#000000" stroke-width="1" width="178" x="734" y="448"/>
+<text font-family="Lucida Grande" font-size="13" x="803" y="462">
+Activo</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="178" x="734" y="472"/>
+<text font-family="Lucida Grande" font-size="13" x="738" y="487">
+dinero_disponible : Integer</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="178" x="734" y="497"/>
+<text font-family="Lucida Grande" font-size="13" x="738" y="512">
+R8()</text>
+<text font-family="Lucida Grande" font-size="13" x="738" y="529">
+R9()</text>
+<polyline fill="none" points="814,448 814,424 510,424 510,385" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="510,385 517,397 503,397" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="510,385 517,397 503,397" stroke="#000000" stroke-width="1"/>
+<rect fill="#ffffff" height="92" stroke="#ffffff" stroke-width="1" width="113" x="1118" y="600"/>
+<rect fill="none" height="92" stroke="#000000" stroke-width="1" width="113" x="1118" y="600"/>
+<text font-family="Lucida Grande" font-size="13" x="1147" y="614">
+Oferente</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="113" x="1118" y="624"/>
+<text font-family="Lucida Grande" font-size="13" x="1122" y="639">
+tipo : Integer</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="113" x="1118" y="649"/>
+<text font-family="Lucida Grande" font-size="13" x="1122" y="664">
+R1()</text>
+<text font-family="Lucida Grande" font-size="13" x="1122" y="681">
+R2()</text>
+<rect fill="#ffffff" height="71" stroke="#ffffff" stroke-width="1" width="143" x="542" y="568"/>
+<rect fill="none" height="71" stroke="#000000" stroke-width="1" width="143" x="542" y="568"/>
+<text font-family="Lucida Grande" font-size="13" x="588" y="582">
+Inversor</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="143" x="542" y="592"/>
+<text font-family="Lucida Grande" font-size="13" x="546" y="607">
+es_empresa : Boolean</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="143" x="542" y="617"/>
+<polyline fill="none" points="1142,600 1142,488 911,488" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="911,488 923,481 923,495" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="911,488 923,481 923,495" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="614,568 614,488 734,488" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="734,488 722,495 722,481" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="734,488 722,495 722,481" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="838,448 838,325" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="845" x2="838" y1="337" y2="325"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="831" x2="838" y1="337" y2="325"/>
+<text font-family="Lucida Grande" font-size="13" x="747" y="392">
+tipos_valor</text>
+<text font-family="Lucida Grande" font-size="13" x="810" y="352">
+1..*</text>
+<rect fill="#ffffff" height="156" stroke="#ffffff" stroke-width="1" width="210" x="70" y="352"/>
+<rect fill="none" height="156" stroke="#000000" stroke-width="1" width="210" x="70" y="352"/>
+<text font-family="Lucida Grande" font-size="13" x="147" y="366">
+Solicitud</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="210" x="70" y="376"/>
+<text font-family="Lucida Grande" font-size="13" x="74" y="391">
+tipo : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="74" y="408">
+monto : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="74" y="425">
+fecha : Date</text>
+<text font-family="Lucida Grande" font-size="13" x="74" y="442">
+total_a_gastar : Double</text>
+<text font-family="Lucida Grande" font-size="13" x="74" y="459">
+precio_min_IF_VENDER : Double</text>
+<text font-family="Lucida Grande" font-size="13" x="74" y="476">
+comprada : Boolean</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="210" x="70" y="486"/>
+<polyline fill="none" points="182,352 182,80 854,80 854,136" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="847" x2="854" y1="124" y2="136"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="861" x2="854" y1="124" y2="136"/>
+<text font-family="Lucida Grande" font-size="13" x="353" y="60">
+valor_a_comerciar</text>
+<rect fill="#ffffff" height="88" stroke="#ffffff" stroke-width="1" width="137" x="14" y="176"/>
+<rect fill="none" height="88" stroke="#000000" stroke-width="1" width="137" x="14" y="176"/>
+<text font-family="Lucida Grande" font-size="13" x="19" y="190">
+Representante_legal</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="137" x="14" y="200"/>
+<text font-family="Lucida Grande" font-size="13" x="18" y="215">
+name : String</text>
+<text font-family="Lucida Grande" font-size="13" x="18" y="232">
+ID : PK</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="137" x="14" y="242"/>
+<polyline fill="none" points="358,208 150,208" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="162" x2="150" y1="201" y2="208"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="162" x2="150" y1="215" y2="208"/>
+<text font-family="Lucida Grande" font-size="13" x="210" y="188">
+rep_legal</text>
+<rect fill="#ffffff" height="75" stroke="#ffffff" stroke-width="1" width="171" x="214" y="624"/>
+<rect fill="none" height="75" stroke="#000000" stroke-width="1" width="171" x="214" y="624"/>
+<text font-family="Lucida Grande" font-size="13" x="279" y="638">
+Pasivo</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="171" x="214" y="648"/>
+<text font-family="Lucida Grande" font-size="13" x="218" y="663">
+num_registro_PK : Integer</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="171" x="214" y="673"/>
+<text font-family="Lucida Grande" font-size="13" x="218" y="688">
+R7()</text>
+<polyline fill="none" points="286,624 286,552 422,552 422,385" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="422,385 429,397 415,397" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="422,385 429,397 415,397" stroke="#000000" stroke-width="1"/>
+<rect fill="#ffffff" height="68" stroke="#ffffff" stroke-width="1" width="94" x="254" y="752"/>
+<rect fill="none" height="68" stroke="#000000" stroke-width="1" width="94" x="254" y="752"/>
+<text font-family="Lucida Grande" font-size="13" x="259" y="766">
+Intermediario</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="94" x="254" y="776"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="94" x="254" y="797"/>
+<polyline fill="none" points="294,752 294,698" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="294,698 301,710 287,710" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="294,698 301,710 287,710" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="734,456 454,456 454,640 384,640" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="396" x2="384" y1="633" y2="640"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="396" x2="384" y1="647" y2="640"/>
+<text font-family="Lucida Grande" font-size="13" x="474" y="488">
+Intermediario</text>
+<polyline fill="none" points="384,672 510,672 510,520 734,520" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="722" x2="734" y1="527" y2="520"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="722" x2="734" y1="513" y2="520"/>
+<text font-family="Lucida Grande" font-size="13" x="453" y="649">
+clientes</text>
+<text font-family="Lucida Grande" font-size="13" x="708" y="515">
+1..*</text>
+<rect fill="#ffffff" height="71" stroke="#ffffff" stroke-width="1" width="113" x="326" y="920"/>
+<rect fill="none" height="71" stroke="#000000" stroke-width="1" width="113" x="326" y="920"/>
+<text font-family="Lucida Grande" font-size="13" x="344" y="934">
+Transaccion</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="113" x="326" y="944"/>
+<text font-family="Lucida Grande" font-size="13" x="330" y="959">
+date : Date</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="113" x="326" y="969"/>
+<polyline fill="none" points="862,539 862,576 710,576 710,688 606,688 606,944 438,944" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="450" x2="438" y1="937" y2="944"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="450" x2="438" y1="951" y2="944"/>
+<text font-family="Lucida Grande" font-size="13" x="524" y="788">
+transacciones</text>
+<text font-family="Lucida Grande" font-size="13" x="442" y="939">
+1..*</text>
+<polyline fill="none" points="374,698 374,920" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="367" x2="374" y1="908" y2="920"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="381" x2="374" y1="908" y2="920"/>
+<text font-family="Lucida Grande" font-size="13" x="216" y="888">
+transacciones_procesadas</text>
+<text font-family="Lucida Grande" font-size="13" x="380" y="903">
+1..*</text>
+<polyline fill="none" points="326,928 190,928 190,507" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="197" x2="190" y1="519" y2="507"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="183" x2="190" y1="519" y2="507"/>
+<text font-family="Lucida Grande" font-size="13" x="192" y="834">
+resuelta</text>
+<polyline fill="none" points="326,960 118,960 118,507" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="125" x2="118" y1="519" y2="507"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="111" x2="118" y1="519" y2="507"/>
+<text font-family="Lucida Grande" font-size="13" x="27" y="843">
+vendida</text>
+<polyline fill="none" points="238,507 238,560 790,560 790,539" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="797" x2="790" y1="551" y2="539"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="783" x2="790" y1="551" y2="539"/>
+<text font-family="Lucida Grande" font-size="13" x="654" y="555">
+solicitante</text>
+<polyline fill="none" points="782,448 782,408 279,408" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="291" x2="279" y1="401" y2="408"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="291" x2="279" y1="415" y2="408"/>
+<text font-family="Lucida Grande" font-size="13" x="316" y="423">
+ordenadas</text>
+<text font-family="Lucida Grande" font-size="13" x="283" y="403">
+1..*</text>
+<polyline fill="none" points="334,624 334,464 279,464" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="291" x2="279" y1="457" y2="464"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="291" x2="279" y1="471" y2="464"/>
+<text font-family="Lucida Grande" font-size="13" x="337" y="543">
+solicitudes</text>
+<text font-family="Lucida Grande" font-size="13" x="283" y="459">
+1..*</text>
+<polyline fill="none" points="214,507 214,592 262,592 262,624" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="255" x2="262" y1="612" y2="624"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="269" x2="262" y1="612" y2="624"/>
+<text font-family="Lucida Grande" font-size="13" x="223" y="580">
+intermediario</text>
+<rect fill="#ffffff" height="139" stroke="#ffffff" stroke-width="1" width="120" x="1406" y="152"/>
+<rect fill="none" height="139" stroke="#000000" stroke-width="1" width="120" x="1406" y="152"/>
+<text font-family="Lucida Grande" font-size="13" x="1443" y="166">
+Noticia</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="120" x="1406" y="176"/>
+<text font-family="Lucida Grande" font-size="13" x="1410" y="191">
+titulo : String</text>
+<text font-family="Lucida Grande" font-size="13" x="1410" y="208">
+contenido : String</text>
+<text font-family="Lucida Grande" font-size="13" x="1410" y="225">
+media : String</text>
+<text font-family="Lucida Grande" font-size="13" x="1410" y="242">
+fuente : String</text>
+<text font-family="Lucida Grande" font-size="13" x="1410" y="259">
+fecha : Date</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="120" x="1406" y="269"/>
+<rect fill="#ffffff" height="88" stroke="#ffffff" stroke-width="1" width="176" x="1382" y="392"/>
+<rect fill="none" height="88" stroke="#000000" stroke-width="1" width="176" x="1382" y="392"/>
+<text font-family="Lucida Grande" font-size="13" x="1439" y="406">
+Comment</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="176" x="1382" y="416"/>
+<text font-family="Lucida Grande" font-size="13" x="1386" y="431">
+contenido : String</text>
+<text font-family="Lucida Grande" font-size="13" x="1386" y="448">
+fecha : Date</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="176" x="1382" y="458"/>
+<polyline fill="none" points="1462,290 1462,392" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1455" x2="1462" y1="380" y2="392"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1469" x2="1462" y1="380" y2="392"/>
+<text font-family="Lucida Grande" font-size="13" x="1465" y="346">
+comentarios</text>
+<text font-family="Lucida Grande" font-size="13" x="1468" y="375">
+0..*</text>
+<polyline fill="none" points="1382,432 1022,432 1022,352 589,352" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="601" x2="589" y1="345" y2="352"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="601" x2="589" y1="359" y2="352"/>
+<text font-family="Lucida Grande" font-size="13" x="1070" y="426">
+autor</text>
+<text font-family="Lucida Grande" font-size="13" x="600" y="347">
+1</text>
+<rect fill="#ffffff" height="105" stroke="#ffffff" stroke-width="1" width="118" x="1230" y="192"/>
+<rect fill="none" height="105" stroke="#000000" stroke-width="1" width="118" x="1230" y="192"/>
+<text font-family="Lucida Grande" font-size="13" x="1253" y="206">
+Contraseña</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="118" x="1230" y="216"/>
+<text font-family="Lucida Grande" font-size="13" x="1234" y="231">
+password : String</text>
+<text font-family="Lucida Grande" font-size="13" x="1234" y="248">
+pregunta : String</text>
+<text font-family="Lucida Grande" font-size="13" x="1234" y="265">
+respuesta : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="118" x="1230" y="275"/>
+<polyline fill="none" points="589,200 718,200 718,48 1286,48 1286,192" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1279" x2="1286" y1="180" y2="192"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1293" x2="1286" y1="180" y2="192"/>
+<rect fill="#ffffff" height="156" stroke="#ffffff" stroke-width="1" width="119" x="798" y="656"/>
+<rect fill="none" height="156" stroke="#000000" stroke-width="1" width="119" x="798" y="656"/>
+<text font-family="Lucida Grande" font-size="13" x="841" y="670">
+Perfil</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="119" x="798" y="680"/>
+<text font-family="Lucida Grande" font-size="13" x="802" y="695">
+status : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="802" y="712">
+biografia : String</text>
+<text font-family="Lucida Grande" font-size="13" x="802" y="729">
+avatar : String</text>
+<text font-family="Lucida Grande" font-size="13" x="802" y="746">
+currency : Integer</text>
+<text font-family="Lucida Grande" font-size="13" x="802" y="763">
+edad : String</text>
+<text font-family="Lucida Grande" font-size="13" x="802" y="780">
+last_active : Date</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="119" x="798" y="790"/>
+<rect fill="#ffffff" height="156" stroke="#ffffff" stroke-width="1" width="146" x="974" y="720"/>
+<rect fill="none" height="156" stroke="#000000" stroke-width="1" width="146" x="974" y="720"/>
+<text font-family="Lucida Grande" font-size="13" x="1016" y="734">
+Ubicacion</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="146" x="974" y="744"/>
+<text font-family="Lucida Grande" font-size="13" x="978" y="759">
+pais : String</text>
+<text font-family="Lucida Grande" font-size="13" x="978" y="776">
+ciudad : String</text>
+<text font-family="Lucida Grande" font-size="13" x="978" y="793">
+departamento : String</text>
+<text font-family="Lucida Grande" font-size="13" x="978" y="810">
+GMT : String</text>
+<text font-family="Lucida Grande" font-size="13" x="978" y="827">
+direccion : String</text>
+<text font-family="Lucida Grande" font-size="13" x="978" y="844">
+zip_code : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="146" x="974" y="854"/>
+<rect fill="#ffffff" height="88" stroke="#ffffff" stroke-width="1" width="114" x="998" y="888"/>
+<rect fill="none" height="88" stroke="#000000" stroke-width="1" width="114" x="998" y="888"/>
+<text font-family="Lucida Grande" font-size="13" x="1026" y="902">
+Contacto</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="114" x="998" y="912"/>
+<text font-family="Lucida Grande" font-size="13" x="1002" y="927">
+name : String</text>
+<text font-family="Lucida Grande" font-size="13" x="1002" y="944">
+link : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="114" x="998" y="954"/>
+<rect fill="#ffffff" height="105" stroke="#ffffff" stroke-width="1" width="134" x="982" y="1024"/>
+<rect fill="none" height="105" stroke="#000000" stroke-width="1" width="134" x="982" y="1024"/>
+<text font-family="Lucida Grande" font-size="13" x="1014" y="1038">
+Profesional</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="134" x="982" y="1048"/>
+<text font-family="Lucida Grande" font-size="13" x="986" y="1063">
+resume_PDF : String</text>
+<text font-family="Lucida Grande" font-size="13" x="986" y="1080">
+current_joc : String</text>
+<text font-family="Lucida Grande" font-size="13" x="986" y="1097">
+current_org : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="134" x="982" y="1107"/>
+<polyline fill="none" points="894,811 894,928 998,928" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="986" x2="998" y1="935" y2="928"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="986" x2="998" y1="921" y2="928"/>
+<text font-family="Lucida Grande" font-size="13" x="914" y="923">
+contactos</text>
+<text font-family="Lucida Grande" font-size="13" x="972" y="923">
+0..*</text>
+<polyline fill="none" points="916,739 974,739" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="962" x2="974" y1="746" y2="739"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="962" x2="974" y1="732" y2="739"/>
+<text font-family="Lucida Grande" font-size="13" x="901" y="719">
+ubicacion</text>
+<text font-family="Lucida Grande" font-size="13" x="955" y="734">
+1</text>
+<polyline fill="none" points="814,811 814,1072 982,1072" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="970" x2="982" y1="1079" y2="1072"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="970" x2="982" y1="1065" y2="1072"/>
+<text font-family="Lucida Grande" font-size="13" x="817" y="1030">
+profesional</text>
+<text font-family="Lucida Grande" font-size="13" x="963" y="1067">
+1</text>
+<polyline fill="none" points="470,385 470,752 798,752" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="786" x2="798" y1="759" y2="752"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="786" x2="798" y1="745" y2="752"/>
+<text font-family="Lucida Grande" font-size="13" x="474" y="737">
+pefil</text>
+<text font-family="Lucida Grande" font-size="13" x="779" y="747">
+1</text>
+<polyline fill="none" points="886,448 886,416 990,416 990,512 911,512" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="923" x2="911" y1="505" y2="512"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="923" x2="911" y1="519" y2="512"/>
+<text font-family="Lucida Grande" font-size="13" x="900" y="411">
+followers</text>
+<text font-family="Lucida Grande" font-size="13" x="915" y="507">
+0..*</text>
+<polyline fill="none" points="684,600 750,600 750,592 894,592 894,539" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="901" x2="894" y1="551" y2="539"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="887" x2="894" y1="551" y2="539"/>
+<text font-family="Lucida Grande" font-size="13" x="699" y="615">
+following</text>
+<text font-family="Lucida Grande" font-size="13" x="866" y="566">
+0..*</text>
+<polyline fill="none" points="854,325 854,448" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="847" x2="854" y1="436" y2="448"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="861" x2="854" y1="436" y2="448"/>
+<text font-family="Lucida Grande" font-size="13" x="886" y="342">
+Dueño</text>
+<text font-family="Lucida Grande" font-size="13" x="867" y="431">
+1</text>
+</svg>
