@@ -7,4 +7,5 @@ genericusers_urls = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^userzone/', 'genericusers.views.userzone', name='userzone'),
+    url(r'^api/auth/(?P<username>\w+)/', 'genericusers.api.auth', name='auth')
 )

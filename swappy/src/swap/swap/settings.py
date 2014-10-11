@@ -14,7 +14,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import User
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 SERVER = 'prod.oracle.virtual.uniandes.edu.co'
 PORT = '1531'
@@ -25,7 +25,7 @@ passwords = {'ISIS2304361420' : 'entrambac1ddf', 'ISIS2304031420' : 'ciertib4789
 
 current_user = None
 user_code = None
-user_flag = '36'
+user_flag = '03'
 
 if user_flag == '36':
     #Sebastián Valencia Calderón
@@ -63,9 +63,18 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'actives',
     'genericusers',
     'home',
+    'investors',
+    'news',
+    'offerants',
+    'passives',
+    'solicitudes',
+    'swapprofiles',
+    'swaptransactions',
     'util',
+    'vals',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,10 +124,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # Session config
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_COOKIE_HTTPONLY = True
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Allow all host headers
+
+ALLOWED_HOSTS = ['*']
