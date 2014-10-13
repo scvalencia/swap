@@ -1,3 +1,4 @@
+import cx_Oracle
 import time
 
 terms = ['ocaml', 'lisp', 'haskell', 'wall street', 'finances', 'colombia', 
@@ -30,7 +31,7 @@ class VimeoHelper(object):
 		return base
 
 	def process_query(self):
-		
+
 
 
 	def generate_solicitude(self):
@@ -43,7 +44,27 @@ class DBVideoHelper(object):
 	OAUTH_SIGNATURE = "HMAC-SHA1"
 	OAUTH_VERSION = "1.0"
 
-	def __init__(self, db_username, db_password):
+	def __init__(self, db_username, db_password, server, port, sid, production):
+		self.dsn_tns = cx_Oracle.makedsn(server, port, sid)
+		self.production = production
+		self.connection = None
+		self.cursor()
+			try:
+				self.connection = cx_Oracle.connect(db_username, db_password, self.dsn_tns)
+				try:
+					self.cursor = self.connection.cursor()
+					# PROCESS					
+				finally:
+					self.cursor.close()
+			finally:
+				if self.connection is not None:
+					if self.production:
+						self.connection.commit()
+					self.connection.close()
+		try:
+			self.connection = cx_Oracle.connect(db_username, db_password, self.dsn_tns)
+			self.cursor = self.connection.cursor()
+		e
 
 
 
