@@ -5,8 +5,13 @@ dj-database-url==0.3.0
 dj-static==0.0.6
 django-toolbelt==0.0.1
 gunicorn==19.1.1
+oauthlib==0.6.3
 psycopg2==2.5.4
 python-memcached==1.53
+requests==2.1.0
+requests-oauthlib==0.4.0
 static3==0.5.1
 tabulate==0.7.3
+twitter==1.15.0
+twython==3.1.2
 wsgiref==0.1.2
