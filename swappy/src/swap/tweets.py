@@ -21,13 +21,6 @@ def process_word(word, order = 2):
     if len(prefix) < order:
         prefix += (word,)
         return
-	if prefix in suffix_map:
-		suffix_map[prefix].append(word)
-	else:
-		suffix_map[prefix] = [word]
-
-
-
 
     try:
         suffix_map[prefix].append(word)
