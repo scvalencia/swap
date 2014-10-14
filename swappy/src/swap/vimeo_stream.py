@@ -8,14 +8,18 @@ terms = ['ocaml', 'lisp', 'haskell', 'wall street', 'finances', 'colombia',
 was_actioned = False
 videos_ids = []
 
+CONSUMER_KEY = "c1f5add1d34817a6775d10b3f6821268"	
+OAUTH_NONCE = "ee88b5bd5b8c1f65334f39d354642bce"
+OAUTH_SIGNATURE = "HMAC-SHA1"
+OAUTH_VERSION = "1.0"
+
 class VimeoHelper(object):
 	
-	def __init__(self, consumer_key, oauth_key, crypto, api_version, query):
+	def __init__(self, consumer_key, oauth_key, crypto, api_version):
 		self.consumer_key = consumer_key
 		self.nonce = oauth_key		
 		self.signature_method = crypto
 		self.version = api_version
-		self.query = query.split()
 		self.base = ''		
 
 	def generate_base(self):
@@ -25,18 +29,16 @@ class VimeoHelper(object):
 		self.base += self.nonce + "%26oauth_signature_method"
 		self.base += "%3D" + self.signature_method + "%26oauth_timestamp%3D"
 
-		#base += "1413237330%26oauth_version%3D"
-		#base += self.version + "%26query%3Dlogic%2520programming"
+	def process_query(self, query):
+		query = query.split()
+		query_base = "%26query%3D" + "%2520".join(query)
+		return (self.version + query_base)
 
-		return base
+	def generate_solicitude(self, query):
+		self.generate_base()
+		timestamp = str(int(time.time()))
+		self.base += timestamp + "%26oauth_version%3D" + self.process_query(query)
 
-	def process_query(self):
-
-
-
-	def generate_solicitude(self):
-		timestamp = int(time.time())
-		print timestamp
 
 class DBVideoHelper(object):
 	CONSUMER_KEY = "c1f5add1d34817a6775d10b3f6821268"	
@@ -48,23 +50,23 @@ class DBVideoHelper(object):
 		self.dsn_tns = cx_Oracle.makedsn(server, port, sid)
 		self.production = production
 		self.connection = None
-		self.cursor()
-			try:
-				self.connection = cx_Oracle.connect(db_username, db_password, self.dsn_tns)
-				try:
-					self.cursor = self.connection.cursor()
-					# PROCESS					
-				finally:
-					self.cursor.close()
-			finally:
-				if self.connection is not None:
-					if self.production:
-						self.connection.commit()
-					self.connection.close()
+		self.cursor = None
+		self.vimeo = VimeoHelper(self.CONSUMER_KEY, self.OAUTH_NONCE, 
+			self.OAUTH_SIGNATURE, self.OAUTH_VERSION)
 		try:
 			self.connection = cx_Oracle.connect(db_username, db_password, self.dsn_tns)
-			self.cursor = self.connection.cursor()
-		e
+			try:
+				self.cursor = self.connection.cursor()
+				# PROCESS					
+			finally:
+				self.cursor.close()
+		finally:
+			if self.connection is not None:
+				if self.production:
+					self.connection.commit()
+				self.connection.close()
+
+
 
 
 
@@ -84,6 +86,7 @@ def get_videos():
 
 CONSUMER_SIGNATURE = "HM0Mgax7ny8W3PBEHzYl0rmTB0E%3D"
 
-vimeo = VimeoHelper()
+vimeo = VimeoHelper(CONSUMER_KEY, OAUTH_NONCE, OAUTH_SIGNATURE, OAUTH_VERSION)
+vimeo.generate_solicitude("logic programming")
 #vimeo.generate_solicitude()
-print vimeo.generate_base()
+print vimeo.base
