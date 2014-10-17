@@ -3,15 +3,16 @@ import base64
 import urlfetch
 
 def get_access_token(cid, secret, api_url='https://api.vimeo.com/oauth/authorize/client'):
+
+    token = "OTM4YjEyNzM1YjYzZmU2ZGFiMzhmNDUxYjE1M2RhMDlkZmRmOGExNDozYTdiMmY4NTc5ZGNmZjdiYTNkN2JlYzI3NDAzOThiN2QwYTY4YWJl";
  
     encoded = base64.b64encode("%s:%s" % (cid, secret)) 
     payload = {
                 "grant_type": "client_credentials",
-                "scope": "public create"
             }
     headers = {
                 "Accept": "application/vnd.vimeo.*+json; version=3.0",
-                "Authorization": "basic %s" % encoded
+                "Authorization": "basic %s" % token
               }
     response = urlfetch.fetch(api_url,
                           method="POST",

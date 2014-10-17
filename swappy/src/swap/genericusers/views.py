@@ -1,5 +1,12 @@
 from django.shortcuts import render
+from django.views.generic import View
 
 
-def userzone(request):
-    return render(request, 'genericusers/userzone.html')
+class UserzoneView(View):
+    """
+    The view endpoint of the userzone url.
+    """
+    template_name = 'genericusers/userzone.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
