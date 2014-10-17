@@ -67,7 +67,7 @@ class ActiveDao(object):
     		self.cursor.execute(query, params)
     	else:
     		active_object = Active(user_login = arg_user_login, 
-    			available_money = arg_available_money)
+    			available_money = float(arg_available_money))
     		active_object.save()
 
     def create(self, active_object, test = False):
