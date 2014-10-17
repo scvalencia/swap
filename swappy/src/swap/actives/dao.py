@@ -10,8 +10,7 @@ class ActiveDao(object):
 
 	def process_row(self, result_set):
         user_login = result_set[0]
-        passive_register = result_set[1]
-        available_money = result_set[2]
+        available_money = result_set[1]
         active_object = ActiveDump(user_login, passive_register, available_money)
         return active_object
 
