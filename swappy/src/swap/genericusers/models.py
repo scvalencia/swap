@@ -26,7 +26,7 @@ class Legal(models.Model):
     """
     legal_id = models.CharField(max_length=20, primary_key=True)
     legal_name = models.CharField(max_length=20)
-    user_login = models.ForeignKey(GenericUser, related_name='Legal.user_login')
+    user_login = models.ForeignKey(GenericUser, related_name='Legal.user_login', db_column='user_login')
 
     class Meta:
         db_table = 'legals'
