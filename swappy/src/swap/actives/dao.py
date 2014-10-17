@@ -20,7 +20,7 @@ class ActiveDao(object):
     		objects = list(Active.objects.all())
     		result_set = [item for item in objects]
     		for itm in result_set:
-    			ans.append(itm)
+    			ans.append(self.process_active_object(itm))
     	return ans
 
     def find_by_login(self, login, test = False):
@@ -37,7 +37,7 @@ class ActiveDao(object):
     		objects = list(Active.objects.filter(user_login = login))
     		result_set = [item for item in objects]
     		for itm in result_set:
-    			ans.append(itm)
+    			ans.append(self.process_active_object(itm))
     	return ans
 
     def find_by_money(self, money, test = False):
@@ -54,7 +54,7 @@ class ActiveDao(object):
     		objects = list(Active.objects.filter(available_money = money))
     		result_set = [item for item in objects]
     		for itm in result_set:
-    			ans.append(itm)
+    			ans.append(self.process_active_object(itm))
     	return ans
 
     def insert(self, arg_user_login, arg_available_money, test = False):
