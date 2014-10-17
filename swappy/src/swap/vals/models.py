@@ -33,7 +33,6 @@ class Val(models.Model):
     val_type = models.CharField(max_length=1)
     amount = models.IntegerField()
     price = models.FloatField()
-    active_login = models.ForeignKey(Active, null=True, related_name='Val.active_login')
     rent_id = models.ForeignKey(Rent, related_name='Val.rent_id')
 
     class Meta:

@@ -70,6 +70,7 @@ INSTALLED_APPS = (
     'news',
     'offerants',
     'passives',
+    'portfolios',
     'solicitudes',
     'swaptransactions',
     'util',

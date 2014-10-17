@@ -4,10 +4,11 @@ from models import Active
 
 
 class ActiveDao(object):
-	
-	def __init__(self):
-		self.cursor = connection.cursor()
+    
+    def __init__(self):
+        self.cursor = connection.cursor()
 
+<<<<<<< HEAD
 	def process_active_object(self, active_object):
 		user_login = active_object.user_login
 		available_money = active_object.available_money
@@ -93,3 +94,4 @@ class ActiveDao(object):
 
 	def remove(self, login, test = False):
 		pass
+
