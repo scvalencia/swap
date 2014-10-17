@@ -40,6 +40,11 @@ class VimeoHelper(object):
 		self.base += timestamp + "%26oauth_version%3D" + self.process_query(query)
 
 
+class Video(object):
+	pass
+	# TODO
+
+
 class DBVideoHelper(object):
 	CONSUMER_KEY = "c1f5add1d34817a6775d10b3f6821268"	
 	OAUTH_NONCE = "ee88b5bd5b8c1f65334f39d354642bce"
@@ -66,9 +71,14 @@ class DBVideoHelper(object):
 					self.connection.commit()
 				self.connection.close()
 
+	def create_table(self):
+		query = ("CREATE TABLE VIDEO")
 
+	def retrieve_videos(self):
+		pass
+		#TODO
 
-
+	def 
 
 
 def set_videos():
