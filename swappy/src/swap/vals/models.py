@@ -5,6 +5,10 @@ from offerants.models import Offerant
 
 
 class Rent(models.Model):
+    """
+    This class represents the object conversion from the 
+    rents relation presented in the Oracle database.
+    """
     pk_id = models.IntegerField(primary_key=True)
     rent_name = models.CharField(max_length=20)
     description = models.CharField(max_length=140)
@@ -19,6 +23,10 @@ class Rent(models.Model):
 
 
 class Val(models.Model):
+    """
+    This class represents the object conversion from the 
+    vals relation presented in the Oracle database.
+    """
     pk_id = models.IntegerField(primary_key=True)
     val_name = models.CharField(max_length=20)
     description = models.CharField(max_length=140)

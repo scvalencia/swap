@@ -71,7 +71,6 @@ INSTALLED_APPS = (
     'offerants',
     'passives',
     'solicitudes',
-    'swapprofiles',
     'swaptransactions',
     'util',
     'vals',

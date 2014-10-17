@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from .models import Investor, Follow
+from .models import Investor
 
 
 admin.site.register(Investor)
-admin.site.register(Follow)

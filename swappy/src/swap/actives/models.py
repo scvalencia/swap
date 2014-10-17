@@ -1,12 +1,14 @@
 from django.db import models
 
 from genericusers.models import GenericUser
-from passives.models import Passive
 
 
 class Active(models.Model):
+    """
+    This class represents the object conversion from the 
+    actives relation presented in the Oracle database.
+    """
     user_login = models.ForeignKey(GenericUser, primary_key=True, related_name='Active.user_login')
-    passive_register = models.ForeignKey(Passive, related_name='Active.passive_register')
     available_money = models.FloatField()
 
     class Meta:
