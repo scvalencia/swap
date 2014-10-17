@@ -8,11 +8,17 @@ class ActiveDao(object):
 	def __init__(self):
 		self.cursor = connection.cursor()
 
+	def process_active_object(self, active_object):
+		user_login = active_object.user_login
+		available_money = active_object.available_money
+		active_dump = ActiveDump(user_login, available_money)
+		return active_dump
+
 	def process_row(self, result_set):
-        user_login = result_set[0]
-        available_money = result_set[1]
-        active_object = ActiveDump(user_login, passive_register, available_money)
-        return active_object
+		user_login = result_set[0]
+		available_money = result_set[1]
+		active_object = ActiveDump(user_login, available_money)
+		return active_object
 
 	def find_all(self, test = False):
 		ans = []
@@ -21,7 +27,7 @@ class ActiveDao(object):
 			self.cursor.execute(query)
 			result_set = [item for item in self.cursor.fetchall()]
 			for itm in result_set:
-				ans.append(process_row(itm))			
+				ans.append(self.process_row(itm))			
 		else:
 			objects = list(Active.objects.all())
 			result_set = [item for item in self.cursor.fetchall()]
@@ -33,22 +39,8 @@ class ActiveDao(object):
 		ans = []
 		if not test:
 			query = "SELECT * FROM actives WHERE user_login = %s"
-			self.cursor.execute(query)
-			result_set = [item for item in self.cursor.fetchall()]
-			for itm in result_set:
-				ans.append(process_row(itm))
-		else:
-			objects = list(Active.objects.filter(user_login = login))
-			result_set = [item for item in self.cursor.fetchall()]
-			for itm in result_set:
-				ans.append(itm)
-		return ans
-
-	def finb_by_passive(self, passive, test = False):
-		ans = []
-		if not test:
-			query = "SELECT * FROM actives WHERE user_login = %s"
-			self.cursor.execute(query)
+			params = [login]
+			self.cursor.execute(query, login)
 			result_set = [item for item in self.cursor.fetchall()]
 			for itm in result_set:
 				ans.append(process_row(itm))
@@ -60,10 +52,38 @@ class ActiveDao(object):
 		return ans
 
 	def find_by_money(self, money, test = False):
-		pass
+		ans = []
+		if not test:
+			query = "SELECT * FROM actives WHERE available_money = %s"
+			params = [money]
+			self.cursor.execute(query, params)
+			result_set = [item for item in self.cursor.fetchall()]
+			for itm in result_set:
+				ans.append(process_row(itm))
+		else:
+			objects = list(Active.objects.filter(available_money = money))
+			result_set = [item for item in self.cursor.fetchall()]
+			for itm in result_set:
+				ans.append(itm)
+		return ans
+
+	def insert(self, arg_user_login, arg_available_money, test = False):
+		user_login = str(user_login)
+		available_money = float(available_money)
+		if not test:
+			active_object = ActiveDump(user_login, available_money)
+			query = "INSERT INTO actives VALUES(%s, %f)"
+			params = [user_login, available_money]
+			self.cursor.execute(query, params)
+		else:
+			active_object = Active(user_login = arg_user_login, 
+				available_money = arg_available_money)
+			active_object.save()
 
 	def create(self, active_object, test = False):
-		pass
+		user_login = active_object.user_login
+		available_money = active_object.available_money
+		self.insert(user_login, available_money, test)
 
 	def update(self, active_object, test = False):
 		pass
@@ -73,68 +93,3 @@ class ActiveDao(object):
 
 	def remove(self, login, test = False):
 		pass
-
-
-
-
-	def get_active_by_login(self, arg_user_login):
-		only_active = None
-		query = "SELECT * FROM actives WHERE user_login = %s"
-		params = [arg_user_login]
-		self.cursor.execute(query, params)
-		result_set = [item for item in self.cursor.fetchall()]
-		length = len(tuples)
-		if length == 0:
-			only_active = None
-		else:
-			actives = []
-			for itm in result_set:
-				user_login = itm[0]
-    			passive_register = itm[1]
-    			available_money = itm[2]
-    			active = Active(user_login, passive_register, available_money)
-    			actives.append(active)
-
-			only_active = actives.pop()
-
-		connection.close()
-		return only_active
-
-	def get_actives_by_passive_register(self, arg_passive_register):
-		actives = []
-		query = "SELECT * FROM actives WHERE passive_register = %s"
-		params = [arg_passive_register]
-		self.cursor.execute(query, params)
-		result_set = [item for item in self.cursor.fetchall()]
-		for item in result_set:
-			user_login = itm[0]
-    		passive_register = itm[1]
-    		available_money = itm[2]
-    		active = Active(user_login, passive_register, available_money)
-    		actives.append(active)
-    	return actives
-
-    def get_actives_by_available_money(self, arg_available_money):
-    	actives = []
-		query = "SELECT * FROM actives WHERE available_money = %s"
-		params = [arg_available_money]
-		self.cursor.execute(query, params)
-		result_set = [item for item in self.cursor.fetchall()]
-		for item in result_set:
-			user_login = itm[0]
-    		passive_register = itm[1]
-    		available_money = itm[2]
-    		active = Active(user_login, passive_register, available_money)
-    		actives.append(active)
-    	return actives
-
-    def add_active(self, arg_login, arg_passive, arg_money):
-    	added_Actives = []
-
-    def add_actives(self, argument_tuples):
-    	for (login, passive, arg_money) in argument_tuples:
-    		self.add_actives(login, passive, arg_money)
-
-
-	def __str__(self):
-		pass 
