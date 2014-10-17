@@ -8,7 +8,7 @@ class Active(models.Model):
     This class represents the object conversion from the 
     actives relation presented in the Oracle database.
     """
-    user_login = models.ForeignKey(GenericUser, primary_key=True, related_name='Active.user_login')
+    user_login = models.ForeignKey(GenericUser, primary_key=True, related_name='Active.user_login',  db_column='user_login')
     available_money = models.FloatField()
 
     class Meta:

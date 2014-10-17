@@ -10,8 +10,8 @@ class SwapTransaction(models.Model):
     """
     pk_id = models.IntegerField(primary_key=True)
     created_at = models.DateTimeField()
-    solicitude_1_pk = models.ForeignKey(Solicitude, related_name='SwapTransaction.solicitude_1_pk')
-    solicitude_2_pk = models.ForeignKey(Solicitude, related_name='SwapTransaction.solicitude_2_pk')
+    solicitude_1_pk = models.ForeignKey(Solicitude, related_name='SwapTransaction.solicitude_1_pk', db_column='solicitude_1_pk')
+    solicitude_2_pk = models.ForeignKey(Solicitude, related_name='SwapTransaction.solicitude_2_pk', db_column='solicitude_2_pk')
 
     class Meta:
         db_table = 'swap_transactions'

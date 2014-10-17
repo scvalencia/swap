@@ -15,7 +15,7 @@ class Rent(models.Model):
     rent_function = models.CharField(max_length=1)
     rent_length = models.CharField(max_length=1)
     rent_type = models.CharField(max_length=1)
-    offerant_login = models.ForeignKey(Offerant, related_name='Rent.offerant_login')
+    offerant_login = models.ForeignKey(Offerant, related_name='Rent.offerant_login', db_column='offerant_login')
 
     class Meta:
         db_table='rents'
@@ -33,7 +33,7 @@ class Val(models.Model):
     val_type = models.CharField(max_length=1)
     amount = models.IntegerField()
     price = models.FloatField()
-    rent_id = models.ForeignKey(Rent, related_name='Val.rent_id')
+    rent_id = models.ForeignKey(Rent, related_name='Val.rent_id', db_column='rent_id')
 
     class Meta:
         db_table = 'vals'

@@ -1,13 +1,21 @@
-(function(){
-	var app = angular.module('userzone', []);
+var app = angular.module('userzone', []);
 
-	app.controller('LoginController', function(){
-		this.login = {};
-	});
+app.controller('LoginController', function(){
+	this.login = {};
 
-	app.controller('SignupController', function(){
-		this.signup = {
-			userType: '1',
-		};
-	});
-})();
+	this.submit = function() {
+		$http.post('/userzone', this.login).
+        success(function(data, status, headers, config) {
+            window.alert('YES');
+        }).
+        error(function(data, status, headers, config) {
+            window.alert('BAD');
+        });
+	}
+});
+
+app.controller('SignupController', function(){
+	this.signup = {
+		userType: '1',
+	};
+});
