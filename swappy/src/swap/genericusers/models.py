@@ -43,13 +43,6 @@ class GenericUserDump(object):
         self.email = email
         self.phone = phone
 
-    def create_object(self, arg_login, arg_user_id, arg_user_pass, 
-        arg_first_name, arg_last_name, arg_email, arg_phone):
-        generic_user_object = GenericUser(login = arg_login, user_id = arg_user_id, 
-            user_pass = arg_user_pass, first_name = arg_first_name, last_name = arg_last_name,
-            email = arg_email, phone = arg_phone)
-        generic_user_object.save()
-
     def __str__(self):
         ans = '('
         ans += str(self.login) + ', '
@@ -69,15 +62,10 @@ class LegalDump(object):
         self.legal_name = legal_name
         self.user_login = user_login
 
-    def create_object(self, arg_legal_id, arg_legal_name, arg_user_login):
-        legal_object = Legal(legal_id = arg_legal_id, legal_name = arg_legal_name,
-            user_login = arg_user_login)
-        legal_object.save()
-
     def __str__(self):
         ans = '('
         ans += str(self.legal_id) + ', '
-        user_id = str(self.legal_name) + ', '
-        user_pass = str(self.user_login)
+        ans += str(self.legal_name) + ', '
+        ans += str(self.user_login)
         ans += ')'
         return ans
