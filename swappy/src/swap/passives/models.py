@@ -41,16 +41,3 @@ class PassiveDump(object):
         ans += str(self.user_login)
         ans += ')'
         return ans
-
-class ActivePassiveDump(object):
-
-    def __init__(self, active_login, passive_login):
-        self.active_login = active_login
-        self.passive_login = passive_login
-
-    def __str__(self):
-        ans = '('
-        ans += str(self.active_login) + ', '
-        ans += str(self.passive_login)
-        ans += ')'
-        return ans
