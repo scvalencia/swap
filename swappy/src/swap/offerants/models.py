@@ -27,3 +27,4 @@ class OfferantDump(object):
         ans += str(self.offerant_type)
         ans += ')'
         return ans
+
