@@ -3,81 +3,213 @@ from models import GenericUser
 from models import GenericUserDump
 from models import Legal
 from models import LegalDump
+from resultset.resultSet import ResultSet 
 
 class GenericUserDao(object):
 
     def __init__(self):
         self.cursor = connection.cursor()
+        self.rs = ResultSet()
 
     def find_all(self, test = False):
     	ans = []
-    	if not test:			
-    		query = "SELECT * FROM users ORDER BY login"
-    		self.cursor.execute(query)
-    		result_set = [item for item in self.cursor.fetchall()]
-    		for itm in result_set:
-    			ans.append(self.process_row(itm))
+    	if not test:
+            try:			
+        		query = "SELECT * FROM users ORDER BY login"
+        		self.cursor.execute(query)
+        		result_set = [item for item in self.cursor.fetchall()]
+        		for itm in result_set:
+        			ans.append(self.process_row(itm))
+            except:
+                return []
     	else:
-    		objects = list(GenericUser.objects.all())
-    		result_set = [item for item in objects]
-    		for itm in result_set:
-    			ans.append(self.process_generic_user_object(itm))
+            try:
+        		objects = list(GenericUser.objects.all())
+        		result_set = [item for item in objects]
+        		for itm in result_set:
+        			ans.append(self.process_generic_user_object(itm))
+            except:
+                return []
+        self.rs.set(ans)
     	return ans
 
     def find_by_login(self, arg_login, test = False):
         login = str(arg_login)
         ans = []
         if not test:
-            query = "SELECT * FROM users WHERE login = %s"
-            params = [login]
-            self.cursor.execute(query, params)
-            result_set = [item for item in self.cursor.fetchall()]
-            for itm in result_set:
-                ans.append(self.process_row(itm))
+            try:
+                query = "SELECT * FROM users WHERE login = %s"
+                params = [login]
+                self.cursor.execute(query, params)
+                result_set = [item for item in self.cursor.fetchall()]
+                for itm in result_set:
+                    ans.append(self.process_row(itm))
+            except:
+                return []
         else:
-            objects = list(GenericUser.objects.filter(login = login))
-            result_set = [item for item in objects]
-            for itm in result_set:
-                ans.append(self.process_generic_user_object(itm))
+            try:
+                objects = list(GenericUser.objects.filter(login = login))
+                result_set = [item for item in objects]
+                for itm in result_set:
+                    ans.append(self.process_generic_user_object(itm))
+            except:
+                return []
+        self.rs.set(ans)
         return ans
 
-    def find_by_id(self, id, test = False):
-        pass
+    def find_by_id(self, arg_id, test = False):
+        arg_id = str(arg_id)
+        ans = []
+        if not test:
+            try:
+                query = "SELECT * FROM users WHERE user_id = %s"
+                params = [arg_id]
+                self.cursor.execute(query, params)
+                result_set = [item for item in self.cursor.fetchall()]
+                for itm in result_set:
+                    ans.append(self.process_row(itm))
+            except:
+                return []
+        else:
+            try:
+                objects = list(GenericUser.objects.filter(user_id = arg_id))
+                result_set = [item for item in objects]
+                for itm in result_set:
+                    ans.append(self.process_generic_user_object(itm))
+            except:
+                return []
+        self.rs.set(ans)
+        return ans
 
     def find_by_first_name(self, first_name, test = False):
-        pass
+        first_name = str(first_name)
+        ans = []
+        if not test:
+            try:
+                query = "SELECT * FROM users WHERE first_name = %s"
+                params = [first_name]
+                self.cursor.execute(query, params)
+                result_set = [item for item in self.cursor.fetchall()]
+                for itm in result_set:
+                    ans.append(self.process_row(itm))
+            except:
+                return []
+        else:
+            try:
+                objects = list(GenericUser.objects.filter(first_name = first_name))
+                result_set = [item for item in objects]
+                for itm in result_set:
+                    ans.append(self.process_generic_user_object(itm))
+            except:
+                return []
+        self.rs.set(ans)
+        return ans
 
     def find_by_last_name(self, last_name, test = False):
-        pass
+        last_name = str(last_name)
+        ans = []
+        if not test:
+            try:
+                query = "SELECT * FROM users WHERE last_name = %s"
+                params = [last_name]
+                self.cursor.execute(query, params)
+                result_set = [item for item in self.cursor.fetchall()]
+                for itm in result_set:
+                    ans.append(self.process_row(itm))
+            except:
+                return []
+        else:
+            try:
+                objects = list(GenericUser.objects.filter(last_name = last_name))
+                result_set = [item for item in objects]
+                for itm in result_set:
+                    ans.append(self.process_generic_user_object(itm))
+            except:
+                return []
+        self.rs.set(ans)
+        return ans
 
     def find_by_email(self, email, test = False):
-        pass
+        email = str(email)
+        ans = []
+        if not test:
+            try:
+                query = "SELECT * FROM users WHERE email = %s"
+                params = [email]
+                self.cursor.execute(query, params)
+                result_set = [item for item in self.cursor.fetchall()]
+                for itm in result_set:
+                    ans.append(self.process_row(itm))
+            except:
+                return []
+        else:
+            try:
+                objects = list(GenericUser.objects.filter(email = email))
+                result_set = [item for item in objects]
+                for itm in result_set:
+                    ans.append(self.process_generic_user_object(itm))
+            except:
+                return []
+        self.rs.set(ans)
+        return ans
 
     def find_by_phone(self, phone, test = False):
-        pass
-    
-    def insert(self, arg_user_login, arg_available_money, test = False):
-        user_login = str(arg_user_login)
-        available_money = str(arg_available_money)
+        phone = str(phone)
+        ans = []
         if not test:
-            active_object = ActiveDump(user_login, available_money)
-            query = "INSERT INTO actives VALUES(%s, %s)"
-            params = [user_login, available_money]
-            self.cursor.execute(query, params)
+            try:
+                query = "SELECT * FROM users WHERE phone = %s"
+                params = [phone]
+                self.cursor.execute(query, params)
+                result_set = [item for item in self.cursor.fetchall()]
+                for itm in result_set:
+                    ans.append(self.process_row(itm))
+            except:
+                return []
         else:
-            active_object = Active(user_login = arg_user_login, 
-                available_money = arg_available_money)
-            active_object.save()
+            try:
+                objects = list(GenericUser.objects.filter(phone = phone))
+                result_set = [item for item in objects]
+                for itm in result_set:
+                    ans.append(self.process_generic_user_object(itm))
+            except:
+                return []
+        self.rs.set(ans)
+        return ans
+    
+    def insert(self, arg_login, arg_user_id, arg_user_pass, arg_first_name, 
+        arg_last_name, arg_email, arg_phone, test = False):
+        login = str(arg_login)
+        user_id = str(arg_user_id)
+        user_pass = str(arg_user_pass)
+        first_name = str(arg_first_name)
+        last_name = str(arg_last_name)
+        email = str(arg_email)
+        phone = str(arg_phone)
+        if not test:
+            try:
+                query = "INSERT INTO users VALUES(%s, %s, %s, %s, %s, %s, %s)"
+                params = [login, user_id, user_pass, first_name, last_name, email, phone]
+                self.cursor.execute(query, params)
+                return True
+            except:
+                return False
+        else:
+            try:
+                generic_user_object = GenericUser(login = login, user_id = user_id, user_pass = user_pass,
+                    first_name = first_name, last_name = last_name, email = email, phone = phone)
+                generic_user_object.save()
+                return True
+            except:
+                return False
 
     def create(self, active_object, test = False):
-        user_login = active_object.user_login
-        available_money = active_object.available_money
-        self.insert(user_login, available_money, test)
+        ans = self.insert(active_object.login, active_object.user_id, 
+            active_object.user_pass, active_object.first_name, active_object.last_name,
+            active_object.email, active_object.phone, test)
+        return ans
 
     def update(self, active_object, test = False):
-        pass
-
-    def save(self, active_object, test = False):
         pass
 
     def remove(self, active_object, test = False):
