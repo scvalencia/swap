@@ -2,8 +2,6 @@ from django.db import connection
 
 from models import Passive
 from models import PassiveDump
-from models import ActivePassive
-from models import ActivePassiveDump
 from resultset.resultSet import ResultSet 
 
 class PassiveDao(object):
