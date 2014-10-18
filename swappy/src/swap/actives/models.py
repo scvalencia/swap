@@ -27,6 +27,6 @@ class ActiveDump(object):
 
 	def __str__(self):
 		ans = '('
-		ans += self.user_login + ', '
+		ans += str(self.user_login) + ', '
 		ans += str(self.available_money) + ')'
 		return ans
