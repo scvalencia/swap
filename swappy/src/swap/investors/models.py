@@ -14,3 +14,16 @@ class Investor(models.Model):
     class Meta:
         db_table = 'investors'
         managed = False
+
+class InvestorDump(object):
+
+    def __init__(self, user_login, is_enterprise):
+        self.user_login = user_login
+        self.is_enterprise = is_enterprise
+
+    def __str__(self):
+        ans = '('
+        ans += str(self.user_login) + ', '
+        ans += str(self.is_enterprise)
+        ans += ')'
+        return ans
