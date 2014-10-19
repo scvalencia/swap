@@ -28,3 +28,16 @@ class ActivePassive(models.Model):
     class Meta:
         db_table = 'activespassives'
         managed = False
+
+class PassiveDump(object):
+
+    def __init__(self, passive_register, user_login):
+        self.passive_register = passive_register
+        self.user_login = user_login
+
+    def __str__(self):
+        ans = '('
+        ans += str(self.passive_register) + ', '
+        ans += str(self.user_login)
+        ans += ')'
+        return ans

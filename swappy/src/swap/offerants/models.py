@@ -14,3 +14,17 @@ class Offerant(models.Model):
     class Meta:
         db_table = 'offerants'
         managed = False
+
+class OfferantDump(object):
+
+    def __init__(self, user_login, offerant_type):
+        self.user_login = user_login
+        self.offerant_type = offerant_type
+
+    def __str__(self):
+        ans = '('
+        ans += str(self.user_login) + ', '
+        ans += str(self.offerant_type)
+        ans += ')'
+        return ans
+

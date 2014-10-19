@@ -18,3 +18,24 @@ class Solicitude(models.Model):
     class Meta:
         db_table = 'solicitudes'
         managed = False
+
+class SolicitudeDump(object):
+
+    def __init__(self, pk_id, request_type, amount, amount_unit, created_at, active_login):
+        self.pk_id = pk_id
+        self.request_type = request_type
+        self.amount = amount
+        self.amount_unit = amount_unit
+        self.created_at = created_at
+        self.active_login = active_login
+
+    def __str__(self):
+        ans = '('
+        ans += str(self.pk_id) + ', '
+        ans += str(self.request_type) + ', '
+        ans += str(self.amount) + ', '
+        ans += str(self.amount_unit) + ', '
+        ans += str(self.created_at) + ', '
+        ans += str(self.active_login)
+        ans+= ')'
+        return ans

@@ -17,10 +17,16 @@ class Active(models.Model):
 
 class ActiveDump(object):
 
-	def __init__(self, user_login, passive_register, available_money):
+	def __init__(self, user_login, available_money):
 		self.user_login = user_login
-		self.passive_register = passive_register
 		self.available_money = available_money
 
-	def create_object(self, login, reg, money):
-		pass
+	def create_object(self, login, money):
+		active_object = Active(user_login = login, available_money = money)
+		active_object.save()
+
+	def __str__(self):
+		ans = '('
+		ans += str(self.user_login) + ', '
+		ans += str(self.available_money) + ')'
+		return ans

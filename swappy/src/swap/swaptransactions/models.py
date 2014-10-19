@@ -16,3 +16,20 @@ class SwapTransaction(models.Model):
     class Meta:
         db_table = 'swap_transactions'
         managed = False
+
+class SwapTransactionDump(object):
+
+    def __init__(self, pk_id, created_at, solicitude_1_pk, solicitude_2_pk):
+        self.pk_id = pk_id
+        self.created_at = created_at
+        self.solicitude_1_pk = solicitude_1_pk
+        self.solicitude_2_pk = solicitude_2_pk
+
+    def __str__(self):
+        ans = '('
+        ans += str(self.pk_id) + ', '
+        ans += str(self.created_at) + ', '
+        ans += str(self.solicitude_1_pk) + ', '
+        ans += str(self.solicitude_2_pk)
+        ans += ')'
+        return ans
