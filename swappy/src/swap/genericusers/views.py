@@ -78,13 +78,7 @@ class SearchView(View):
 
 
 def validate_login(in_data):
-    # TODO
-    # Dado un diccionario con valores para
-    # user y password, verificar si el usuario
-    # existe, en caso de existir, agregar las
-    # respectivas cookies (usuario y tipo_usuario)
-    # y retornar True, de lo contrario, False.
-    user_login = in_data['user']
+    user_login = in_data['login']
     user_password = in_data['password']
     generic_users = GenericUserDao()
     users_with_such_login = generic_users.find_by_login(user_login)
@@ -101,20 +95,22 @@ def validate_login(in_data):
         return False
 
 
-
-    return in_data.get('user') == 'juan'
-
-
 def validate_signup(in_data):
-    # TODO
-    # Dado un diccionario con valores para
-    # nuevo usuario (login, user_id, user_pass,
-    # first_name, last_name, email, phone),
-    # verificar si el usuario existe, en caso
-    # de existir, retornar False, de lo contrario,
-    # agregar las respectivas cookies (usuario
-    # y tipo_usuario) y retornar True.
-    return True
+    generic_users = GenericUserDao()
+    users_with_such_login = generic_users.find_by_login(user_login)
+    if len(users_with_such_login) == 0:
+        arg_login = in_data['login']
+        arg_user_id = in_data['id']
+        arg_user_pass = in_data['password']
+        arg_first_name = in_data['first_name']
+        arg_last_name = in_data_['last_name']
+        arg_email = in_data['email']
+        arg_phone = in_data['phone']
+        generic_users.insert(arg_login, arg_user_id, arg_user_pass, 
+            arg_first_name, arg_last_name, arg_email, arg_phone)
+        return True
+    else:
+        return False
 
 
 def get_data(param):
@@ -133,4 +129,21 @@ def get_data(param):
 
     # Si es investor, los valores que tiene en la bolsa y 
     # como estan distribuidos (portafolio).
-    return {}
+    ans = {}
+    if param == 'passives':
+        ans = get_passives()
+    elif param == 'offerants':
+        ans = get_offerants()
+    elif param == 'investors':
+        ans = get_investors()
+    else:
+        return {}
+
+def get_passives():
+    pass
+
+def get_offerants():
+    pass
+
+def get_investors():
+    pass
