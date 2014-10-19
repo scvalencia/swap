@@ -43,8 +43,7 @@ class SolicitudeDao(object):
         self.rs.set(ans)        
         return ans
     
-    def insert(self, pk_id, request_type, amount, amount_unit, 
-        created_at, active_login, test = False):
+    def insert(self, pk_id, request_type, amount, amount_unit, active_login, test = False):
         params = [int(pk_id), str(request_type), str(float(amount)),
         str(amount_unit), str(active_login)]
         if not test:
