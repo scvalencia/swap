@@ -1,48 +1,206 @@
-{% extends "util/base.html" %}
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <style>
+        .form{
+            padding: 5%;
+        }
 
-{% block head %}
+        .banner {
+            background: #18BC9C;
+            border-bottom: 1px solid #07AB8B;
+        }
 
-    {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static "genericusers/css/userzone.css" %}">
-    <script src="{% static "genericusers/js/userzone.js" %}"></script>
+        .banner span {
+            margin-right: 10px;
+        }
 
-{% endblock %}
+        .banner h1 {
+            text-align: center;
+            color: black;
+            padding: 11% 0 8% 0;
+            color: #FFF;
+        }
 
-{% block body %}
+        .footer h4 {
+            text-align: center;
+            padding-top: 4%;
+            padding-bottom: 5%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
 
-    <div class="container-fluid" ng-app="userzone">
-        <div class="row">
-            <div class="nav">
-                {% include "util/nav.html" %}
+        <!-- Nav bar -->
+
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand">
+                        <span class="glyphicon glyphicon-th-large"></span>
+                        Swap
+                    </a>
+                </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/search">Buscar</a></li>
+                    <li class="active"><a href="/userzone">Usuario</a></li>
+                    <li><a href="/about">Acerca de</a></li>
+                </ul>
             </div>
-        </div>
+          </div>
+        </nav>
+
+        <!-- Banner -->
+
         <div class="row">
             <div class="banner" id="welcome">
-                {% include "genericusers/banner.html" %}
+                <h1>
+                    <span class="glyphicon glyphicon-user"></span>
+                    Zona de usuarios
+                </h1>
             </div>
         </div>
+
+        <!-- Forms -->
+
         <div class="container">
             <div class="row">
+
+                <!-- Login form -->
+
                 <div class="col-md-6">
-                    <div id="login" class="form" ng-controller="LoginController as loginCtrl">
-                        {% include "genericusers/login.html" %}
+                    <div id="login" class="form" ng-controller="LoginController">
+                        <h2>Iniciar sesion</h2>
+                        <div ng-hide="loginMessage.message == null">
+                            {% verbatim %}
+                            <pre ng-class="loginMessage.css">{{ loginMessage.message }}</pre>
+                            <hr>
+                            {% endverbatim %}
+                        </div>
+                        <form name="loginForm" novalidate>
+                            {{ login_form }}
+                            <br>
+                            <button ng-click="setLogin() && submit()" ng-disabled="!loginForm.$valid" class="btn btn-default">
+                                Login
+                            </button>
+                        </form>
                     </div>
                 </div>
+
+                <!-- Signup form -->
+
                 <div class="col-md-6">
-                    <div id="signup" class="form" ng-controller="SignupController as signupCtrl">
-                        {% include "genericusers/signup.html" %}
+                    <div id="signup" class="form" ng-controller="SignupController">
+                        <h2>Registrarse</h2>
+                        <div ng-hide="signupMessage.message == null">
+                            {% verbatim %}
+                            <pre ng-class="signupMessage.css">{{ signupMessage.message }}</pre>
+                            <hr>
+                            {% endverbatim %}
+                        </div>
+                        <form name="signupForm" novalidate>
+                            {{ signup_form }}
+                            <br>
+                            <button ng-click="setSignup() && submit()" ng-disabled="!signupForm.$valid" class="btn btn-default">
+                                Signup
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <!-- Separator -->
+
             <div class="row">
                 <hr>
             </div>
+
+            <!-- Footer -->
+
             <div class="row">
                 <div class="footer">
-                    {% include "util/footer.html" %}
+                    <h4>
+                        <span class="glyphicon glyphicon-copyright-mark"></span>
+                        Copyright 2014, all rights reserved
+                    </h4>
                 </div>
             </div>
         </div>
     </div>
 
-{% endblock %}
+    <!-- JS scripts -->
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.4/angular.min.js"></script>
+    <script>
+        var app = angular.module('app', []);
+
+        app.config(['$httpProvider', function($httpProvider) {
+            $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+            $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        }]);
+
+        app.controller('LoginController', ['$scope', '$http', function($scope, $http) {
+            $scope.login = {};
+
+            $scope.loginMessage = {};
+
+            $scope.submit = function() {
+                $http.post('userzone', $scope.login)
+                    .success(function(data) {
+                        $scope.loginMessage.message = 'Datos validos!';
+                        $scope.loginMessage.css = 'alert alert-success';
+                        window.location.assign('/');
+                    })
+                    .error(function(data) {
+                        $scope.loginMessage.message = 'Datos NO validos!';
+                        $scope.loginMessage.css = 'alert alert-danger';
+                    });
+            };
+
+            $scope.setLogin = function() {
+                $scope.login.form_type = 'login';
+                return true;
+            };
+        }]);
+
+        app.controller('SignupController', ['$scope', '$http', function($scope, $http) {
+            $scope.signup = {};
+
+            $scope.signupMessage = {};
+
+            $scope.submit = function() {
+                $http.post('userzone', $scope.signup)
+                    .success(function(data) {
+                        $scope.signupMessage.message = 'Datos validos!';
+                        $scope.signupMessage.css = 'alert alert-success';
+                        window.location.assign('/');
+                    })
+                    .error(function(data) {
+                        $scope.signupMessage.message = 'Datos NO validos!';
+                        $scope.signupMessage.css = 'alert alert-danger';
+                    });
+            };
+
+            $scope.setSignup = function() {
+                $scope.signup.form_type = 'signup';
+                return true;
+            };
+        }]);
+    </script>
+</body>
+</html>
