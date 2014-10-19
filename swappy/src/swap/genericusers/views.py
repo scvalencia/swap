@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
-
+from dao import GenericUserDao
+from actives.dao import ActiveDao
 from .forms import LoginForm, SignupForm
 import json
 
@@ -83,6 +84,24 @@ def validate_login(in_data):
     # existe, en caso de existir, agregar las
     # respectivas cookies (usuario y tipo_usuario)
     # y retornar True, de lo contrario, False.
+    user_login = in_data['user']
+    user_password = in_data['password']
+    generic_users = GenericUserDao()
+    users_with_such_login = generic_users.find_by_login(user_login)
+    tipo_usuario = None
+    if len(users_with_such_login) == 1:
+        if_active = ActiveDao()
+        active_users = if_active.find_by_login(user_login)
+        if len(active_users) == 1:
+            tipo_usuario = 'activo'
+        else:
+            tipo_usuario = 'pasivo'
+        return True
+    else:
+        return False
+
+
+
     return in_data.get('user') == 'juan'
 
 
