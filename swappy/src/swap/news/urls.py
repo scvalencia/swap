@@ -4,5 +4,5 @@ from .views import NewsView
 
 
 news_urls = patterns('',
-    url(r'^news', NewsView.as_view()),
+    url(r'^api/news', NewsView.as_view()),
 )

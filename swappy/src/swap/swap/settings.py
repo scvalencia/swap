@@ -65,15 +65,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'actives',
     'genericusers',
-    'home',
     'investors',
     'news',
     'offerants',
     'passives',
     'portfolios',
+    'rest_framework',
     'solicitudes',
     'swaptransactions',
-    'util',
     'vals',
 )
 
