@@ -7,9 +7,7 @@ from news.urls import news_urls
 from vals.urls import vals_urls
 
 
-urlpatterns = patterns('',
-	url(r'^admin/', include(admin.site.urls)),
-)
+urlpatterns = patterns('')
 
 urlpatterns += actives_urls
 urlpatterns += genericusers_urls

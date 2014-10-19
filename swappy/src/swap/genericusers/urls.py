@@ -1,9 +1,13 @@
 from django.conf.urls import patterns, include, url
 
-from .views import HomeView, UserZoneView
+from .views import AdminView, HomeView, UserZoneView, APIView
 
 
 genericusers_urls = patterns('',
 	url(r'^$', HomeView.as_view()),
-    url(r'^userzone/', UserZoneView.as_view()),
+	url(r'^admin/$', AdminView.as_view()),
+	url(r'^admin/api/$', AdminView.as_view()),
+	url(r'^admin/$', AdminView.as_view()),
+    url(r'^userzone/$', UserZoneView.as_view()),
+    url(r'^api/(?P<param>\w+)/$', APIView.as_view()),
 )
