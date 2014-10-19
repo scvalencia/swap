@@ -2,10 +2,10 @@ from django.db import connection
 from models import PortfolioDump
 from resultset.resultSet import ResultSet 
 
-class PortafolioDao(object):
+class PortfolioDao(object):
 
     def __init__(self):
-        self.table_name = 'portafolios'
+        self.table_name = 'portfolios'
         self.schema = ('user_login', 'risk', 'pk_id')
         self.cursor = connection.cursor()
         self.rs = ResultSet()
@@ -14,7 +14,7 @@ class PortafolioDao(object):
         ans = []
         if not test:
             try:            
-                query = "SELECT * FROM portafolios ORDER BY pk_id"
+                query = "SELECT * FROM portfolios ORDER BY pk_id"
                 self.cursor.execute(query)
                 result_set = [item for item in self.cursor.fetchall()]
                 for itm in result_set:
@@ -30,7 +30,7 @@ class PortafolioDao(object):
         ans = []
         if not test:
             try:
-                query = "SELECT * FROM portafolios WHERE pk_id = %s"
+                query = "SELECT * FROM portfolios WHERE pk_id = %s"
                 params = [pk_id]
                 self.cursor.execute(query, params)
                 result_set = [item for item in self.cursor.fetchall()]
@@ -46,7 +46,7 @@ class PortafolioDao(object):
         params = map(str, [login, risk, pk_id])
         if not test:
             try:
-                query = "INSERT INTO portafolios VALUES(%s, %s, %s)"
+                query = "INSERT INTO portfolios VALUES(%s, %s, %s)"
                 self.cursor.execute(query, params)                
                 return True
             except Exception as e:
@@ -62,7 +62,7 @@ class PortafolioDao(object):
         if(available_for_update):
             if not test:
                 try:
-                    query = "UPDATE portafolios SET user_login = %s, risk = %s WHERE pk_id = %s"
+                    query = "UPDATE portfolios SET user_login = %s, risk = %s WHERE pk_id = %s"
                     params = [user_login, risk, pk_id]
                     self.cursor.execute(query, params)                    
                     return True
@@ -79,7 +79,7 @@ class PortafolioDao(object):
         if(available_for_update):
             if not test:
                 try:
-                    query = ("DELETE FROM portafolios WHERE pk_id = %s")
+                    query = ("DELETE FROM portfolios WHERE pk_id = %s")
                     params = [pk_id]
                     self.cursor.execute(query, params)                    
                     return True
