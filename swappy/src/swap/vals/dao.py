@@ -221,23 +221,22 @@ class ValDao(object):
                 return False
 
     def update(self, arg_object, test = False):
-        pk_id = arg_object.pk_id
-        rent_name = arg_object.rent_name
-        desc = arg_object.description
-        rent_function = arg_object.rent_function
-        rent_len = arg_object.rent_length
-        rent_tp = arg_object.rent_type
-        login = arg_object.offerant_login
+        pk_id = int(arg_object.pk_id)
+        val_name = arg_object.val_name
+        description = arg_object.description
+        val_type = arg_object.val_type
+        amount = int(arg_object.amount)
+        price = arg_object.price
+        rent_id = arg_object.rent_id
         objects = self.find_by_id(pk_id)
         available_for_update = (len(objects) == 1)
         if(available_for_update):
             if not test:
                 try:
-                    query = ("UPDATE rents "
-                             "SET rent_name = %s, description = %s, "
-                             "rent_function = %s, rent_length = %s, rent_type = %s, "
-                             "offerant_login = %s WHERE pk_id = %s")
-                    params = [rent_name, desc, rent_function, rent_len, rent_tp, login, pk_id]
+                    query = ("UPDATE vals "
+                             "SET val_name = %s, description = %s, val_type = %s, amount = %s, "
+                             "price = %s, rent_id = %s WHERE pk_id = %s")
+                    params = [val_name, description, val_type, amount, price, rent_id, pk_id]
                     self.cursor.execute(query, params)                    
                     return True
                 except Exception as e:
@@ -260,7 +259,7 @@ class ValDao(object):
         if(available_for_update):
             if not test:
                 try:
-                    query = ("DELETE FROM rents WHERE pk_id = %s")
+                    query = ("DELETE FROM vals WHERE pk_id = %s")
                     params = [pk_id]
                     self.cursor.execute(query, params)                    
                     return True
