@@ -17,7 +17,6 @@ class Portfolio(models.Model):
         db_table = 'portfolios'
         managed = False
 
-
 class PortfolioVal(models.Model):
     """
     This class represents the object conversion from the 
@@ -30,3 +29,18 @@ class PortfolioVal(models.Model):
     class Meta:
         db_table = 'portfolios'
         managed = False
+
+class PortfolioDump(object):
+
+    def __init__(self, pk_id, user_login, risk):
+        self.pk_id = pk_id
+        self.user_login = user_login
+        self.risk = risk
+
+    def __str__(self):
+        ans = ''
+        ans += str(self.pk_id) + ', '
+        ans += str(self.user_login) + ', '
+        ans += str(self.risk)
+        ans += ')'
+        return ans
