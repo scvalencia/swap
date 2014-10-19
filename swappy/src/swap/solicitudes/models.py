@@ -30,7 +30,7 @@ class SolicitudeDump(object):
         self.active_login = active_login
 
     def __str__(self):
-        ans = ''
+        ans = '('
         ans += str(self.pk_id) + ', '
         ans += str(self.request_type) + ', '
         ans += str(self.amount) + ', '
