@@ -38,7 +38,7 @@ class PortfolioDump(object):
         self.risk = risk
 
     def __str__(self):
-        ans = ''
+        ans = '('
         ans += str(self.pk_id) + ', '
         ans += str(self.user_login) + ', '
         ans += str(self.risk)
