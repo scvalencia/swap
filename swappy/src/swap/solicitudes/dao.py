@@ -15,7 +15,7 @@ class SolicitudeDao(object):
         ans = []
         if not test:
             try:            
-                query = "SELECT * FROM portafolios ORDER BY pk_id"
+                query = "SELECT * FROM solicitudes ORDER BY pk_id"
                 self.cursor.execute(query)
                 result_set = [item for item in self.cursor.fetchall()]
                 for itm in result_set:
@@ -31,7 +31,7 @@ class SolicitudeDao(object):
         ans = []
         if not test:
             try:
-                query = "SELECT * FROM portafolios WHERE pk_id = %s"
+                query = "SELECT * FROM solicitudes WHERE pk_id = %s"
                 params = [pk_id]
                 self.cursor.execute(query, params)
                 result_set = [item for item in self.cursor.fetchall()]
@@ -43,11 +43,13 @@ class SolicitudeDao(object):
         self.rs.set(ans)        
         return ans
     
-    def insert(self, login, risk, pk_id, test = False):
-        params = map(str, [login, risk, pk_id])
+    def insert(self, pk_id, request_type, amount, amount_unit, 
+        created_at, active_login, test = False):
+        params = [int(pk_id), str(request_type), str(float(amount)),
+        str(amount_unit), str(active_login)]
         if not test:
             try:
-                query = "INSERT INTO portafolios VALUES(%s, %s, %s)"
+                query = "INSERT INTO solicitudes VALUES(%s, %s, %s, %s, Current_Timestamp, %s)"
                 self.cursor.execute(query, params)                
                 return True
             except Exception as e:
@@ -56,15 +58,20 @@ class SolicitudeDao(object):
 
     def update(self, dump_object, test = False):
         pk_id = dump_object.pk_id
-        user_login = dump_object.user_login
-        risk = dump_object.risk
+        request_type = dump_object.request_type
+        amount = dump_object.amount
+        amount_unit = dump_object.amount_unit
+        created_at = dump_object.created_at
+        active_login = dump_object.active_login
         objects = self.find_by_id(pk_id)
         available_for_update = (len(objects) == 1)
         if(available_for_update):
             if not test:
                 try:
-                    query = "UPDATE portafolios SET user_login = %s, risk = %s WHERE pk_id = %s"
-                    params = [user_login, risk, pk_id]
+                    query = ("UPDATE solicitudes "
+                             "SET request_type = %s, amount = %s, amount_unit = %s, active_login = %s "
+                             "WHERE pk_id = %s")
+                    params = [request_type, str(float(amount)), amount_unit, active_login, int(pk_id)]
                     self.cursor.execute(query, params)                    
                     return True
                 except Exception as e:
@@ -80,7 +87,7 @@ class SolicitudeDao(object):
         if(available_for_update):
             if not test:
                 try:
-                    query = ("DELETE FROM portafolios WHERE pk_id = %s")
+                    query = ("DELETE FROM solicitudes WHERE pk_id = %s")
                     params = [pk_id]
                     self.cursor.execute(query, params)                    
                     return True
@@ -90,9 +97,13 @@ class SolicitudeDao(object):
         else:            
             return False        
 
-    def process_row(self, result_set):
-        pk_id = result_set[0]
-        user_login = result_set[1]
-        risk = result_set[2]
-        dump = PortfolioDump(pk_id, user_login, risk)
+    def process_row(self, rs):
+        pk_id = rs[0]
+        request_type = rs[1]
+        amount = rs[2]
+        amount_unit = rs[3]
+        created_at = rs[4]
+        active_login = rs[5]
+        dump = SolicitudeDump(pk_id, request_type, amount, 
+            amount_unit, created_at, active_login) 
         return dump
