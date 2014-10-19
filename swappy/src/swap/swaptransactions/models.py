@@ -26,7 +26,7 @@ class SwapTransactionDump(object):
         self.solicitude_2_pk = solicitude_2_pk
 
     def __str__(self):
-        ans = ''
+        ans = '('
         ans += str(self.pk_id) + ', '
         ans += str(self.created_at) + ', '
         ans += str(self.solicitude_1_pk) + ', '
