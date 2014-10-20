@@ -210,6 +210,7 @@ def get_investors():
     for itm in all_investors:
         print itm
         ans['investors'].append(process_investor(itm))
+    print ans
     return ans
 
 def process_investor(investor_object):
@@ -227,6 +228,8 @@ def process_investor(investor_object):
 
     for itm in get_portfolios_per_investor(user_login):
         bare_sct['portfolios'],append(process_portfolio(itm))
+
+    print bare_sct
     return bare_sct
 
 def process_offerant(offerant_object):
@@ -270,7 +273,7 @@ def process_portfolio(portfolio_object):
     values_on_portfolio = get_values_on_portfolio(pk_id)
     for value_object in values_on_portfolio:
         bare_sct['values'].append(process_value(value_object))
-
+    print bare_sct
     return bare_sct
 
 def process_value(val_object):
@@ -287,7 +290,9 @@ def process_value(val_object):
     if len(rent_object) == 1:
         to_append = process_rent(rent_object[0])
     bare_sct['rent_id'] = to_append
+    print bare_sct
     return bare_sct
 
 def process_rent(rent_object):
+    print rent_object.__dict__
     return rent_object.__dict__
