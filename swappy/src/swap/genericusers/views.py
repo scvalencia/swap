@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
+
 from dao import GenericUserDao
 from actives.dao import ActiveDao
 from passives.dao import PassiveDao
@@ -46,25 +47,28 @@ class UserZoneView(View):
     """
     The view endpoint of the userzone url.
     """
-    template_name = 'genericusers/userzone.html'
 
     def get(self, request, *args, **kwargs):
-        params = {
-            'login_form': LoginForm(),
-            'signup_form': SignupForm(),
-        }
-        return render(request, self.template_name, params)
+        if request.session.get('user') and request.session.get('type'):
+            return render(request, 'genericusers/profile.html')
+        else:
+            params = {
+                'login_form': LoginForm(),
+                'signup_form': SignupForm(),
+            }
+            return render(request, 'genericusers/userzone.html', params)
 
     def post(self, request, *args, **kwargs):
         in_data = json.loads(request.body)
         if in_data.get('form_type') == 'login':
-            valid = validate_login(in_data)
+            valid = validate_login(request, in_data)
             if valid:
+                for i in request.session.keys(): print i, '->', request.session[i]
                 return HttpResponse(status=200)
             else:
                 return HttpResponse(status=403)
         elif in_data.get('form_type') == 'signup':
-            valid = validate_signup(in_data)
+            valid = validate_signup(request, in_data)
             if valid:
                 return HttpResponse(status=200)
             else:
@@ -83,8 +87,8 @@ class SearchView(View):
         return render(request, self.template_name)
 
 
-def validate_login(in_data):
-    user_login = in_data['login']
+def validate_login(request, in_data):
+    user_login = in_data['user']
     user_password = in_data['password']
     generic_users = GenericUserDao()
     users_with_such_login = generic_users.find_by_login(user_login)
@@ -96,12 +100,14 @@ def validate_login(in_data):
             tipo_usuario = 'activo'
         else:
             tipo_usuario = 'pasivo'
+        request.session['user'] = user_login
+        request.session['type'] = tipo_usuario
         return True
     else:
         return False
 
 
-def validate_signup(in_data):
+def validate_signup(request, in_data):
     generic_users = GenericUserDao()
     users_with_such_login = generic_users.find_by_login(user_login)
     if len(users_with_such_login) == 0:
@@ -112,8 +118,12 @@ def validate_signup(in_data):
         arg_last_name = in_data_['last_name']
         arg_email = in_data['email']
         arg_phone = in_data['phone']
+        request.session['login'] = user_login
+        request.session['type'] = tipo_usuario
         generic_users.insert(arg_login, arg_user_id, arg_user_pass, 
             arg_first_name, arg_last_name, arg_email, arg_phone)
+        request.session['login'] = user_login
+        request.session['type'] = tipo_usuario
         return True
     else:
         return False
