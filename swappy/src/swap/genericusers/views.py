@@ -3,6 +3,9 @@ from django.shortcuts import render
 from django.views.generic import View
 from dao import GenericUserDao
 from actives.dao import ActiveDao
+from passives.dao import PassiveDao
+from offerants.dao import OfferantDao
+from investors.dao import InvestorDao
 from .forms import LoginForm, SignupForm
 import json
 
