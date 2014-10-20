@@ -240,13 +240,17 @@ def process_offerant(offerant_object):
 
     def get_portfolios_per_offerant(user_login):
         ans = []
+        print user_login
         portfolios = PortfolioDao().find_by_user_login(user_login)
+        print 'WE GTOT IT BRO'
         for itm in portfolios:
+            print itm, '---------------'
             ans.append(itm)
+        print 'AND THIS IS THE END'
         return ans
 
     for itm in get_portfolios_per_offerant(user_login):
-        bare_sct['portfolios'],append(process_portfolio(itm))
+        bare_sct['portfolios'].append(process_portfolio(itm))
     print 'OFFERANT'
     print bare_sct
     return bare_sct    
