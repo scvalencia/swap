@@ -87,12 +87,13 @@
 
                 <div id="passives" ng-show="tab == 'passive'">
                     <h2>Intermediarios</h2>
+                    {% verbatim %}
                     <div ng-show="passives.length == 0">
-                        {% verbatim %}
                         <pre class="alert alert-danger">No hay registros</pre>
                         <hr>
-                        {% endverbatim %}
                     </div>
+                    <div ng-repeat="of in offerants">{{ of }}</div>
+                    {% endverbatim %}
                 </div>
 
                 <!-- Offerants -->
@@ -105,6 +106,7 @@
                         <hr>
                         {% endverbatim %}
                     </div>
+                    <div ng-repeat="of in offerants">{{ of }}</div>
                 </div>
 
                 <!-- Investors -->
@@ -171,7 +173,7 @@
 
             $http.get('/api/offerants')
             .success(function(data) {
-                $scope.offerants = data;
+                $scope.offerants = data.offerants;
             })
             .error(function(data) {
                 $scope.offerants = [];
@@ -179,7 +181,7 @@
 
             $http.get('/api/investors')
             .success(function(data) {
-                $scope.investors = data;
+                $scope.investors = data.investors;
             })
             .error(function(data) {
                 $scope.investors = [];

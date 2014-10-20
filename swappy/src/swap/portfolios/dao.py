@@ -50,9 +50,15 @@ class PortfolioDao(object):
                 query = "SELECT * FROM portfolios WHERE user_login = %s"
                 params = [user_login]
                 self.cursor.execute(query, params)
+                print query % user_login
+                print "WE START HERE"
                 result_set = [item for item in self.cursor.fetchall()]
                 for itm in result_set:
+                    print '*' * 20
+                    print itm
+                    print '*' * 20
                     ans.append(self.process_row(itm))
+                print "BUT END HERE"
             except Exception as e:
                 print e
                 return []

@@ -21,6 +21,7 @@ class APIView(View):
     def get(self, request, *args, **kwargs):
         param = kwargs.get('param')
         data = get_data(param)
+        print 'DATAAA', data
         return HttpResponse(json.dumps(data), content_type="application/json")
 
 
@@ -152,8 +153,7 @@ def get_data(param):
         ans = get_offerants()
     elif param == 'investors':
         ans = get_investors()
-    else:
-        return {}
+    return ans
 
 def get_passives():
     pass
@@ -240,13 +240,17 @@ def process_offerant(offerant_object):
 
     def get_portfolios_per_offerant(user_login):
         ans = []
+        print user_login
         portfolios = PortfolioDao().find_by_user_login(user_login)
+        print 'WE GTOT IT BRO'
         for itm in portfolios:
+            print itm, '---------------'
             ans.append(itm)
+        print 'AND THIS IS THE END'
         return ans
 
     for itm in get_portfolios_per_offerant(user_login):
-        bare_sct['portfolios'],append(process_portfolio(itm))
+        bare_sct['portfolios'].append(process_portfolio(itm))
     print 'OFFERANT'
     print bare_sct
     return bare_sct    
