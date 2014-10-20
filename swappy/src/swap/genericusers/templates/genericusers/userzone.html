@@ -160,11 +160,11 @@
             $scope.loginMessage = {};
 
             $scope.submit = function() {
-                $http.post('userzone', $scope.login)
+                $http.post('/userzone/', $scope.login)
                     .success(function(data) {
                         $scope.loginMessage.message = 'Datos validos!';
                         $scope.loginMessage.css = 'alert alert-success';
-                        window.location.assign('/');
+                        window.location.assign('/userzone');
                     })
                     .error(function(data) {
                         $scope.loginMessage.message = 'Datos NO validos!';
@@ -184,11 +184,11 @@
             $scope.signupMessage = {};
 
             $scope.submit = function() {
-                $http.post('userzone', $scope.signup)
+                $http.post('/userzone/', $scope.signup)
                     .success(function(data) {
                         $scope.signupMessage.message = 'Datos validos!';
                         $scope.signupMessage.css = 'alert alert-success';
-                        window.location.assign('/');
+                        window.location.assign('/userzone');
                     })
                     .error(function(data) {
                         $scope.signupMessage.message = 'Datos NO validos!';
