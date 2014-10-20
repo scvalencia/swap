@@ -21,6 +21,7 @@ class APIView(View):
     def get(self, request, *args, **kwargs):
         param = kwargs.get('param')
         data = get_data(param)
+        print 'DATAAA', data
         return HttpResponse(json.dumps(data), content_type="application/json")
 
 
