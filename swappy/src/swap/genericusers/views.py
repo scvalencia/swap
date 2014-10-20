@@ -164,6 +164,7 @@ def get_offerants():
     offerants = OfferantDao()
     all_offerants = offerants.find_all()
     for itm in all_offerants:
+        print itm
         ans['offerants'].append(process_offerant(itm))
     return ans
 '''
@@ -208,7 +209,6 @@ def get_investors():
 
 def process_offerant(offerant_object):
     bare_sct = offerant_object.__dict__
-    print bare_sct
     user_login = bare_sct['user_login']
     offerant_type = bare_sct['offerant_type']
     bare_sct['portfolios'] = []
@@ -222,8 +222,6 @@ def process_offerant(offerant_object):
 
     for itm in get_portfolios_per_offerant(user_login):
         bare_sct['portfolios'],append(process_portfolio(itm))
-
-    print bare_sct
     return bare_sct    
 
 def process_portfolio(portfolio_object):
