@@ -164,6 +164,7 @@ def get_offerants():
     all_offerants = offerants.find_all()
     for itm in all_offerants:
         ans['offerants'].append(process_offerant(itm))
+    return ans
 '''
     {'offerants' :
         [
