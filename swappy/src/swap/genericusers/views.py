@@ -154,6 +154,42 @@ def get_offerants():
     all_offerants = offerants.find_all()
     for itm in all_offerants:
         ans['offerants'].append(process_offerant(itm))
+'''
+    {'offerants' :
+        [
+            {
+                'user-login' : '', 
+                'offerant_type' : '', 
+                'portfolio' : 
+                    {
+                        'id' : '',
+                        'risk' : '',
+                        'vals' :
+                            [
+                                {
+                                    'id' : '',
+                                    'name' : '',
+                                    'description' : '',
+                                    'type' : '',
+                                    'amount' : '',
+                                    'price' : '',
+                                    'rent' :
+                                        {
+                                            'id' : '',
+                                            'name' : '',
+                                            'description' : '',
+                                            'function' : '',
+                                            'length' : '',
+                                            'type' : '',
+                                            'offerant_login' : ''
+                                        }
+                                }
+                            ]
+                    }
+             }
+         ]
+    } 
+'''
 
 def get_investors():
     pass
