@@ -205,7 +205,7 @@ def get_investors():
     pass
 
 def process_offerant(offerant_object):
-    bare_sct = portfolio_object.__dict__
+    bare_sct = offerant_object.__dict__
     user_login = bare_sct['user_login']
     offerant_type = bare_sct['offerant_type']
     bare_sct['portfolios'] = []
