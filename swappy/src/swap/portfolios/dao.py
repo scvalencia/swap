@@ -41,6 +41,23 @@ class PortfolioDao(object):
                 return []
         self.rs.set(ans)        
         return ans
+
+    def find_by_user_login(self, user_login, test = False):
+        user_login = str(user_login)
+        ans = []
+        if not test:
+            try:
+                query = "SELECT * FROM portfolios WHERE user_login = %s"
+                params = [user_login]
+                self.cursor.execute(query, params)
+                result_set = [item for item in self.cursor.fetchall()]
+                for itm in result_set:
+                    ans.append(self.process_row(itm))
+            except Exception as e:
+                print e
+                return []
+        self.rs.set(ans)        
+        return ans
     
     def insert(self, login, risk, pk_id, test = False):
         params = map(str, [login, risk, pk_id])
