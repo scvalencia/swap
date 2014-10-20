@@ -6,6 +6,9 @@ from actives.dao import ActiveDao
 from passives.dao import PassiveDao
 from offerants.dao import OfferantDao
 from investors.dao import InvestorDao
+from portfolios.dao import PortfolioDao
+from vals.dao import RentDao
+from vals.dao import ValDao
 from .forms import LoginForm, SignupForm
 import json
 
@@ -128,10 +131,10 @@ def get_data(param):
     # y portafolio.
 
     # Si es offerant, incluir los valores que tiene en la
-    # bolsa y como estan distribuidos (portafolio).
+    # bolsa y portafolio.
 
     # Si es investor, los valores que tiene en la bolsa y 
-    # como estan distribuidos (portafolio).
+    # portafolio.
     ans = {}
     if param == 'passives':
         ans = get_passives()
@@ -146,7 +149,74 @@ def get_passives():
     pass
 
 def get_offerants():
-    pass
+    ans = {'offerants' : []}
+    offerants = OfferantDao()
+    all_offerants = offerants.find_all()
+    for itm in all_offerants:
+        ans['offerants'].append(process_offerant(itm))
 
 def get_investors():
     pass
+
+def process_offerant(offerant_object):
+    bare_sct = portfolio_object.__dict__
+    user_login = bare_sct['user_login']
+    offerant_type = bare_sct['offerant_type']
+    bare_sct['portfolios'] = []
+
+    def get_portfolios_per_offerant(user_login):
+        ans = []
+        portfolios = PortfolioDao().find_by_user_login(user_login)
+        for itm in portfolios:
+            ans.append(itm)
+        return ans
+
+    for itm in get_portfolios_per_offerant(user_login):
+        bare_sct['portfolios'],append(process_portfolio(itm))
+
+    return bare_sct    
+
+def process_portfolio(portfolio_object):
+    bare_sct = portfolio_object.__dict__
+    pk_id = bare_sct['pk_id']
+    user_login = bare_sct['user_login']
+    risk = bare_sct['risk']
+    bare_sct['values'] = []
+
+    def get_values_on_portfolio(pk_portfolio):
+        from django.db import connection
+        ans = []
+        cursor = connection.cursor()
+        query = "SELECT * FROM portfolios_vals WHERE pk_portfolio = %s"
+        params = [pk_portfolio]
+        cursor.execute(query, params)
+        items = [itm for itm in cursor.fetchall()]
+        for item in items:
+            ans.append(ValDao().process_row(item))
+        connection.close()
+        return ans
+
+    values_on_portfolio = get_values_on_portfolio(pk_id)
+    for value_object in values_on_portfolio:
+        bare_sct['values'].append(process_value(value_object))
+
+    return bare_sct
+
+def process_value(val_object):
+    bare_sct = val_object.__dict__
+    pk_id = bare_sct['pk_id']
+    val_name = bare_sct['val_name']
+    description = bare_sct['description']
+    val_type = bare_sct['val_type']
+    amount = bare_sct['amount']
+    price = bare_sct['price']
+    rent_id = bare_sct['rent_id']
+    rent_object = RentDao().find_by_id(rent_id)
+    to_append = None
+    if len(rent_object) == 1:
+        to_append = process_rent(rent_object[0])
+    bare_sct['rent_id'] = to_append
+    return bare_sct
+
+def process_rent(rent_object):
+    return rent_object.__dict__
