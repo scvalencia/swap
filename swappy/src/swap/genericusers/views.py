@@ -247,6 +247,7 @@ def process_offerant(offerant_object):
 
     for itm in get_portfolios_per_offerant(user_login):
         bare_sct['portfolios'],append(process_portfolio(itm))
+    print 'OFFERANT'
     print bare_sct
     return bare_sct    
 
@@ -273,6 +274,7 @@ def process_portfolio(portfolio_object):
     values_on_portfolio = get_values_on_portfolio(pk_id)
     for value_object in values_on_portfolio:
         bare_sct['values'].append(process_value(value_object))
+    print 'POTFOLIO'
     print bare_sct
     return bare_sct
 
@@ -290,9 +292,11 @@ def process_value(val_object):
     if len(rent_object) == 1:
         to_append = process_rent(rent_object[0])
     bare_sct['rent_id'] = to_append
+    print 'VALUE'
     print bare_sct
     return bare_sct
 
 def process_rent(rent_object):
+    print 'RENT'
     print rent_object.__dict__
     return rent_object.__dict__
