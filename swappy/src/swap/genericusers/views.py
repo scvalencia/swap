@@ -153,8 +153,7 @@ def get_data(param):
         ans = get_offerants()
     elif param == 'investors':
         ans = get_investors()
-    else:
-        return {}
+    return ans
 
 def get_passives():
     pass
