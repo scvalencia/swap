@@ -204,7 +204,30 @@ def get_offerants():
 '''
 
 def get_investors():
-    pass
+    ans = {'investors' : []}
+    investors = InvestorDao()
+    all_investors = investors.find_all()
+    for itm in all_investors:
+        print itm
+        ans['investors'].append(process_investor(itm))
+    return ans
+
+def process_investor(investor_object):
+    bare_sct = offerant_object.__dict__
+    user_login = bare_sct['user_login']
+    is_enterprise = bare_sct['is_enterprise']
+    bare_sct['portfolios'] = []
+
+    def get_portfolios_per_investor(user_login):
+        ans = []
+        portfolios = PortfolioDao().find_by_user_login(user_login)
+        for itm in portfolios:
+            ans.append(itm)
+        return ans
+
+    for itm in get_portfolios_per_investor(user_login):
+        bare_sct['portfolios'],append(process_portfolio(itm))
+    return bare_sct
 
 def process_offerant(offerant_object):
     bare_sct = offerant_object.__dict__
