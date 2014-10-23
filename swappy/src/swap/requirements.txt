@@ -7,7 +7,16 @@ dj-static==0.0.6
 django-toolbelt==0.0.1
 djangorestframework==2.4.3
 gunicorn==19.1.1
+oauthlib==0.6.3
 psycopg2==2.5.4
-requests==2.4.3
+python-memcached==1.53
+requests==2.1.0
+requests-oauthlib==0.4.0
 static3==0.5.1
+tabulate==0.7.3
+termcolor==1.1.0
+tweepy==2.3.0
+twitter==1.15.0
+twython==3.1.2
+urlfetch==1.0
 wsgiref==0.1.2

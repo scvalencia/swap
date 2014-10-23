@@ -47,7 +47,7 @@ class GenericUserDao(object):
                 result_set = [item for item in self.cursor.fetchall()]
                 for itm in result_set:
                     ans.append(self.process_row(itm))
-            except:
+            except Exception as e:
                 return []
         else:
             try:
@@ -55,7 +55,7 @@ class GenericUserDao(object):
                 result_set = [item for item in objects]
                 for itm in result_set:
                     ans.append(self.process_object(itm))
-            except:
+            except Exception as e:
                 return []
         self.rs.set(ans)        
         return ans
@@ -72,15 +72,17 @@ class GenericUserDao(object):
         if not test:
             try:
                 query = "INSERT INTO users VALUES(%s, %s, %s, %s, %s, %s, %s)"
-                params = [login, user_id, user_pass, first_name, last_name, email, phone]
+                params = [login, user_id, first_name, last_name, email, phone, user_pass]
                 self.cursor.execute(query, params)                
                 return True
-            except:                
+            except Exception as e:
+                print e                
                 return False
         else:
             try:
-                generic_user_object = GenericUser(login = login, user_id = user_id, user_pass = user_pass,
-                    first_name = first_name, last_name = last_name, email = email, phone = phone)
+                generic_user_object = GenericUser(login = login, user_id = user_i, 
+                    first_name = first_name, last_name = last_name, email = email, 
+                    phone = phone, user_pass = user_pass)
                 generic_user_object.save()                
                 return True
             except:                
@@ -227,7 +229,8 @@ class LegalDao(object):
             try:
                 query = "INSERT INTO legals VALUES(%s, %s, %s)"
                 params = [arg_id, arg_name, arg_user_login]
-                self.cursor.execute(query, params)                
+                self.cursor.execute(query, params)
+                print self               
                 return True
             except:                
                 return False
