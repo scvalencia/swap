@@ -113,9 +113,47 @@
                         <div class="alert alert-danger">No hay registros</div>
                         <hr>
                     </div>
-                    <div ng-repeat="passive in passives" class="panel panel-default">
+                    <div class="panel panel-default" ng-repeat="passive in passives">
                         <div class="panel-body">
-                            {{ passive }}
+                            <h3><a ng-click="(showid == passive.user_login) ? showid = '0': showid = passive.user_login">
+                                {{ passive.user_login }}
+                            </a></h3>
+                            <div ng-show="showid == passive.user_login">
+                                <hr>
+                                <h4>
+                                    Numero de registro: {{ passive.passive_register }}
+                                </h4>
+                                <hr>
+                                <h4>Inversores</h4>
+                                <hr>
+                                <div class="investors" ng-repeat="i in passive.investors">
+                                    <p>Login: {{ i.user_login }}</p>
+                                    <p>Dinero: {{ i.available_money }}</p>
+                                    <hr ng-hide="i == passive.investors[passive.investors.length-1]">
+                                </div>
+                                <hr>
+                                <h4>Transacciones</h4>
+                                <hr>
+                                <div class="transactions" ng-repeat="t in passive.transaction">
+                                    <p>ID: {{ t.pk_id }}</p>
+                                    <p>Fecha creada: {{ t.created_at }}</p>
+                                    <hr ng-hide="t == passive.transaction[passive.transaction.length-1]">
+                                </div>
+                                <hr>
+                                <h4>Solicitudes</h4>
+                                <hr>
+                                <div class="solicitudes" ng-repeat="s in passive.solicitudes">
+                                    <p>Solicitante: {{ s.active_login }}</p>
+                                    <p>ID: {{ s.pk_id }}</p>
+                                    <p>Fecha creada: {{ s.created_at }}</p>
+                                    <p>Cantidad: {{ s.amount }}</p>
+                                    <p>Tipo de solicitud: {{ s.request_type }}</p>
+                                    <p>Unidad: {{ s.amount_unit }}</p>
+                                    <hr ng-hide="s == passive.solicitudes[passive.solicitudes.length-1]">
+                                </div>
+                                <hr>
+                                <a ng-click="showid = '0'">Ocultar</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -128,24 +166,80 @@
                         <div class="alert alert-danger">No hay registros</div>
                         <hr>
                     </div>
-                    <div ng-repeat="offerant in offerants" class="panel panel-default">
+                    <div class="panel panel-default" ng-repeat="offerant in offerants">
                         <div class="panel-body">
-                            {{ offerant }}
+                            <h3>
+                                <a ng-click="(showid == offerant.user_login) ? showid = '0': showid = offerant.user_login">
+                                    {{ offerant.user_login }}
+                                </a>
+                            </h3>
+                            <div ng-show="showid == offerant.user_login">
+                                <hr>
+                                <h4>
+                                    Tipo de oferente: {{ offerant.offerant_type }}
+                                </h4>
+                                <hr>
+                                <h4>Portafolios</h4>
+                                <hr>
+                                <div class="portfolios" ng-repeat="p in offerant.portfolios">
+                                    <p>ID: {{ p.pk_id }}</p>
+                                    <p>Riesgo: {{ p.risk }}</p>
+                                    <hr ng-hide="p == offerant.portfolios[offerant.portfolios.length-1]">
+                                </div>
+                                <hr>
+                                <a ng-click="showid = '0'">Ocultar</a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Investors -->
 
-                <div id="invertors" ng-show="tab == '3'">
+                <div id="investors" ng-show="tab == '3'">
                     <h2>Inversores</h2>
                     <div ng-show="investors == null || investors.length == 0">
                         <div class="alert alert-danger">No hay registros</div>
                         <hr>
                     </div>
-                    <div ng-repeat="investor in investors" class="panel panel-default">
+                    <div class="panel panel-default" ng-repeat="investor in investors">
                         <div class="panel-body">
-                            {{ investor }}
+                            <h3>
+                                <a ng-click="(showid == investor.user_login) ? showid = '0': showid = investor.user_login">
+                                    {{ investor.user_login }}
+                                </a>
+                            </h3>
+                            <div ng-show="showid == investor.user_login">
+                                <hr>
+                                <h4>
+                                    {{ (investor.is_enterprise == '1') ? 'Es empresario': 'No es empresario' }}
+                                </h4>
+                                <hr>
+                                <h4>Portafolios</h4>
+                                <hr>
+                                <div class="portfolios" ng-repeat="p in investor.portfolios">
+                                    <p>ID: {{ p.pk_id }}</p>
+                                    <p>Riesgo: {{ p.risk }}</p>
+                                    <hr>
+                                    <h5>Valores</h5>
+                                    <hr>
+                                    <div class="vals" ng-repeat="v in p.values">
+                                        <p>ID: {{ v.pk_id }}</p>
+                                        <p>Nombre: {{ v.name }}</p>
+                                        <p>Tipo de valor: {{ v.val_type }}</p>
+                                        <p>Tipo de renta: {{ v.rent_id.rent_type }}</p>
+                                        <p>Oferente: {{ v.rent_id.offerant_login }}</p>
+                                        <p>Descripcion renta:</p>
+                                        <p>{{ v.rent_id.description }}</p>
+                                        <p>Descripcion valor:</p>
+                                        <p>{{ v.description }}</p>
+                                        <p>Precio: {{ v.price }}</p>
+                                        <p>Cantidad: {{ v.amount }}</p>
+                                    </div>
+                                    <hr ng-hide="p == investor.portfolios[investor.portfolios.length-1]">
+                                </div>
+                                <hr>
+                                <a ng-click="showid = '0'">Ocultar</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -185,6 +279,8 @@
         }]);
 
         app.controller('MasterController', ['$scope', '$http', function($scope, $http) {
+            $scope.showid = '0';
+
             $scope.tab = '1';
 
             $scope.passives = [];
