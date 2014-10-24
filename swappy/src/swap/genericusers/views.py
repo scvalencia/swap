@@ -389,6 +389,8 @@ def get_most_active_values():
     ans = []
     values = ValDao().find_all()
     values = [_.__dict__ for _ in values]
+    return values
+    '''
     random_length = random.randrange(len(values))
     i = 0
     while(i < random_length):
@@ -397,11 +399,14 @@ def get_most_active_values():
             ans.append(choice)
         i += 1
     return ans
+    '''
 
 def get_most_active_actives():
     ans = []
     actives = ActiveDao().find_all()
     actives = [_.__dict__ for _ in actives]
+    return actives
+    '''
     random_length = random.randrange(len(actives))
     i = 0
     while(i < random_length):
@@ -410,6 +415,7 @@ def get_most_active_actives():
             ans.append(choice)
         i += 1
     return ans
+    '''
 
 @transaction.commit_manually
 def remove_passive(num_register):
@@ -436,7 +442,6 @@ def remove_passive(num_register):
                               "T ON T.PASSIVE_REGISTER = PASSIVES.PASSIVE_REGISTER")
         cursor.execute(lazy_passive_query)
         lazy_passive = PassiveDao().process_row([itm for itm in cursor.fetchall()][0])
-        print lazy_passive
         
 
         # Si el activo tiene mas pasivos no hacer nada, de otra forma poner a lazy_passive
@@ -456,12 +461,14 @@ def remove_passive(num_register):
         for item in items:
             active_login = item[0]
             freq = int(item[1])
-            print freq
-            print active_login
-            remover_query = "DELETE * FROM ACTIVESPASSIVES WHERE passive_register = %s"
-            cursor.execute(remover_query, [num_register])
+            try:
+                remover_query = "DELETE * FROM activespassives WHERE passive_register = %s"
+                cursor.execute(remover_query, [num_register])
+            except Exception as e:
+                print e
             PassiveDao().remove(lazy_passive_regis)
             GenericUserDao().remove(lazy_passive_login)
+
 
             if freq == 1:                
                 insert_query = "INSERT INTO ACTIVESPASSIVES VALUES(%s, %s)"
