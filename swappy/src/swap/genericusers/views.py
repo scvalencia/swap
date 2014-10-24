@@ -167,6 +167,10 @@ def get_data(param):
         ans = get_offerants()
     elif param == 'investors':
         ans = get_investors()
+    elif param == 'actives':
+        ans = get_most_active_actives()
+    elif param == 'vals':
+        ans = get_most_active_values()
     return ans
 
 
