@@ -173,7 +173,7 @@ def get_passives():
     ans = {'passives' : []}
     passives = PassiveDao()
     all_passives = passives.find_all()
-    for itm in all_offerants:
+    for itm in all_passives:
         print itm
         ans['passives'].append(process_passive(itm))
     return ans
@@ -198,12 +198,8 @@ def get_investors():
     print ans
     return ans
 
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-=======
 def process_passive(passive_object):
-    bare_sct = offerant_object.__dict__
+    bare_sct = passive_object.__dict__
     passive_register = bare_sct['passive_register']
     user_login = bare_sct['user_login']
     bare_sct['investors'] = []
@@ -277,7 +273,6 @@ def process_solicitude(solicitude_object):
 def process_transaction(transaction_object):
     return transaction_object.__dict__
 
->>>>>>> 32f16beb357b6ffdc2ba7927a379f5d9acf3cbfc
 def process_investor(investor_object):
     bare_sct = investor_object.__dict__
     user_login = bare_sct['user_login']
