@@ -133,7 +133,6 @@ def validate_signup(request, in_data):
 
 
 def get_data(param):
-    # TODO
     # Dado un parametro (passives, offerants o investors)
     # devolver la tabla en forma de diccionario con los
     # datos de todas las filas de la misma, en caso de 
@@ -148,6 +147,7 @@ def get_data(param):
 
     # Si es investor, los valores que tiene en la bolsa y 
     # portafolio.
+
     ans = {}
     if param == 'passives':
         ans = get_passives()
