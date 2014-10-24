@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.db import transaction
 from django.views.generic import View
 
 from dao import GenericUserDao
@@ -406,15 +407,19 @@ def get_random_objects(obj):
     return ans
 
 def get_most_active_values():
+    print 'saafasd'
     ans = []
     values = ValDao().find_all()
     values = [_.__dict__ for _ in values]
-    random_length = random.randrange(len(values) - 1)
+    print values
+    random_length = random.randrange(len(values))
+    print random_length
     i = 0
     while(i < random_length):
         choice = random.choice(values)
         if choice not in ans:
             ans.append(choice)
+        i += 1
     print ans
     return ans
 
@@ -422,11 +427,75 @@ def get_most_active_actives():
     ans = []
     actives = ActiveDao().find_all()
     actives = [_.__dict__ for _ in actives]
-    random_length = random.randrange(len(actives) - 1)
+    for i in actives: print actives
+    random_length = random.randrange(len(actives))
     i = 0
     while(i < random_length):
         choice = random.choice(actives)
         if choice not in ans:
             ans.append(choice)
+        print "I: ", i
+        i += 1
     print ans
     return ans
+
+@transaction.commit_manually
+def remove_passive(num_register):
+    ans = True
+    obj = PassiveDao().find_by_register(num_register)
+    try:
+        # Remove from activespassives DONE
+        # Pass to other pasivo from solicitude
+        # Remove from passive
+        # Si tiene mas pasivos, adicionar a esos, de otra forma adicionarle al de menor carga
+        cursor = connection.cursor()
+        lazy_passive_query = ("SELECT PASSIVES.* "
+                              "FROM PASSIVES "
+                              "INNER JOIN "
+                                "(SELECT * FROM "
+                                    "(SELECT passive_register, COUNT(passive_register) AS freq "
+                                     "FROM ACTIVESPASSIVES GROUP BY passive_register) "
+                                     "WHERE freq = "
+                                        "(SELECT MIN(freq) "
+                                         "FROM "
+                                            "(SELECT passive_register, COUNT(passive_register) AS freq "
+                                             "FROM ACTIVESPASSIVES GROUP BY passive_register) "
+                                     ")) "
+                              "T ON T.PASSIVE_REGISTER = PASSIVES.PASSIVE_REGISTER")
+        cursor.execute(lazy_passive_query)
+        lazy_passive = PassiveDao().process_row([itm for itm in cursor.fetchall()][0])
+
+        
+
+        # Si el activo tiene mas pasivos no hacer nada, de otra forma poner a lazy_passive
+        passives_actives_freq = ("SELECT x.ACTIVE_LOGIN, freq FROM "
+                                "       (SELECT active_login, COUNT(active_login) AS freq "
+                                "       FROM ACTIVESPASSIVES GROUP BY(ACTIVE_LOGIN)) x "
+                                "   INNER JOIN "
+                                "       (SELECT * FROM ACTIVESPASSIVES WHERE PASSIVE_REGISTER = %s) t "
+                                "   ON t.ACTIVE_LOGIN = x.active_login")
+
+        cursor.execute(passives_actives_freq, [num_register])
+        lazy_passive_login = lazy_passive.user_login 
+        lazy_passive_regis = lazy_passive.passive_register
+
+        items = [_ for _ in cursor.fetchall()]
+        for item in items:
+            active_login = item[0]
+            freq = int(item[1])
+            remover_query = "DELETE * FROM ACTIVESPASSIVES WHERE passive_register = %s"
+            cursor.execute(remover_query, [num_register])
+            if freq == 1:                
+                insert_query = "INSERT INTO ACTIVESPASSIVES VALUES(%s, %s)"
+                cursor.execute(insert_query, [active_login, lazy_passive_regis])
+            else:
+                continue
+
+    except:
+        ans = False
+        transaction.rollback()        
+    else:
+        transaction.commit()
+
+    return ans
+
