@@ -406,15 +406,19 @@ def get_random_objects(obj):
     return ans
 
 def get_most_active_values():
+    print 'saafasd'
     ans = []
     values = ValDao().find_all()
     values = [_.__dict__ for _ in values]
-    random_length = random.randrange(len(values) - 1)
+    print values
+    random_length = random.randrange(len(values))
+    print random_length
     i = 0
     while(i < random_length):
         choice = random.choice(values)
         if choice not in ans:
             ans.append(choice)
+        i += 1
     print ans
     return ans
 
@@ -422,11 +426,14 @@ def get_most_active_actives():
     ans = []
     actives = ActiveDao().find_all()
     actives = [_.__dict__ for _ in actives]
-    random_length = random.randrange(len(actives) - 1)
+    for i in actives: print actives
+    random_length = random.randrange(len(actives))
     i = 0
     while(i < random_length):
         choice = random.choice(actives)
         if choice not in ans:
             ans.append(choice)
+        print "I: ", i
+        i += 1
     print ans
     return ans
