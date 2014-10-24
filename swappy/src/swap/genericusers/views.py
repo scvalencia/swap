@@ -131,11 +131,15 @@ def validate_login(request, in_data):
         return False
 
 
-def get_register(user):
-    #TODO DADO UN USUARIO RETRNAR EL NUMERO DE REGISTRO
-    #SI EL USUARIO NO TIENE NUMERO DE REGISTRO(NO ES PASIVO)
-    #RETORNA NULL
-    pass
+def get_register(user_login):
+    ans = None
+    cursor = connection.cursor()
+    query = "SELECT passive_register FROM passives WHERE user_login = %s"
+    cursor.execute(query. user_login)
+    items = [_ for _ in cursor.fetchal()]
+    if len(items) != 0:
+        ans = items.pop()[0]
+    return ans
 
 
 def validate_signup(request, in_data):
