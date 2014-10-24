@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View
 
 from dao import GenericUserDao
@@ -51,7 +51,10 @@ class UserZoneView(View):
 
     def get(self, request, *args, **kwargs):
         if request.session.get('user') and request.session.get('type'):
-            return render(request, 'genericusers/profile.html')
+            if request.session.get('type') == 'activo':
+                return render(request, 'genericusers/active.html')
+            elif request.session.get('type') == 'pasivo':
+                return render(request, 'genericusers/passive.html')
         else:
             params = {
                 'login_form': LoginForm(),
@@ -64,7 +67,7 @@ class UserZoneView(View):
         if in_data.get('form_type') == 'login':
             valid = validate_login(request, in_data)
             if valid:
-                for i in request.session.keys(): print i, '->', request.session[i]
+                
                 return HttpResponse(status=200)
             else:
                 return HttpResponse(status=403)
@@ -87,6 +90,14 @@ class SearchView(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+
+class LogoutView(View):
+    """
+    The view endpoint of the logout url.
+    """
+    def get(self, request, *args, **kwargs):
+        request.session.flush()
+        return redirect('/')
 
 def validate_login(request, in_data):
     user_login = in_data['user']
@@ -155,8 +166,10 @@ def get_data(param):
         ans = get_investors()
     return ans
 
+
 def get_passives():
     pass
+
 
 def get_offerants():
     ans = {'offerants' : []}
@@ -213,8 +226,9 @@ def get_investors():
     print ans
     return ans
 
+
 def process_investor(investor_object):
-    bare_sct = offerant_object.__dict__
+    bare_sct = investor_object.__dict__
     user_login = bare_sct['user_login']
     is_enterprise = bare_sct['is_enterprise']
     bare_sct['portfolios'] = []
@@ -231,6 +245,7 @@ def process_investor(investor_object):
 
     print bare_sct
     return bare_sct
+
 
 def process_offerant(offerant_object):
     bare_sct = offerant_object.__dict__
@@ -254,6 +269,7 @@ def process_offerant(offerant_object):
     print 'OFFERANT'
     print bare_sct
     return bare_sct    
+
 
 def process_portfolio(portfolio_object):
     bare_sct = portfolio_object.__dict__
@@ -282,6 +298,7 @@ def process_portfolio(portfolio_object):
     print bare_sct
     return bare_sct
 
+
 def process_value(val_object):
     bare_sct = val_object.__dict__
     pk_id = bare_sct['pk_id']
@@ -299,6 +316,7 @@ def process_value(val_object):
     print 'VALUE'
     print bare_sct
     return bare_sct
+
 
 def process_rent(rent_object):
     print 'RENT'
