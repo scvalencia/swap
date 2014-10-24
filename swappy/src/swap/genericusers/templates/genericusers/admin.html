@@ -181,10 +181,27 @@
                                 <hr>
                                 <h4>Portafolios</h4>
                                 <hr>
-                                <div class="portfolios" ng-repeat="p in offerant.portfolios">
+                                <div class="portfolios" ng-repeat="p in investor.portfolios">
                                     <p>ID: {{ p.pk_id }}</p>
                                     <p>Riesgo: {{ p.risk }}</p>
-                                    <hr ng-hide="p == offerant.portfolios[offerant.portfolios.length-1]">
+                                    <hr>
+                                    <h5>Valores</h5>
+                                    <hr>
+                                    <div class="vals" ng-repeat="v in p.values">
+                                        <p>ID: {{ v.pk_id }}</p>
+                                        <p>Nombre: {{ v.name }}</p>
+                                        <p>Tipo de valor: {{ v.val_type }}</p>
+                                        <p>Tipo de renta: {{ v.rent_id.rent_type }}</p>
+                                        <p>Oferente: {{ v.rent_id.offerant_login }}</p>
+                                        <p>Descripcion renta:</p>
+                                        <p>{{ v.rent_id.description }}</p>
+                                        <p>Descripcion valor:</p>
+                                        <p>{{ v.description }}</p>
+                                        <p>Precio: {{ v.price }}</p>
+                                        <p>Cantidad: {{ v.amount }}</p>
+                                        <hr ng-show="v == p.values[p.values-length-1]">
+                                    </div>
+                                    <hr ng-hide="p == investor.portfolios[investor.portfolios.length-1]">
                                 </div>
                                 <hr>
                                 <a ng-click="showid = '0'">Ocultar</a>
@@ -234,6 +251,7 @@
                                         <p>{{ v.description }}</p>
                                         <p>Precio: {{ v.price }}</p>
                                         <p>Cantidad: {{ v.amount }}</p>
+                                        <hr ng-show="v == p.values[p.values-length-1]">
                                     </div>
                                     <hr ng-hide="p == investor.portfolios[investor.portfolios.length-1]">
                                 </div>
