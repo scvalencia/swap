@@ -251,7 +251,7 @@ def process_passive(passive_object):
 
     actives_objects = process_actives_for_passive(passive_register)
     for itm in actives_objects:
-        bare_sct['investors'].append(process_investor(itm))
+        bare_sct['investors'].append(process_active(itm))
     active_logins = [i.user_login for i in actives_objects]
     solicitudes = []
     for active_login in active_logins:
@@ -270,13 +270,18 @@ def process_passive(passive_object):
     return bare_sct
 
 def process_solicitude(solicitude_object):
-    return solicitude_object.__dict__
+    dct = solicitude_object.__dict__
+    dct['created_at'] = str(dct['created_at'])
+    return dct
 
 def process_transaction(transaction_object):
-    return transaction_object.__dict__
+    dct = transaction_object.__dict__
+    dct['created_at'] = str(dct['created_at'])
+    return dct
 
 def process_investor(investor_object):
     bare_sct = investor_object.__dict__
+    print bare_sct
     user_login = bare_sct['user_login']
     is_enterprise = bare_sct['is_enterprise']
     bare_sct['portfolios'] = []
@@ -320,22 +325,35 @@ def process_offerant(offerant_object):
 
 
 def process_portfolio(portfolio_object):
+    print 'dasDFADSDFFfa', portfolio_object
     bare_sct = portfolio_object.__dict__
+    print bare_sct
     pk_id = bare_sct['pk_id']
     user_login = bare_sct['user_login']
     risk = bare_sct['risk']
     bare_sct['values'] = []
 
     def get_values_on_portfolio(pk_portfolio):
+        print pk_portfolio
         from django.db import connection
         ans = []
         cursor = connection.cursor()
-        query = "SELECT * FROM portfolios_vals WHERE pk_portfolio = %s"
+        query = ("SELECT vals.pk_id, vals.val_name, vals.description, "
+                 "vals.val_type, vals.amount, vals.price, vals.rent_id FROM "
+                 "portfolios_vals INNER JOIN vals ON portfolios_vals.pk_val = "
+                 "vals.pk_id WHERE portfolios_vals.pk_portfolio = %s")
         params = [pk_portfolio]
         cursor.execute(query, params)
         items = [itm for itm in cursor.fetchall()]
+        print items
         for item in items:
-            ans.append(ValDao().process_row(item))
+            pk_val = item[0]
+            val_object = ValDao().find_by_id(pk_val).pop()
+            ans.append(val_object)
+            print '*' * 100
+            print val_object
+            print '*' * 100
+            print 'saFDASFADFADFADfadFAFDAfFDFFdas'
         connection.close()
         return ans
 
@@ -345,6 +363,9 @@ def process_portfolio(portfolio_object):
     print 'POTFOLIO'
     print bare_sct
     return bare_sct
+
+def process_active(active_object):
+    return active_object.__dict__
 
 
 def process_value(val_object):

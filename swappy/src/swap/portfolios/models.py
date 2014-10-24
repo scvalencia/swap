@@ -32,7 +32,7 @@ class PortfolioVal(models.Model):
 
 class PortfolioDump(object):
 
-    def __init__(self, pk_id, user_login, risk):
+    def __init__(self, user_login, risk, pk_id):
         self.pk_id = pk_id
         self.user_login = user_login
         self.risk = risk
