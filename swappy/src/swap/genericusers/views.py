@@ -267,6 +267,8 @@ def process_passive(passive_object):
     for itm in transactions:
         bare_sct['transaction'].append(process_transaction(itm))
 
+    return bare_sct
+
 def process_solicitude(solicitude_object):
     return solicitude_object.__dict__
 
