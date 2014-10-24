@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.db import transaction
+from django.db import transaction, connection
 from django.views.generic import View
 
 from dao import GenericUserDao
@@ -21,8 +21,9 @@ import random
 class RetireView(View):
     def get(self, request, *args, **kwargs):
         num = get_register(request.session['user'])
-        if num:
+        if num: 
             remove_passive(num)
+            request.session.flush()
         return redirect('/')
 
 
@@ -125,7 +126,6 @@ def validate_login(request, in_data):
             tipo_usuario = 'pasivo'
         request.session['user'] = user_login
         request.session['type'] = tipo_usuario
-        print tipo_usuario
         return True
     else:
         return False
@@ -135,8 +135,8 @@ def get_register(user_login):
     ans = None
     cursor = connection.cursor()
     query = "SELECT passive_register FROM passives WHERE user_login = %s"
-    cursor.execute(query. user_login)
-    items = [_ for _ in cursor.fetchal()]
+    cursor.execute(query, [user_login])
+    items = [_ for _ in cursor.fetchall()]
     if len(items) != 0:
         ans = items.pop()[0]
     return ans
@@ -435,7 +435,7 @@ def remove_passive(num_register):
                               "T ON T.PASSIVE_REGISTER = PASSIVES.PASSIVE_REGISTER")
         cursor.execute(lazy_passive_query)
         lazy_passive = PassiveDao().process_row([itm for itm in cursor.fetchall()][0])
-
+        print lazy_passive
         
 
         # Si el activo tiene mas pasivos no hacer nada, de otra forma poner a lazy_passive
@@ -451,9 +451,12 @@ def remove_passive(num_register):
         lazy_passive_regis = lazy_passive.passive_register
 
         items = [_ for _ in cursor.fetchall()]
+        print items
         for item in items:
             active_login = item[0]
             freq = int(item[1])
+            print freq
+            print active_login
             remover_query = "DELETE * FROM ACTIVESPASSIVES WHERE passive_register = %s"
             cursor.execute(remover_query, [num_register])
             if freq == 1:                

@@ -10,6 +10,6 @@ genericusers_urls = patterns('',
 	url(r'^admin/$', AdminView.as_view()),
     url(r'^userzone/$', UserZoneView.as_view()),
     url(r'^api/(?P<param>\w+)/$', APIView.as_view()),
-    url(r'^logout/$', LogoutView.as_view())
+    url(r'^logout/$', LogoutView.as_view()),
     url(r'^retirar/$', RetireView.as_view())
 )
