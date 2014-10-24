@@ -158,6 +158,23 @@ def get_data(param):
 def get_passives():
     pass
 
+def process_passive(passive_object):
+    bare_sct = offerant_object.__dict__
+    passive_register = bare_sct['passive_register']
+    user_login = bare_sct['user_login']
+    bare_sct['investors'] = []
+    bare_sct['solicitudes'] = []
+    bare_sct['transaction'] = []
+
+    def process_active_for_passive():
+        pass
+
+    def process_solicitude():
+        pass
+
+    def process_transaction():
+        pass
+
 def get_offerants():
     ans = {'offerants' : []}
     offerants = OfferantDao()
@@ -166,42 +183,6 @@ def get_offerants():
         print itm
         ans['offerants'].append(process_offerant(itm))
     return ans
-'''
-    {'offerants' :
-        [
-            {
-                'user-login' : '', 
-                'offerant_type' : '', 
-                'portfolio' : 
-                    {
-                        'id' : '',
-                        'risk' : '',
-                        'vals' :
-                            [
-                                {
-                                    'id' : '',
-                                    'name' : '',
-                                    'description' : '',
-                                    'type' : '',
-                                    'amount' : '',
-                                    'price' : '',
-                                    'rent' :
-                                        {
-                                            'id' : '',
-                                            'name' : '',
-                                            'description' : '',
-                                            'function' : '',
-                                            'length' : '',
-                                            'type' : '',
-                                            'offerant_login' : ''
-                                        }
-                                }
-                            ]
-                    }
-             }
-         ]
-    } 
-'''
 
 def get_investors():
     ans = {'investors' : []}
@@ -227,7 +208,7 @@ def process_investor(investor_object):
         return ans
 
     for itm in get_portfolios_per_investor(user_login):
-        bare_sct['portfolios'],append(process_portfolio(itm))
+        bare_sct['portfolios'].append(process_portfolio(itm))
 
     print bare_sct
     return bare_sct
