@@ -14,6 +14,7 @@ from vals.dao import RentDao
 from vals.dao import ValDao
 from .forms import LoginForm, SignupForm
 import json
+import random
 
 
 class APIView(View):
@@ -391,3 +392,21 @@ def process_rent(rent_object):
     print 'RENT'
     print rent_object.__dict__
     return rent_object.__dict__
+
+def get_most_active_values():
+    ans = set()
+    values = ValDao().find_all()
+    random_length = random.randrange(len(values))
+    i = 0
+    while(i < random_length):
+        ans.add(random.choice(values))
+    return list(ans)
+
+def get_most_active_actives():
+    ans = set()
+    actives = ActiveDao().find_all()
+    random_length = random.randrange(len(actives))
+    i = 0
+    while(i < random_length):
+        ans.add(random.choice(actives))
+    return list(ans)
