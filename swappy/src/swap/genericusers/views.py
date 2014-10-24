@@ -405,6 +405,7 @@ def get_most_active_actives():
     ans = []
     actives = ActiveDao().find_all()
     actives = [_.__dict__ for _ in actives]
+    print actives
     return actives
     '''
     random_length = random.randrange(len(actives))

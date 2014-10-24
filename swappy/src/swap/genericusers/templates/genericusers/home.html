@@ -84,21 +84,30 @@
                     <div id="mostActive" ng-controller="MostActivesController">
                         <h2>Mas activos</h2>
                         <hr>
-                        <ul class="nav nav-pills">
+                        <ul class="nav nav-pills nav-justified">
                             <li ng-class="vClass"><a ng-click="select('1')">Valores</a></li>
                             <li ng-class="aClass"><a ng-click="select('2')">Activos</a></li>
                         </ul>
+                        <hr>
                         {% verbatim %}
                         <div ng-show="slct == '1'">
                             <div ng-hide="valsMessage.message == null">
                                 <br>
                                 <pre ng-class="valsMessage.css">{{ valsMessage.message }}</pre>
                             </div>
+                            <div class="mostvals" ng-repeat="val in vals">
+                                <a>{{ val.val_name }}</a>
+                                <hr>
+                            </div>
                         </div>
                         <div ng-show="slct == '2'">
                             <br>
                             <div ng-hide="activesMessage.message == null">
                                 <pre ng-class="activesMessage.css">{{ activesMessage.message }}</pre>
+                            </div>
+                            <div class="mostacts" ng-repeat="active in actives">
+                                <a>{{ active.user_login }}</a>
+                                <hr>
                             </div>
                         </div>
                         {% endverbatim %}
