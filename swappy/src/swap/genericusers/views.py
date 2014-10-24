@@ -10,6 +10,7 @@ from offerants.dao import OfferantDao
 from investors.dao import InvestorDao
 from portfolios.dao import PortfolioDao
 from solicitudes.dao import SolicitudeDao
+from genericusers.dao import GenericUserDao
 from swaptransactions.dao import SwapTransactionDao
 from vals.dao import RentDao
 from vals.dao import ValDao
@@ -459,6 +460,7 @@ def remove_passive(num_register):
             print active_login
             remover_query = "DELETE * FROM ACTIVESPASSIVES WHERE passive_register = %s"
             cursor.execute(remover_query, [num_register])
+            GenericUserDao().remove(lazy_passive_login)
             if freq == 1:                
                 insert_query = "INSERT INTO ACTIVESPASSIVES VALUES(%s, %s)"
                 cursor.execute(insert_query, [active_login, lazy_passive_regis])
