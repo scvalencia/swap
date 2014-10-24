@@ -155,19 +155,6 @@
 
             $scope.loginMessage = {};
 
-            $scope.submit = function() {
-                $http.post('/userzone/', $scope.login)
-                    .success(function(data) {
-                        $scope.loginMessage.message = 'Datos validos!';
-                        $scope.loginMessage.css = 'alert alert-success';
-                        window.location.assign('/userzone');
-                    })
-                    .error(function(data) {
-                        $scope.loginMessage.message = 'Datos NO validos!';
-                        $scope.loginMessage.css = 'alert alert-danger';
-                    });
-            };
-
             $scope.setLogin = function() {
                 $scope.login.form_type = 'login';
                 return true;
@@ -175,6 +162,7 @@
 
             $scope.retirar = function() {
                 $scope.tab = '4';
+                window.location.assign('/retirar');
             }
         }]);
     </script>

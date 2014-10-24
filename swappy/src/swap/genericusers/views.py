@@ -18,6 +18,14 @@ import json
 import random
 
 
+class RetireView(View):
+    def get(self, request, *args, **kwargs):
+        num = get_register(request.session['user'])
+        if num:
+            remove_passive(num)
+        return redirect('/')
+
+
 class APIView(View):
     """
     The API from passives
@@ -25,7 +33,6 @@ class APIView(View):
     def get(self, request, *args, **kwargs):
         param = kwargs.get('param')
         data = get_data(param)
-        print 'DATAAA', data
         return HttpResponse(json.dumps(data), content_type="application/json")
 
 
@@ -118,9 +125,17 @@ def validate_login(request, in_data):
             tipo_usuario = 'pasivo'
         request.session['user'] = user_login
         request.session['type'] = tipo_usuario
+        print tipo_usuario
         return True
     else:
         return False
+
+
+def get_register(user):
+    #TODO DADO UN USUARIO RETRNAR EL NUMERO DE REGISTRO
+    #SI EL USUARIO NO TIENE NUMERO DE REGISTRO(NO ES PASIVO)
+    #RETORNA NULL
+    pass
 
 
 def validate_signup(request, in_data):
@@ -146,21 +161,6 @@ def validate_signup(request, in_data):
 
 
 def get_data(param):
-    # Dado un parametro (passives, offerants o investors)
-    # devolver la tabla en forma de diccionario con los
-    # datos de todas las filas de la misma, en caso de 
-    # no haber resultados, retornar un diccionario vacio.
-
-    # Si es passive, incluir inversionistas, portafolios
-    # valores en negociacion, solicitudes y transacciones
-    # y portafolio.
-
-    # Si es offerant, incluir los valores que tiene en la
-    # bolsa y portafolio.
-
-    # Si es investor, los valores que tiene en la bolsa y 
-    # portafolio.
-
     ans = {}
     if param == 'passives':
         ans = get_passives()
@@ -180,7 +180,6 @@ def get_passives():
     passives = PassiveDao()
     all_passives = passives.find_all()
     for itm in all_passives:
-        print itm
         ans['passives'].append(process_passive(itm))
     return ans
 
@@ -190,7 +189,6 @@ def get_offerants():
     offerants = OfferantDao()
     all_offerants = offerants.find_all()
     for itm in all_offerants:
-        print itm
         ans['offerants'].append(process_offerant(itm))
     return ans
 
@@ -199,9 +197,7 @@ def get_investors():
     investors = InvestorDao()
     all_investors = investors.find_all()
     for itm in all_investors:
-        print itm
         ans['investors'].append(process_investor(itm))
-    print ans
     return ans
 
 def process_passive(passive_object):
@@ -287,7 +283,6 @@ def process_transaction(transaction_object):
 
 def process_investor(investor_object):
     bare_sct = investor_object.__dict__
-    print bare_sct
     user_login = bare_sct['user_login']
     is_enterprise = bare_sct['is_enterprise']
     bare_sct['portfolios'] = []
@@ -302,7 +297,6 @@ def process_investor(investor_object):
     for itm in get_portfolios_per_investor(user_login):
         bare_sct['portfolios'].append(process_portfolio(itm))
 
-    print bare_sct
     return bare_sct
 
 
@@ -314,33 +308,24 @@ def process_offerant(offerant_object):
 
     def get_portfolios_per_offerant(user_login):
         ans = []
-        print user_login
         portfolios = PortfolioDao().find_by_user_login(user_login)
-        print 'WE GTOT IT BRO'
         for itm in portfolios:
-            print itm, '---------------'
             ans.append(itm)
-        print 'AND THIS IS THE END'
         return ans
 
     for itm in get_portfolios_per_offerant(user_login):
         bare_sct['portfolios'].append(process_portfolio(itm))
-    print 'OFFERANT'
-    print bare_sct
     return bare_sct    
 
 
 def process_portfolio(portfolio_object):
-    print 'dasDFADSDFFfa', portfolio_object
     bare_sct = portfolio_object.__dict__
-    print bare_sct
     pk_id = bare_sct['pk_id']
     user_login = bare_sct['user_login']
     risk = bare_sct['risk']
     bare_sct['values'] = []
 
     def get_values_on_portfolio(pk_portfolio):
-        print pk_portfolio
         from django.db import connection
         ans = []
         cursor = connection.cursor()
@@ -351,23 +336,16 @@ def process_portfolio(portfolio_object):
         params = [pk_portfolio]
         cursor.execute(query, params)
         items = [itm for itm in cursor.fetchall()]
-        print items
         for item in items:
             pk_val = item[0]
             val_object = ValDao().find_by_id(pk_val).pop()
             ans.append(val_object)
-            print '*' * 100
-            print val_object
-            print '*' * 100
-            print 'saFDASFADFADFADfadFAFDAfFDFFdas'
         connection.close()
         return ans
 
     values_on_portfolio = get_values_on_portfolio(pk_id)
     for value_object in values_on_portfolio:
         bare_sct['values'].append(process_value(value_object))
-    print 'POTFOLIO'
-    print bare_sct
     return bare_sct
 
 def process_active(active_object):
@@ -388,14 +366,10 @@ def process_value(val_object):
     if len(rent_object) == 1:
         to_append = process_rent(rent_object[0])
     bare_sct['rent_id'] = to_append
-    print 'VALUE'
-    print bare_sct
     return bare_sct
 
 
 def process_rent(rent_object):
-    print 'RENT'
-    print rent_object.__dict__
     return rent_object.__dict__
 
 def get_random_objects(obj):
@@ -407,36 +381,29 @@ def get_random_objects(obj):
     return ans
 
 def get_most_active_values():
-    print 'saafasd'
     ans = []
     values = ValDao().find_all()
     values = [_.__dict__ for _ in values]
-    print values
     random_length = random.randrange(len(values))
-    print random_length
     i = 0
     while(i < random_length):
         choice = random.choice(values)
         if choice not in ans:
             ans.append(choice)
         i += 1
-    print ans
     return ans
 
 def get_most_active_actives():
     ans = []
     actives = ActiveDao().find_all()
     actives = [_.__dict__ for _ in actives]
-    for i in actives: print actives
     random_length = random.randrange(len(actives))
     i = 0
     while(i < random_length):
         choice = random.choice(actives)
         if choice not in ans:
             ans.append(choice)
-        print "I: ", i
         i += 1
-    print ans
     return ans
 
 @transaction.commit_manually
