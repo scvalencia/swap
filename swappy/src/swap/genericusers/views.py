@@ -413,6 +413,7 @@ def get_most_active_values():
     i = 0
     while(i < random_length):
         ans.add(random.choice(values))
+    print ans
     return list(ans)
 
 def get_most_active_actives():
@@ -423,4 +424,5 @@ def get_most_active_actives():
     i = 0
     while(i < random_length):
         ans.add(random.choice(actives))
+    print ans
     return list(ans)
