@@ -393,10 +393,18 @@ def process_rent(rent_object):
     print rent_object.__dict__
     return rent_object.__dict__
 
+def get_random_objects(obj):
+    ans = []
+    if obj == 'actives':
+        ans = get_most_active_actives()
+    elif obj == 'values':
+        ans = get_most_active_values()
+    return ans
+
 def get_most_active_values():
     ans = set()
     values = ValDao().find_all()
-    random_length = random.randrange(len(values))
+    random_length = random.randrange(len(values) - 1)
     i = 0
     while(i < random_length):
         ans.add(random.choice(values))
@@ -405,7 +413,7 @@ def get_most_active_values():
 def get_most_active_actives():
     ans = set()
     actives = ActiveDao().find_all()
-    random_length = random.randrange(len(actives))
+    random_length = random.randrange(len(actives) - 1)
     i = 0
     while(i < random_length):
         ans.add(random.choice(actives))
