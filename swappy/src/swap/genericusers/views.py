@@ -166,13 +166,25 @@ def process_passive(passive_object):
     bare_sct['solicitudes'] = []
     bare_sct['transaction'] = []
 
-    def process_active_for_passive():
+    def process_active_for_passive(passive_register):
+        from django.db import connection
+        ans = []
+        cursor = connection.cursor()
+        query = "SELECT * FROM activespassives WHERE passive_register = %s"
+        params = [passive_register]
+        cursor.execute(query, params)
+        elements = [_ for _ in cursor.fetchall()]
+        for itm in elements:
+            active_login = itm[0]
+            active_object = ActiveDao().find_by_login(active_login)[0]
+            ans.append(active_object)
+        connection.close()
+        return ans
+
+    def process_solicitude(active_login):
         pass
 
-    def process_solicitude():
-        pass
-
-    def process_transaction():
+    def process_transaction(solicitude_pk):
         pass
 
 def get_offerants():
