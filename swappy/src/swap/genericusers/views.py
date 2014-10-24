@@ -457,7 +457,9 @@ def remove_passive(num_register):
             freq = int(item[1])
             remover_query = "DELETE * FROM ACTIVESPASSIVES WHERE passive_register = %s"
             cursor.execute(remover_query, [num_register])
+            PassiveDao().remove(lazy_passive_regis)
             GenericUserDao().remove(lazy_passive_login)
+
             if freq == 1:                
                 insert_query = "INSERT INTO ACTIVESPASSIVES VALUES(%s, %s)"
                 cursor.execute(insert_query, [active_login, lazy_passive_regis])
