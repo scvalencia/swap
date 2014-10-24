@@ -8,6 +8,8 @@ from passives.dao import PassiveDao
 from offerants.dao import OfferantDao
 from investors.dao import InvestorDao
 from portfolios.dao import PortfolioDao
+from solicitudes.dao import SolicitudeDao
+from swaptransactions.dao import SwapTransactionDao
 from vals.dao import RentDao
 from vals.dao import ValDao
 from .forms import LoginForm, SignupForm
@@ -156,36 +158,13 @@ def get_data(param):
     return ans
 
 def get_passives():
-    pass
-
-def process_passive(passive_object):
-    bare_sct = offerant_object.__dict__
-    passive_register = bare_sct['passive_register']
-    user_login = bare_sct['user_login']
-    bare_sct['investors'] = []
-    bare_sct['solicitudes'] = []
-    bare_sct['transaction'] = []
-
-    def process_active_for_passive(passive_register):
-        from django.db import connection
-        ans = []
-        cursor = connection.cursor()
-        query = "SELECT * FROM activespassives WHERE passive_register = %s"
-        params = [passive_register]
-        cursor.execute(query, params)
-        elements = [_ for _ in cursor.fetchall()]
-        for itm in elements:
-            active_login = itm[0]
-            active_object = ActiveDao().find_by_login(active_login)[0]
-            ans.append(active_object)
-        connection.close()
-        return ans
-
-    def process_solicitude(active_login):
-        pass
-
-    def process_transaction(solicitude_pk):
-        pass
+    ans = {'passives' : []}
+    passives = PassiveDao()
+    all_passives = passives.find_all()
+    for itm in all_offerants:
+        print itm
+        ans['passives'].append(process_passive(itm))
+    return ans
 
 def get_offerants():
     ans = {'offerants' : []}
@@ -205,6 +184,81 @@ def get_investors():
         ans['investors'].append(process_investor(itm))
     print ans
     return ans
+
+def process_passive(passive_object):
+    bare_sct = offerant_object.__dict__
+    passive_register = bare_sct['passive_register']
+    user_login = bare_sct['user_login']
+    bare_sct['investors'] = []
+    bare_sct['solicitudes'] = []
+    bare_sct['transaction'] = []
+
+    def process_actives_for_passive(passive_register):
+        from django.db import connection
+        ans = []
+        cursor = connection.cursor()
+        query = "SELECT * FROM activespassives WHERE passive_register = %s"
+        params = [passive_register]
+        cursor.execute(query, params)
+        elements = [_ for _ in cursor.fetchall()]
+        for itm in elements:
+            active_login = itm[0]
+            active_object = ActiveDao().find_by_login(active_login)[0]
+            ans.append(active_object)
+        connection.close()
+        return ans
+
+    def process_solicitudes(active_login):
+        from django.db import connection
+        ans = []
+        cursor = connection.cursor()
+        query = "SELECT * FROM solicitudes WHERE active_login = %s"
+        params = [active_login]
+        cursor.execute(query, params)
+        elements = [_ for _ in cursor.fetchall()]
+        for itm in elements:
+            solicitude_object = SolicitudeDao().process_row(itm)
+            ans.append(solicitude_object)
+        connection.close()
+        return ans
+
+    def process_transactions(solicitude_pk):
+        from django.db import connection
+        ans = []
+        cursor = connection.cursor()
+        query = "SELECT * FROM swap_transactions WHERE solicitude_1_pk = %s OR solicitude_2_pk = %s"
+        params = [solicitude_pk, solicitude_pk]
+        cursor.execute(query, params)
+        elements = [_ for _ in cursor.fetchall()]
+        for itm in elements:
+            transaction_object = SwapTransactionDao().process_row(itm)
+            ans.append(transaction_object)
+        connection.close()
+        return ans
+
+    actives_objects = process_actives_for_passive(passive_register)
+    for itm in actives_objects:
+        bare_sct['investors'].append(process_investor(itm))
+    active_logins = [i.user_login for i in actives_objects]
+    solicitudes = []
+    for active_login in active_logins:
+        solicitudes_for_active = process_solicitudes(active_login)
+        solicitudes.extend(solicitudes_for_active)
+    for itm in solicitudes:
+        bare_sct['solicitudes'].append(process_solicitude(itm))
+    solicitude_ids = [i.pk_id for i in solicitudes]
+    transactions = []
+    for solicitude_id in solicitude_ids:
+        transactions_for_such_id = process_transactions(solicitude_id)
+        transactions.extend(transactions_for_such_id)
+    for itm in transactions:
+        bare_sct['transaction'].append(process_transaction(itm))
+
+def process_solicitude(solicitude_object):
+    return solicitude_object.__dict__
+
+def process_transaction(transaction_object):
+    return transaction_object.__dict__
 
 def process_investor(investor_object):
     bare_sct = offerant_object.__dict__
