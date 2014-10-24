@@ -404,6 +404,7 @@ def get_random_objects(obj):
 def get_most_active_values():
     ans = set()
     values = ValDao().find_all()
+    values = [_.__dict__ for _ in values]
     random_length = random.randrange(len(values) - 1)
     i = 0
     while(i < random_length):
@@ -413,6 +414,7 @@ def get_most_active_values():
 def get_most_active_actives():
     ans = set()
     actives = ActiveDao().find_all()
+    actives = [_.__dict__ for _ in actives]
     random_length = random.randrange(len(actives) - 1)
     i = 0
     while(i < random_length):
