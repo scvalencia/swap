@@ -357,6 +357,4 @@ def print_report(passed, failed):
 def main():
 	main_slave_homebrew()
 	connection.close()
-
-if __name__ == '__main__':
-	main()
+main()
