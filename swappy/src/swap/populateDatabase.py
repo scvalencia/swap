@@ -17,6 +17,8 @@ from investors.models import Investor
 
 from portfolios.dao import PortfolioDao
 
+from offerants.dao import OfferantDao
+
 
 from termcolor import colored
 from tabulate import tabulate
@@ -367,6 +369,84 @@ class PortfolioPopulator(object):
 		ans += colored('Failed: ' + str(self.failed), 'red')
 		return ans
 
+class OfferantPopulator(object):
+
+	def __init__(self, debugging, bound, printer):
+		self.logins = [itm.user_login.login for itm in Active.objects.all()]
+		self.types = ['1', '0']
+		self.debugging = debugging
+		self.printer = printer
+		self.bound = bound
+		self.inserter = OfferantDao()
+		self.passed = 0
+		self.failed = 0
+
+	def populate(self):
+		i = 0
+		while i < self.bound:
+			login = random.choice(self.logins).encode('utf-8')
+			_type = random.choice(self.types)
+			
+			addion_tuple = login, _type
+			self.inserter = OfferantDao()			
+			response = self.inserter.insert(login, _type)
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
+			i += 1
+
+	def __str__(self):
+		ans = ''
+		ans += colored('Passed: ' + str(self.passed), 'green')
+		ans += ' '
+		ans += colored('Failed: ' + str(self.failed), 'red')
+		return ans
+
+class RentPopulator(object):
+
+	def __init__(self, debugging, bound, printer):
+		self.logins = [itm.user_login.login for itm in Active.objects.all()]
+		self.types = ['1', '0']
+		self.debugging = debugging
+		self.printer = printer
+		self.bound = bound
+		self.inserter = OfferantDao()
+		self.passed = 0
+		self.failed = 0
+
+	def populate(self):
+		i = 0
+		while i < self.bound:
+			login = random.choice(self.logins).encode('utf-8')
+			_type = random.choice(self.types)
+			
+			addion_tuple = login, _type
+			self.inserter = OfferantDao()			
+			response = self.inserter.insert(login, _type)
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
+			i += 1
+
+	def __str__(self):
+		ans = ''
+		ans += colored('Passed: ' + str(self.passed), 'green')
+		ans += ' '
+		ans += colored('Failed: ' + str(self.failed), 'red')
+		return ans
+
 
 
 
@@ -374,9 +454,10 @@ class PortfolioPopulator(object):
 
 def main():
 	debugging = True
-	printer = False
+	printer = True
 	reporter = False
-	size = 20
+	size = 10
+
 
 	Users = UsersPopulator(debugging, size, printer)
 	Users.populate()
@@ -399,10 +480,13 @@ def main():
 	Portfolios = PortfolioPopulator(debugging, size, printer)
 	Portfolios.populate()
 
+	Offerants = OfferantPopulator(debugging, size, printer)
+	Offerants.populate()
+
 	if reporter:
 		entities = {'Users' : Users, 'Actives' : Actives, 
 		'Passives' : Passives, 'Investors' : Investors, 'Legals' : Legals,
-		'Portfolios' : Portfolios}
+		'Portfolios' : Portfolios, 'Offerants' : Offerants}
 		headers = ['Entity', 'Test']
 		table = []
 		for key in entities:
