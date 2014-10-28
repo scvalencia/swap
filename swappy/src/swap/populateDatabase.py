@@ -5,6 +5,8 @@ from genericusers.models import Legal
 from actives.dao import ActiveDao
 from actives.models import Active
 from passives.dao import PassiveDao
+from passives.dao import ActivePassiveDao
+from passives.models import ActivePassive
 from passives.models import Passive
 from passives.models import ActivePassive
 from investors.dao import InvestorDao
@@ -40,16 +42,16 @@ class UsersPopulator(object):
 		for line in file_object_names:
 			line = line.strip()
 			if line[0] not in self.first_names_index:
-				self.first_names_index[line[0]] = [line]
+				self.first_names_index[line[0]] = [line.encode('utf-8')]
 			else:
-				self.first_names_index[line[0]].append(line)
+				self.first_names_index[line[0]].append(line.encode('utf-8'))
 
 		for line in file_object_surnames:
 			line = line.strip()
 			if line[0] not in self.last_names_index:
-				self.last_names_index[line[0]] = [line]
+				self.last_names_index[line[0]] = [line.encode('utf-8')]
 			else:
-				self.last_names_index[line[0]].append(line)
+				self.last_names_index[line[0]].append(line.encode('utf-8'))
 
 	def generator(self, seed, size):
 		return ''.join(random.choice(seed) for _ in range(size))
@@ -82,13 +84,13 @@ class UsersPopulator(object):
 
 		i = 0
 		while i < self.bound:
-			first = random.choice(first_names)
-			last = random.choice(last_names)
-			login = self.generate_login(first, last)
+			first = random.choice(first_names).encode('utf-8')
+			last = random.choice(last_names).encode('utf-8')
+			login = self.generate_login(first, last).encode('utf-8')
 			first = first.capitalize()
 			first_name = ''.join(first.split())
 			user_id = self.generator('1234567890', 10)
-			email = self.generate_email(login)
+			email = self.generate_email(login).encode('utf-8')
 			phone = self.generator('1234567890', 7)
 			password = self.generate_pass()
 			addion_tuple = first, last, login, user_id, email, phone, password
@@ -131,7 +133,7 @@ class ActivesPopulator(object):
 	def populate(self):
 		i = 0
 		while i < self.bound:
-			login = random.choice(self.logins)
+			login = random.choice(self.logins).encode('utf-8')
 			money = random.uniform(1000.0, 24000.0)
 			addion_tuple = login, money
 			self.insertor = ActiveDao()
@@ -173,7 +175,7 @@ class PassivesPopulator(object):
 	def populate(self):
 		i = 0
 		while i < self.bound:
-			login = random.choice(self.logins)
+			login = random.choice(self.logins).encode('utf-8')
 			register = self.generator(self.numbers, 5)
 			addion_tuple = login, register
 			self.insertor = PassiveDao()
@@ -212,7 +214,7 @@ class InvestorPopulator(object):
 	def populate(self):
 		i = 0
 		while i < self.bound:
-			login = random.choice(self.logins)
+			login = random.choice(self.logins).encode('utf-8')
 			is_enterprise = random.choice(self.is_enterprise)
 			addion_tuple = login, is_enterprise
 			self.insertor = InvestorDao()
@@ -256,8 +258,8 @@ class LegalPopulator(object):
 		i = 0
 		while i < self.bound:
 			legal_id = self.generator(self.numbers, 15)
-			name = random.choice(self.names)
-			login = random.choice(self.logins)
+			name = random.choice(self.names).encode('utf-8')
+			login = random.choice(self.logins).encode('utf-8')
 			addion_tuple = legal_id, name, login
 			self.insertor = LegalDao()
 			response = self.insertor.insert(legal_id, name, login)
@@ -288,21 +290,27 @@ class ActivesPassivesPopulator(object):
 		self.debugging = debugging
 		self.printer = printer
 		self.bound = bound
-		self.passed = '-'
-		self.failed = '-'
+		self.inserter = ActivePassiveDao()
+		self.passed = 0
+		self.failed = 0
 
 	def populate(self):
 		i = 0
 		while i < self.bound:
-			login = random.choice(self.logins)
+			login = random.choice(self.logins).encode('utf-8')
 			register = random.choice(self.registers)
 			addion_tuple = login, register
-			print colored('VAN1', 'green')
-			active = Active(user_login = GenericUser(login = login))
-			passive = Passive(passive_register = register)
-			print colored('VAN2', 'green')
-			relation = ActivePassive(active_login = active, passive_login = passive)
-			relation.save()
+			self.inserter = ActivePassiveDao()			
+			response = self.inserter.insert(register, login)
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
 			i += 1
 
 	def __str__(self):
@@ -319,7 +327,7 @@ def main():
 	debugging = True
 	printer = False
 	reporter = True
-	size = 1
+	size = 20000
 
 	Users = UsersPopulator(debugging, size, printer)
 	Users.populate()
