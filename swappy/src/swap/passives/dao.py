@@ -2,6 +2,8 @@ from django.db import connection
 
 from models import Passive
 from models import PassiveDump
+from models import ActivePassive
+from models import ActivePassiveDump
 from resultset.resultSet import ResultSet 
 
 class PassiveDao(object):
@@ -99,3 +101,23 @@ class PassiveDao(object):
         user_login = result_set[1]
         dump = PassiveDump(passive_register, user_login)
         return dump
+
+class ActivePassiveDao(object):
+
+    def __init__(self):
+        self.table_name = 'activespassives'
+        self.schema = ('active_login', 'passive_register')
+        self.cursor = connection.cursor()
+    
+    def insert(self, reg, login, test = False):
+        reg = str(reg)
+        login = str(login)
+        if not test:
+            try:
+                query = "INSERT INTO activespassives VALUES(%s, %s)"
+                params = [login, reg]
+                self.cursor.execute(query, params)                
+                return True
+            except Exception as e:
+                print e                
+                return False
