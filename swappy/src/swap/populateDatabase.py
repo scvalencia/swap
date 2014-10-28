@@ -2,15 +2,22 @@ from genericusers.dao import GenericUserDao
 from genericusers.dao import LegalDao
 from genericusers.models import GenericUser
 from genericusers.models import Legal
+
 from actives.dao import ActiveDao
 from actives.models import Active
+
 from passives.dao import PassiveDao
 from passives.dao import ActivePassiveDao
 from passives.models import ActivePassive
 from passives.models import Passive
 from passives.models import ActivePassive
+
 from investors.dao import InvestorDao
 from investors.models import Investor
+
+from portfolios.dao import PortfolioDao
+
+
 from termcolor import colored
 from tabulate import tabulate
 import string
@@ -320,14 +327,56 @@ class ActivesPassivesPopulator(object):
 		ans += colored('Failed: ' + str(self.failed), 'red')
 		return ans
 
+class PortfolioPopulator(object):
+
+	def __init__(self, debugging, bound, printer):
+		self.logins = [itm.login for itm in GenericUser.objects.all()]
+		self.risks = ['L', 'M', 'H']
+		self.debugging = debugging
+		self.printer = printer
+		self.bound = bound
+		self.inserter = PortfolioDao()
+		self.passed = 0
+		self.failed = 0
+
+	def populate(self):
+		i = 0
+		while i < self.bound:
+			pk_id = i
+			risk = random.choice(self.risks)
+			login = random.choice(self.logins).encode('utf-8')
+			
+			addion_tuple = pk_id, risk, login
+			self.inserter = PortfolioDao()			
+			response = self.inserter.insert(login, risk, pk_id)
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
+			i += 1
+
+	def __str__(self):
+		ans = ''
+		ans += colored('Passed: ' + str(self.passed), 'green')
+		ans += ' '
+		ans += colored('Failed: ' + str(self.failed), 'red')
+		return ans
+
+
+
 
 
 
 def main():
 	debugging = True
 	printer = False
-	reporter = True
-	size = 20000
+	reporter = False
+	size = 20
 
 	Users = UsersPopulator(debugging, size, printer)
 	Users.populate()
@@ -347,9 +396,13 @@ def main():
 	ActivesPassives = ActivesPassivesPopulator(debugging, size, printer)
 	ActivesPassives.populate()
 
+	Portfolios = PortfolioPopulator(debugging, size, printer)
+	Portfolios.populate()
+
 	if reporter:
 		entities = {'Users' : Users, 'Actives' : Actives, 
-		'Passives' : Passives, 'Investors' : Investors, 'Legals' : Legals}
+		'Passives' : Passives, 'Investors' : Investors, 'Legals' : Legals,
+		'Portfolios' : Portfolios}
 		headers = ['Entity', 'Test']
 		table = []
 		for key in entities:
