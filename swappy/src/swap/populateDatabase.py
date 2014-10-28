@@ -297,9 +297,10 @@ class ActivesPassivesPopulator(object):
 			login = random.choice(self.logins)
 			register = random.choice(self.registers)
 			addion_tuple = login, register
-			active = GenericUser(login = login)
-			active = Active(user_login = active.login)
+			print colored('VAN1', 'green')
+			active = Active(user_login = GenericUser(login = login))
 			passive = Passive(passive_register = register)
+			print colored('VAN2', 'green')
 			relation = ActivePassive(active_login = active, passive_login = passive)
 			relation.save()
 			i += 1
@@ -318,7 +319,7 @@ def main():
 	debugging = True
 	printer = False
 	reporter = True
-	size = 20
+	size = 1
 
 	Users = UsersPopulator(debugging, size, printer)
 	Users.populate()
