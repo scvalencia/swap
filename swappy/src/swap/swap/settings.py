@@ -74,6 +74,7 @@ INSTALLED_APPS = (
     'solicitudes',
     'swaptransactions',
     'vals',
+    'filler',
 )
 
 MIDDLEWARE_CLASSES = (
