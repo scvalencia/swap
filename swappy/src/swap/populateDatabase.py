@@ -110,12 +110,12 @@ class UsersPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
 
-			i += 1
 
 	def __str__(self):
 		ans = ''		
@@ -152,12 +152,12 @@ class ActivesPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
-
-			i += 1
+			
 
 	def __str__(self):
 		ans = ''
@@ -194,12 +194,13 @@ class PassivesPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
 
-			i += 1
+			
 
 	def __str__(self):
 		ans = ''
@@ -233,12 +234,13 @@ class InvestorPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
 
-			i += 1
+			
 
 	def __str__(self):
 		ans = ''
@@ -277,12 +279,13 @@ class LegalPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
 
-			i += 1
+			
 
 	def __str__(self):
 		ans = ''
@@ -316,11 +319,12 @@ class ActivesPassivesPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
-			i += 1
+			
 
 	def __str__(self):
 		ans = ''
@@ -356,11 +360,12 @@ class PortfolioPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
-			i += 1
+			
 
 	def __str__(self):
 		ans = ''
@@ -395,11 +400,12 @@ class OfferantPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
-			i += 1
+			
 
 	def __str__(self):
 		ans = ''
@@ -434,11 +440,12 @@ class RentPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
+					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
-			i += 1
+			
 
 	def __str__(self):
 		ans = ''
@@ -459,28 +466,28 @@ def main():
 	size = 10
 
 
-	Users = UsersPopulator(debugging, size, printer)
+	Users = UsersPopulator(debugging, 100, printer)
 	Users.populate()
 
-	Actives = ActivesPopulator(debugging, size, printer) 
+	Actives = ActivesPopulator(debugging, 30, printer) 
 	Actives.populate()
 
-	Passives = PassivesPopulator(debugging, size, printer)
+	Passives = PassivesPopulator(debugging, 30, printer)
 	Passives.populate()
 
-	Investors = InvestorPopulator(debugging, size, printer)
+	Investors = InvestorPopulator(debugging, 30, printer)
 	Investors.populate()
 
-	Legals = LegalPopulator(debugging, size, printer)
+	Legals = LegalPopulator(debugging, 30, printer)
 	Legals.populate()
 
-	ActivesPassives = ActivesPassivesPopulator(debugging, size, printer)
+	ActivesPassives = ActivesPassivesPopulator(debugging, 30, printer)
 	ActivesPassives.populate()
 
-	Portfolios = PortfolioPopulator(debugging, size, printer)
+	Portfolios = PortfolioPopulator(debugging, 100, printer)
 	Portfolios.populate()
 
-	Offerants = OfferantPopulator(debugging, size, printer)
+	Offerants = OfferantPopulator(debugging, 20, printer)
 	Offerants.populate()
 
 	if reporter:
@@ -495,5 +502,5 @@ def main():
 
 		print tabulate(table, headers, tablefmt="grid")
 
-main()
-	
+if __name__ == '__main__':
+	main()
