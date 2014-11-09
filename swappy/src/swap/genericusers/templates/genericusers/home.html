@@ -95,7 +95,7 @@
                                 <br>
                                 <pre ng-class="valsMessage.css">{{ valsMessage.message }}</pre>
                             </div>
-                            <div class="mostvals" ng-repeat="val in vals">
+                            <div class="mostvals" ng-repeat="val in vals | limitTo: 4">
                                 <a>{{ val.val_name }}</a>
                                 <hr>
                             </div>
@@ -105,7 +105,7 @@
                             <div ng-hide="activesMessage.message == null">
                                 <pre ng-class="activesMessage.css">{{ activesMessage.message }}</pre>
                             </div>
-                            <div class="mostacts" ng-repeat="active in actives">
+                            <div class="mostacts" ng-repeat="active in actives | limitTo: 4">
                                 <a>{{ active.user_login }}</a>
                                 <hr>
                             </div>

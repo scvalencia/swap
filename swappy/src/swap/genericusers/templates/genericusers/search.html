@@ -1,0 +1,393 @@
+<!doctype html>
+<html ng-app='app'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
+    <style>
+        .banner {
+            background: #18BC9C;
+            border-bottom: 1px solid #07AB8B;
+        }
+
+        .banner span {
+            margin-right: 10px;
+        }
+
+        .banner h1 {
+            text-align: center;
+            color: black;
+            padding: 11% 0 8% 0;
+            color: #FFF;
+        }
+
+        .footer h4 {
+            text-align: center;
+            padding-top: 4%;
+            padding-bottom: 5%;
+        }
+    </style>
+</head>
+<body>
+    <div class='container-fluid'>
+
+        <!-- Nav bar -->
+
+        <nav class='navbar navbar-default navbar-fixed-top' role='navigation'>
+            <div class='container-fluid'>
+                <div class='navbar-header'>
+                    <button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#bs-example-navbar-collapse-1'>
+                        <span class='sr-only'>Toggle navigation</span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                    </button>
+                    <a class='navbar-brand'>
+                        <span class='glyphicon glyphicon-th-large'></span>
+                        Swap
+                    </a>
+                </div>
+
+            <div class='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
+                <ul class='nav navbar-nav'>
+                    <li><a href='/'>Inicio</a></li>
+                    <li class='active'><a href='/search'>Buscar</a></li>
+                    <li><a href='/userzone'>Usuario</a></li>
+                    <li><a href='/about'>Acerca de</a></li>
+                </ul>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Banner -->
+
+        <div class='row'>
+            <div class='banner' id='welcome'>
+                <h1>
+                    <span class='glyphicon glyphicon-search'></span>
+                    Zona de busquedas
+                </h1>
+            </div>
+        </div>
+
+        <!-- Container -->
+
+        <div class='container' ng-controller='MasterController'>
+
+            <!-- Separator -->
+
+            <div class='row'>
+                <hr class='col-md-11'>
+            </div>
+
+            <!-- Content -->
+
+            <div class='row'>
+
+                <!-- Nav pills -->
+
+                <div class='col-md-3' id='navigation'>
+                    <div class='panel panel-default col-md-11'>
+                        <div class='panel-body'>
+                            <h3>Opciones</h3>
+                            <hr>
+                            <ul class='nav nav-pills nav-stacked'>
+                                <li ng-class='nav == "1" ? "active" : ""'>
+                                    <a ng-click='nav = "1"'>Consultar movimiento</a>
+                                </li>
+                                <li ng-class='nav == "2" ? "active" : ""'>
+                                    <a ng-click='nav = "2"'>Consultar portafolios</a>
+                                </li>
+                                <li ng-class='nav == "3" ? "active" : ""'>
+                                    <a ng-click='nav = "3"'>Consultar valores</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View frame -->
+
+                <div id='vals' class='form col-md-9'>
+
+                    <!-- Movement search -->
+
+                    <div id='valsMove' ng-show='nav == "1"'>
+                        <div class='panel panel-default col-md-11'>
+                            <div class='panel-body'>
+                                <h3>Consultar movimiento</h3>
+                                <hr>
+                                <form name='valsForm' novalidate>
+                                    {% csrf_token %}
+                                    <div class='form-group'>
+                                        <label>Rango fechas *</label>
+                                    </div>
+
+                                    <div class='form-group col-md-6'>
+                                        <label for='fechaInicio'>Fecha inicio *</label>
+                                        <input type='text' class='form-control' placeholder='Fecha inicio' id='fechaInicio' ng-model='formVal.inicio' required>
+                                    </div>
+
+                                    <div class='form-group col-md-6'>
+                                        <label for='fechaFin'>Fecha fin *</label>
+                                        <input type='text' class='form-control' placeholder='Fecha fin' id='fechaFin' ng-model='formVal.fin' required>
+                                    </div>
+
+                                    <div class='form-group'>
+                                        <label>Criterio de busqueda</label>
+                                    </div>
+
+                                    <div class='form-group col-md-6'>
+                                        <label for='tipoCriterio'>Tipo de criterio *</label>
+                                        <select class='form-control' id='tipoCriterio' ng-options='opt.name for opt in valOptions' ng-model='formVal.criType' ng-change='setCriOptions()' required></select>
+                                    </div>
+
+                                    <div class='form-group col-md-6'>
+                                        <label for='criterio'>Valor criterio *</label>
+                                        <select class='form-control' id='criterio' ng-options='opt for opt in criOptions' ng-model='formVal.criVal' required></select>
+                                    </div>
+
+                                    <div class='form-group'>
+                                        <label for='follow'>¿Coincidir con criterio? *</label>
+                                        <select class='form-control' id='follow' ng-options='opt for opt in folOptions' ng-model='formVal.follow' required></select>
+                                    </div>
+
+                                    <button class='btn btn-default' ng-disabled='!valsForm.$valid' ng-click='submitMov()'>
+                                        Buscar ahora
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class='col-md-11' ng-show='valResult.length > 0'>
+                            <h4>Resultados</h4>
+                            <hr>
+                            <div class='panel panel-default' ng-repeat='r in valResult'>
+                                <div class='panel-body'>
+                                    <!-- VAL INFO -->
+                                    {% verbatim %}
+                                    {{ r }}
+                                    {% endverbatim %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Portfolio search -->
+
+                    <div id='portfolio' ng-show='nav == "2"'>
+                        <div class='panel panel-default col-md-11'>
+                            <div class='panel-body'>
+                                <h3>Consultar portafolios</h3>
+                                <hr>
+                                <form name='porForm' novalidate>
+                                    {% csrf_token %}
+
+                                    <div class='form-group'>
+                                        <label for='valType'>Tipo de valor *</label>
+                                        <select class='form-control' id='valType' ng-options='opt for opt in valTypes' ng-model='formPor.valType' required></select>
+                                    </div>
+
+                                    <div class='form-group'>
+                                        <label for='minVal'>Monto mayor a... *</label>
+                                        <input type='number' class='form-control' id='minVal' placeholder='Monto mayor a...' ng-model='formPor.minVal' required></select>
+                                    </div>
+
+                                    <button class='btn btn-default' ng-disabled='!porForm.$valid' ng-click='submitPor()'>
+                                        Buscar ahora
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class='col-md-11' ng-show='porResult.length > 0'>
+                            <h4>Resultados</h4>
+                            <hr>
+                            <div class='panel panel-default' ng-repeat='r in porResult'>
+                                <div class='panel-body'>
+                                    <!-- POR INFO -->
+                                    {% verbatim %}
+                                    {{ r }}
+                                    {% endverbatim %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vals search -->
+
+                    <div id='vals' ng-show='nav == "3"'>
+                        <div class='panel panel-default col-md-11'>
+                            <div class='panel-body'>
+                                <h3>Consultar valores</h3>
+                                <hr>
+                                <form name='idForm' novalidate>
+                                    {% csrf_token %}
+
+                                    <div class='form-group'>
+                                        <label for='idVal'>Identificador del valor *</label>
+                                        <input type='number' class='form-control' id='idVal' placeholder='Identificador del valor' ng-model='formId.idVal' required></select>
+                                    </div>
+
+                                    <button class='btn btn-default' ng-disabled='!idForm.$valid' ng-click='submitId()'>
+                                        Buscar ahora
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class='col-md-11' ng-show='idResult.length > 0'>
+                            <h4>Resultados</h4>
+                            <hr>
+                            <div class='panel panel-default' ng-repeat='r in idResult'>
+                                <div class='panel-body'>
+                                    <!-- VAL INFO -->
+                                    {% verbatim %}
+                                    {{ r }}
+                                    {% endverbatim %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Separator -->
+
+            <div class='row'>
+                <hr>
+            </div>
+
+            <!-- Footer -->
+
+            <div class='row'>
+                <div class='footer'>
+                    <h4>
+                        <span class='glyphicon glyphicon-copyright-mark'></span>
+                        Copyright 2014, all rights reserved
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS scripts -->
+
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+    <script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.4/angular.min.js'></script>
+    <script>
+        var app = angular.module("app", []);
+
+        app.config(["$httpProvider", function($httpProvider) {
+            $httpProvider.defaults.xsrfHeaderName = "X-CSRFToken";
+            $httpProvider.defaults.xsrfCookieName = "csrftoken";
+        }]);
+
+        app.controller("MasterController", ["$scope", "$http", function($scope, $http) {
+
+            /* NAV THINGS */
+
+            $scope.nav = "1";
+
+            /* VAL MOVEMENT THINGS */
+
+            $scope.formVal = {};
+
+            $scope.valOptions = [
+                {
+                    'num': 1,
+                    'name': 'Tipo de valor'
+                },
+                {
+                    'num': 2,
+                    'name': 'Tipo de renta'
+                }
+            ];
+
+            $scope.criOptions = {};
+
+            $scope.setCriOptions = function() {
+                if ($scope.formVal.criType.num == 1) {
+                    $scope.criOptions = [
+                        'a',
+                        'b'
+                    ];
+                    return;
+                }
+                else if ($scope.formVal.criType.num == 2) {
+                    $scope.criOptions = [
+                        'c',
+                        'd'
+                    ];
+                    return;
+                }
+                else {
+                    $scope.criOptions = [];
+                    return;
+                }
+            };
+
+            $scope.folOptions = [
+                'Si',
+                'No'
+            ];
+
+            $scope.valResult = [];
+
+            $scope.submitMov = function() {
+                $http.post('/mov/', $scope.formVal)
+                .success(function(data) {
+                    valResult = data;
+                    return true;
+                })
+                .error(function(data) {
+                    valResult = [];
+                    return false;
+                });
+            };
+
+            /* PORTFOLIO THINGS */
+
+            $scope.formPor = {};
+
+            $scope.valTypes = [
+                'Accion',
+                'Bono'
+            ];
+
+            $scope.porResult = [];
+
+            $scope.submitPor = function() {
+                $http.post('/por/', $scope.formPor)
+                .success(function(data) {
+                    porResult = data;
+                    return true;
+                })
+                .error(function(data) {
+                    porResult = [];
+                    return false;
+                });
+            };
+
+            /* ID VAL THINGS */
+
+            $scope.formId = {};
+
+            $scope.idResult = [];
+
+            $scope.submitId = function() {
+                $http.post('/idval/', $scope.formId)
+                .success(function(data) {
+                    idResult = data;
+                    return true;
+                })
+                .error(function(data) {
+                    idResult = [];
+                    return false;
+                });
+            };
+        }]);
+    </script>
+</body>
+</html>

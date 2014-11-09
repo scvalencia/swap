@@ -19,6 +19,11 @@ import json
 import random
 
 
+############################################################################
+################################## VIEWS ###################################
+############################################################################
+
+
 class RetireView(View):
     def get(self, request, *args, **kwargs):
         num = get_register(request.session['user'])
@@ -47,11 +52,22 @@ class AdminView(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+
 class HomeView(View):
     """
     The view endpoint of the home url.
     """
     template_name = 'genericusers/home.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+
+class SearchView(View):
+    """
+    The view endpoint of the search url.
+    """
+    template_name = 'genericusers/search.html'
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
@@ -111,6 +127,82 @@ class LogoutView(View):
     def get(self, request, *args, **kwargs):
         request.session.flush()
         return redirect('/')
+
+
+class MovView(View):
+    """
+    The view endpoint for Mov.
+    """
+    def post(self, request, *args, **kwargs):
+        info = json.loads(request.body)
+        inicio = info['inicio']
+        fin = info['fin']
+        criType = info['criType']
+        num = criType['num']
+        criVal = info['criVal']
+        follow = info['follow']
+        data = getMovViewInfo(inicio, fin, num, criVal, follow)
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+class PorView(View):
+    """
+    The view endpoint for Por.
+    """
+    def post(self, request, *args, **kwargs):
+        info = json.loads(request.body)
+        valType = info['valType']
+        minVal = info['minVal']
+        data = getPorViewInfo(valType, minVal)
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+class IdView(View):
+    """
+    The view endpoint for Id.
+    """
+    def post(self, request, *args, **kwargs):
+        info = json.loads(request.body)
+        idVal = info['idVal']
+        data = getIdViewInfo(idVal)
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+############################################################################
+################################ FUNCTIONS #################################
+############################################################################
+
+ 
+def getMovViewInfo(inicio, fin, num, criVal, follow):
+    # TODO
+    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
+    # DONDE DADO UNA FECHA DE INICIO, UN FECHA FIN (RANGO DE FECHAS), UN TIPO DE
+    # CRITERIO (NUM) QUE USTED DECIDE COMO MANEJAR PERO DOCUMENTE COMO MANEJO
+    # (EJEMPLO PUEDE DECIRME QUE num=1 ES TIPO DE VALOR, num=2 ES TIPO DE RENTA Y ASI),
+    # UN VALOR PARA ESE CRITERIO (cryVal) Y UNA OPCION FOLLOW QUE PUEDE SER SI O NO,
+    # ESA OPCION FOLLOW SIGNIFICA QUE SI ESTA PUESTA CON VALOR "Si", ENTONCES BUSCARA
+    # LOS MOVIMIENTOS DE VALORES (TRANSACCIONES) QUE HAYAN SIDO REALIZADOS EN ESE RANGO
+    # DE FECHA Y TENGAN VALORES CON ESE CRITERIO, EN CASO DE QUE FOLLOW SEA "No", SERA
+    # IGUAL PERO SERAN VALORES QUE NO TENGAN ESE CRITERIO.
+    return []
+
+
+def getPorViewInfo(valType, minVal):
+    # TODO
+    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
+    # DONDE DADO EL TIPO DEL VALOR (USTED DECIDA QUE TIPOS DEBEN LLEGARLE) Y UN
+    # MONTO MINIMO, DEVUELVA LA LOS PORTAFOLIOS QUE CONTIENEN VALORES DE ESE TIPO
+    # Y QUE HAN TENIDO OPERACIONES CON MONTO MAYOR A ESE MONTO.
+    return []
+
+
+def getIdViewInfo(idVal):
+    # TODO
+    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
+    # DONDE DADO EL ID DEL VALOR, DEVUELVA LA INFORMACION DE LOS PORTAFOLIOS EN LOS 
+    # QUE HA ESTADO INVOLUCRADO.
+    return []
+
 
 def validate_login(request, in_data):
     user_login = in_data['user']
