@@ -16,9 +16,22 @@ from investors.dao import InvestorDao
 from investors.models import Investor
 
 from portfolios.dao import PortfolioDao
+from portfolios.models import Portfolio
+from portfolios.models import PortfolioVal
 
 from offerants.dao import OfferantDao
+from offerants.models import Offerant
 
+from vals.dao import RentDao
+from vals.dao import ValDao
+from vals.models import Rent
+from vals.models import Val
+
+from solicitudes.dao import SolicitudeDao
+from solicitudes.models import Solicitude
+
+from swaptransactions.dao import SwapTransactionDao
+from swaptransactions.models import SwapTransaction
 
 from termcolor import colored
 from tabulate import tabulate
@@ -110,11 +123,11 @@ class UsersPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 
 
 	def __str__(self):
@@ -152,11 +165,11 @@ class ActivesPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 			
 
 	def __str__(self):
@@ -194,11 +207,11 @@ class PassivesPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 
 			
 
@@ -234,11 +247,11 @@ class InvestorPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 
 			
 
@@ -279,11 +292,11 @@ class LegalPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 
 			
 
@@ -319,11 +332,11 @@ class ActivesPassivesPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 			
 
 	def __str__(self):
@@ -345,10 +358,13 @@ class PortfolioPopulator(object):
 		self.passed = 0
 		self.failed = 0
 
+	def generator(self, seed, size):
+		return ''.join(random.choice(seed) for _ in range(size))
+
 	def populate(self):
 		i = 0
 		while i < self.bound:
-			pk_id = i
+			pk_id = random.randint(0, int(self.generator('0123456789', 20)))
 			risk = random.choice(self.risks)
 			login = random.choice(self.logins).encode('utf-8')
 			
@@ -360,11 +376,11 @@ class PortfolioPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 			
 
 	def __str__(self):
@@ -400,11 +416,11 @@ class OfferantPopulator(object):
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 			
 
 	def __str__(self):
@@ -417,34 +433,46 @@ class OfferantPopulator(object):
 class RentPopulator(object):
 
 	def __init__(self, debugging, bound, printer):
-		self.logins = [itm.user_login.login for itm in Active.objects.all()]
+		self.function = ['1', '0']
+		self.length = ['1', '0']
 		self.types = ['1', '0']
+		self.offerants = [itm.user_login.user_login.login for itm in Offerant.objects.all()]
 		self.debugging = debugging
 		self.printer = printer
 		self.bound = bound
-		self.inserter = OfferantDao()
+		self.inserter = RentDao()
 		self.passed = 0
 		self.failed = 0
+
+	def generator(self, size, seed = string.ascii_uppercase):
+		return ''.join(random.choice(seed) for _ in range(size))
 
 	def populate(self):
 		i = 0
 		while i < self.bound:
-			login = random.choice(self.logins).encode('utf-8')
+			pk_id = random.randint(0, int(self.generator(20, '0123456789')))
+			name = self.generator(20)
+			description = self.generator(130)			
+			_fun = random.choice(self.function)
+			_len = random.choice(self.length)
 			_type = random.choice(self.types)
+			login = random.choice(self.offerants).encode('utf-8')
+
 			
-			addion_tuple = login, _type
-			self.inserter = OfferantDao()			
-			response = self.inserter.insert(login, _type)
+			addion_tuple = pk_id, name, description, _fun, _len, _type
+			self.inserter = RentDao()			
+			response = self.inserter.insert(pk_id, name, description, _fun, _len, _type, login)
 			if self.debugging:
 				if response:
 					if self.printer:
 						print addion_tuple, colored(response, 'green')
 					self.passed += 1
-					i += 1
+					
 				else:
 					if self.printer:
 						print addion_tuple, colored(response, 'red')
 					self.failed += 1
+				i += 1
 			
 
 	def __str__(self):
@@ -454,46 +482,358 @@ class RentPopulator(object):
 		ans += colored('Failed: ' + str(self.failed), 'red')
 		return ans
 
+class ValPopulator(object):
+
+	def __init__(self, debugging, bound, printer):
+		self.types = ['1', '0']
+		self.rents = [itm.pk_id for itm in Rent.objects.all()]
+		self.debugging = debugging
+		self.printer = printer
+		self.bound = bound
+		self.inserter = ValDao()
+		self.passed = 0
+		self.failed = 0
+
+	def generator(self, size, seed):
+		return ''.join(random.choice(seed) for _ in range(size))
+
+	def populate(self):
+		i = 0
+		while i < self.bound:
+			pk_id = random.randint(0, int(self.generator(20, '0123456789')))
+			name = self.generator(10, string.ascii_lowercase)
+			description = self.generator(40, string.ascii_lowercase)
+			_type = random.choice(self.types)
+			amount = int(self.generator(5, string.digits))
+			price = random.uniform(0.0, 15.0)
+			rent = random.choice(self.rents)
 
 
+			addion_tuple = pk_id, name, description, _type, amount, price, rent
+			self.inserter = ValDao()			
+			response = self.inserter.insert(pk_id, name, description, _type, amount, price, rent)
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+					
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
+				i += 1
+			
 
+	def __str__(self):
+		ans = ''
+		ans += colored('Passed: ' + str(self.passed), 'green')
+		ans += ' '
+		ans += colored('Failed: ' + str(self.failed), 'red')
+		return ans
+
+class PortfolioValPopulator(object):
+
+	def __init__(self, debugging, bound, printer):
+		self.portfolios = [itm.pk_id for itm in Portfolio.objects.all()]
+		self.vals = [itm.pk_id for itm in Val.objects.all()]
+		self.debugging = debugging
+		self.printer = printer
+		self.bound = bound
+		self.passed = 0
+		self.failed = 0
+
+	def generator(self, size, seed):
+		return ''.join(random.choice(seed) for _ in range(size))
+
+	def populate(self):
+		i = 0
+		while i < self.bound:
+			pk_id = random.randint(0, int(self.generator(20, '0123456789')))
+			portfolio = random.choice(self.portfolios)
+			value = random.choice(self.vals)
+
+			addion_tuple = pk_id, portfolio, value			
+			response = False
+			try:
+				from django.db import connection
+				cursor = connection.cursor()
+				query = "INSERT INTO portfolios_vals VALUES(%s, %s, %s)"
+				params = [pk_id, portfolio, value]
+				cursor.execute(query, params)
+				response = True
+			except Exception, e:
+				response = False
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+					
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
+				i += 1
+			
+
+	def __str__(self):
+		ans = ''
+		ans += colored('Passed: ' + str(self.passed), 'green')
+		ans += ' '
+		ans += colored('Failed: ' + str(self.failed), 'red')
+		return ans
+
+class SolicitudePopulator(object):
+
+	def __init__(self, debugging, bound, printer):
+		self.types = ['1', '0']
+		self.units = ['1', '0']
+		self.logins = [itm.user_login.login for itm in Active.objects.all()]
+		self.debugging = debugging
+		self.printer = printer
+		self.bound = bound
+		self.inserter = SolicitudeDao()
+		self.passed = 0
+		self.failed = 0
+
+	def generator(self, size, seed):
+		return ''.join(random.choice(seed) for _ in range(size))
+
+	def populate(self):
+		i = 0
+		while i < self.bound:
+			pk_id = random.randint(0, int(self.generator(20, '0123456789')))
+			_type = random.choice(self.types)
+			amount = random.uniform(0.0, 15.00)
+			unit = random.choice(self.units)
+			login = random.choice(self.logins).encode('utf-8')
+
+
+			addion_tuple = pk_id, _type, amount, unit, login
+			self.inserter = SolicitudeDao()			
+			response = self.inserter.insert(pk_id, _type, amount, unit, login)
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+					
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
+				i += 1
+			
+
+	def __str__(self):
+		ans = ''
+		ans += colored('Passed: ' + str(self.passed), 'green')
+		ans += ' '
+		ans += colored('Failed: ' + str(self.failed), 'red')
+		return ans
+
+class SwapTransactionsPopulator(object):
+
+	def __init__(self, debugging, bound, printer):
+		self.solicitudes = [itm.pk_id for itm in Solicitude.objects.all()]
+		self.debugging = debugging
+		self.printer = printer
+		self.bound = bound
+		self.inserter = SwapTransactionDao()
+		self.passed = 0
+		self.failed = 0
+
+	def generator(self, size, seed):
+		return ''.join(random.choice(seed) for _ in range(size))
+
+	def populate(self):
+		i = 0
+		while i < self.bound:
+			pk_id = random.randint(0, int(self.generator(20, '0123456789')))
+			s1 = random.choice(self.solicitudes)
+			s2 = random.choice(self.solicitudes)
+
+			addion_tuple = pk_id, s1, s2
+			self.inserter = SwapTransactionDao()			
+			response = self.inserter.insert(pk_id, s1, s2)
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+					
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
+				i += 1
+			
+
+	def __str__(self):
+		ans = ''
+		ans += colored('Passed: ' + str(self.passed), 'green')
+		ans += ' '
+		ans += colored('Failed: ' + str(self.failed), 'red')
+		return ans
+
+class SolicitudeValPopulator(object):
+
+	def __init__(self, debugging, bound, printer):
+		self.solicitudes = [itm.pk_id for itm in Solicitude.objects.all()]
+		self.vals = [itm.pk_id for itm in Val.objects.all()]
+		self.debugging = debugging
+		self.printer = printer
+		self.bound = bound
+		self.passed = 0
+		self.failed = 0
+
+	def populate(self):
+		i = 0
+		while i < self.bound:
+			solicitude = random.choice(self.solicitudes)
+			value = random.choice(self.vals)
+
+			addion_tuple = solicitude, value			
+			response = False
+			try:
+				from django.db import connection
+				cursor = connection.cursor()
+				query = "INSERT INTO solicitudes_val VALUES(%s, %s)"
+				params = [solicitude, value]
+				cursor.execute(query, params)
+				response = True
+			except Exception, e:
+				response = False
+			if self.debugging:
+				if response:
+					if self.printer:
+						print addion_tuple, colored(response, 'green')
+					self.passed += 1
+					
+				else:
+					if self.printer:
+						print addion_tuple, colored(response, 'red')
+					self.failed += 1
+				i += 1
+			
+
+	def __str__(self):
+		ans = ''
+		ans += colored('Passed: ' + str(self.passed), 'green')
+		ans += ' '
+		ans += colored('Failed: ' + str(self.failed), 'red')
+		return ans
+
+def cleaner(sure, secure):
+	if sure and secure:
+		from django.db import connection
+		cursor = connection.cursor()
+		queries = []
+
+		query = "DELETE FROM solicitudes_val"
+		queries.append(query)
+
+		query = "DELETE FROM swap_transactions"
+		queries.append(query)
+
+		query = "DELETE FROM solicitudes"
+		queries.append(query)
+
+		query = "DELETE FROM portfolios_vals"
+		queries.append(query)
+
+		query = "DELETE FROM vals"
+		queries.append(query)
+
+		query = "DELETE FROM rents"
+		queries.append(query)
+
+		query = "DELETE FROM portfolios"
+		queries.append(query)
+
+		query = "DELETE FROM activespassives"
+		queries.append(query)
+
+		query = "DELETE FROM offerants"
+		queries.append(query)
+
+		query = "DELETE FROM legals"
+		queries.append(query)
+
+		query = "DELETE FROM investors"
+		queries.append(query)
+
+		query = "DELETE FROM passives"
+		queries.append(query)
+
+		query = "DELETE FROM actives"
+		queries.append(query)
+
+		query = "DELETE FROM users"
+		queries.append(query)
+
+		for query in queries:
+			print query
+			cursor.execute(query)
+
+		connection.commit()
+		connection.close()
 
 
 def main():
 	debugging = True
 	printer = True
-	reporter = False
-	size = 10
+	reporter = True
 
-
-	Users = UsersPopulator(debugging, 100, printer)
+	Users = UsersPopulator(debugging, 6000, printer)
 	Users.populate()
 
-	Actives = ActivesPopulator(debugging, 30, printer) 
+	Actives = ActivesPopulator(debugging, 500, printer) 
 	Actives.populate()
 
-	Passives = PassivesPopulator(debugging, 30, printer)
+	Passives = PassivesPopulator(debugging, 500, printer)
 	Passives.populate()
 
-	Investors = InvestorPopulator(debugging, 30, printer)
+	Investors = InvestorPopulator(debugging, 500, printer)
 	Investors.populate()
 
-	Legals = LegalPopulator(debugging, 30, printer)
+	Legals = LegalPopulator(debugging, 1000, printer)
 	Legals.populate()
 
-	ActivesPassives = ActivesPassivesPopulator(debugging, 30, printer)
+	ActivesPassives = ActivesPassivesPopulator(debugging, 500, printer)
 	ActivesPassives.populate()
 
-	Portfolios = PortfolioPopulator(debugging, 100, printer)
+	Portfolios = PortfolioPopulator(debugging, 1000, printer)
 	Portfolios.populate()
 
-	Offerants = OfferantPopulator(debugging, 20, printer)
+	Offerants = OfferantPopulator(debugging, 1000, printer)
 	Offerants.populate()
+
+	Rents = RentPopulator(debugging, 1000, printer)
+	Rents.populate()	
+
+	Vals = ValPopulator(debugging, 700000, printer)
+	Vals.populate()	
+
+	PortfolioVals = PortfolioValPopulator(debugging, 200, printer)
+	PortfolioVals.populate()
+
+	Solicitudes = SolicitudePopulator(debugging, 500000, printer)
+	Solicitudes.populate()
+
+	Transactions = SwapTransactionsPopulator(debugging, 400, printer)
+	Transactions.populate()
+
+	SolicitudeVal = SolicitudeValPopulator(debugging, 500000, printer)
+	SolicitudeVal.populate()
 
 	if reporter:
 		entities = {'Users' : Users, 'Actives' : Actives, 
 		'Passives' : Passives, 'Investors' : Investors, 'Legals' : Legals,
-		'Portfolios' : Portfolios, 'Offerants' : Offerants}
+		'Portfolios' : Portfolios, 'Offerants' : Offerants, 'Rents' : Rents,
+		'Vals' : Vals, 'PortfolioVals' : PortfolioVals, 'Solicitudes' : Solicitudes,
+		'Transactions' : Transactions, 'SolicitudeVals' : SolicitudeVal}
 		headers = ['Entity', 'Test']
 		table = []
 		for key in entities:
@@ -502,5 +842,11 @@ def main():
 
 		print tabulate(table, headers, tablefmt="grid")
 
-if __name__ == '__main__':
+
+populate = True
+clean = False
+
+if populate and not clean:
 	main()
+elif clean and not populate:
+	cleaner(clean, not populate)
