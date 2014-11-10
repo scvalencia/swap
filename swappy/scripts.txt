@@ -1,0 +1,94 @@
+select INDEX_NAME, TABLE_NAME from  user_indexes;
+
+SELECT i.table_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('users')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('passives')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('actives')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('legals')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('investors')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('offerants')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('rents')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('vals')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('solicitudes')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('swap_transactions')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('portfolios')
+ORDER  BY c.index_name, c.column_position;
+
+SELECT c.index_name, i.uniqueness, c.column_name
+FROM   user_indexes i, user_ind_columns c
+WHERE  i.index_name = c.index_name
+  AND  i.table_name = UPPER('portfolios_vals')
+ORDER  BY c.index_name, c.column_position;
+
+
+
+CREATE INDEX index10 ON SOLICITUDES_VAL(VAL);
+CREATE INDEX index11 ON ACTIVES(USER_LOGIN);
+CREATE INDEX index12 ON SOLICITUDES_VAL(SOLICITUDES);
+CREATE INDEX index13 ON SOLICITUDES_VAL(VAL);
+CREATE INDEX index14 ON ACTIVESPASSIVES(ACTIVE_LOGIN);
+CREATE INDEX index15 ON ACTIVESPASSIVES(PASSIVE_REGISTER);
+CREATE INDEX index16 ON OFFERANTS(USER_LOGIN);
+CREATE INDEX index17 ON PASSIVES(PASSIVE_REGISTER);
+CREATE INDEX index18 ON PASSIVES(USER_LOGIN);
+CREATE INDEX index19 ON PORTFOLIOS(USER_LOGIN);
+CREATE INDEX index01 ON PORTFOLIOS_VALS(PK_PORTFOLIO);
+CREATE INDEX index02 ON PORTFOLIOS_VALS(PK_VAL);
+CREATE INDEX index03 ON RENTS(RENT_TYPE);
+CREATE INDEX index04 ON SOLICITUDES(CREATED_AT);
+CREATE INDEX index05 ON SOLICITUDES(ACTIVE_LOGIN);
+CREATE INDEX index06 ON SOLICITUDES_VAL(SOLICITUDE);
+CREATE INDEX index07 ON SOLICITUDES_VAL(VAL);
+CREATE INDEX index08 ON VALS(VAL_TYPE);
