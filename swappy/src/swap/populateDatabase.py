@@ -786,25 +786,25 @@ def main():
 	printer = True
 	reporter = True
 
-	Users = UsersPopulator(debugging, 6000, printer)
+	Users = UsersPopulator(debugging, 5000000, printer)
 	Users.populate()
 
-	Actives = ActivesPopulator(debugging, 500, printer) 
+	Actives = ActivesPopulator(debugging, 250000, printer) 
 	Actives.populate()
 
-	Passives = PassivesPopulator(debugging, 500, printer)
+	Passives = PassivesPopulator(debugging, 250000, printer)
 	Passives.populate()
 
-	Investors = InvestorPopulator(debugging, 500, printer)
+	Investors = InvestorPopulator(debugging, 100, printer)
 	Investors.populate()
 
-	Legals = LegalPopulator(debugging, 1000, printer)
+	Legals = LegalPopulator(debugging, 200, printer)
 	Legals.populate()
 
-	ActivesPassives = ActivesPassivesPopulator(debugging, 500, printer)
+	ActivesPassives = ActivesPassivesPopulator(debugging, 250000, printer)
 	ActivesPassives.populate()
 
-	Portfolios = PortfolioPopulator(debugging, 1000, printer)
+	Portfolios = PortfolioPopulator(debugging, 250000, printer)
 	Portfolios.populate()
 
 	Offerants = OfferantPopulator(debugging, 1000, printer)
@@ -813,16 +813,16 @@ def main():
 	Rents = RentPopulator(debugging, 1000, printer)
 	Rents.populate()	
 
-	Vals = ValPopulator(debugging, 700000, printer)
+	Vals = ValPopulator(debugging, 1000, printer)
 	Vals.populate()	
 
-	PortfolioVals = PortfolioValPopulator(debugging, 200, printer)
+	PortfolioVals = PortfolioValPopulator(debugging, 1000000, printer)
 	PortfolioVals.populate()
 
-	Solicitudes = SolicitudePopulator(debugging, 500000, printer)
+	Solicitudes = SolicitudePopulator(debugging, 300000, printer)
 	Solicitudes.populate()
 
-	Transactions = SwapTransactionsPopulator(debugging, 400, printer)
+	Transactions = SwapTransactionsPopulator(debugging, 250000, printer)
 	Transactions.populate()
 
 	SolicitudeVal = SolicitudeValPopulator(debugging, 500000, printer)
