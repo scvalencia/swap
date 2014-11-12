@@ -193,6 +193,8 @@ def validate_login(request, in_data):
     else:
         return False
 
+
+# R1
 def get_movement_info1(value_id, val_type, rent_type, active_login, passive_login, date1, date2):
     # Formato fecha 'yyyy-mm-dd', cuidado con los rangos de fecha, cuidar bounds de cada dato
     # val_type es '0', o '1', punto, igual rent_type
@@ -266,6 +268,8 @@ def get_movement_info1(value_id, val_type, rent_type, active_login, passive_logi
 
     return ans
 
+
+# R2
 def get_movement_info2(value_id, val_type, rent_type, active_login, passive_login, date1, date2):
     # Formato fecha 'yyyy-mm-dd', cuidado con los rangos de fecha, cuidar bounds de cada dato
     # val_type es '0', o '1', punto, igual rent_type
@@ -340,15 +344,95 @@ def get_movement_info2(value_id, val_type, rent_type, active_login, passive_logi
 
     return ans
 
+
+# R3
 def get_portfolio_bound(value_type, bound):
     # value_type in ['0', '1']
     # bound is a number bigger than or equal 0
-    pass
+    query = str(''' SELECT val, frequency, val_name, val_type, amount, price, pk_portfolio, user_login, risk
+                    FROM 
+                    (
+                        SELECT * 
+                        FROM
+                            (
+                                SELECT * 
+                                FROM
+                                    (
+                                        (
+                                            SELECT val, COUNT(val) AS Frequency 
+                                            FROM SOLICITUDES_VAL 
+                                            GROUP BY val 
+                                            ORDER BY COUNT(val) DESC
+                                        ) 
+                                        FREQ INNER JOIN VALS 
+                                        ON FREQ.val = VALS.PK_ID
+                                    )   
+                                WHERE VAL_TYPE = %s AND FREQUENCY > %s
+                            ) 
+                            VALORES INNER JOIN PORTFOLIOS_VALS
+                            ON VALORES.VAL = PORTFOLIOS_VALS.PK_VAL
+                    ) 
+                    PORTFOLIO_INFO INNER JOIN PORTFOLIOS
+                    ON PK_PORTFOLIO = PK_ID 
+            ''')
+    params = [val_type, bound]
+    cursor = connection.cursor()
+    cursor.execute(query, params)
 
+    ans = []
+    result_set = [_ for _ in cursor.fetchall()]
+    for itm in result_set:
+        val = itm[0] 
+        frequency = itm[1]
+        val_name = itm[2]
+        val_type = itm[3]
+        amount = itm[4]
+        price = itm[5]
+        pk_portfolio = itm[6]
+        user_login = itm[7]
+        risk = itm[8]
+
+        dct = {'val' : val, 'frequency' : frequency, 'val_name' : val_name, 'val_type' : val_type, 
+               'amount' : amount, 'price' : price, 'pk_portfolio' : pk_portfolio, 'user_login' : user_login, 
+               'risk' : risk}
+
+        ans.append(dct)
+
+    return ans
+
+
+# R4
 def get_portfolios_value(value_id):
     # value_id is an id value
-    # Take care if was present
-    pass
+    # Take care if was present3
+    query = ''' SELECT pk_portfolio, user_login, risk  
+                FROM
+                    (
+                        SELECT PK_PORTFOLIO 
+                        FROM 
+                        PORTFOLIOS_VALS INNER JOIN VALS 
+                        ON PORTFOLIOS_VALS.PK_VAL = VALS.PK_ID 
+                        WHERE PK_VAL = %s
+                    ) 
+                INFO INNER JOIN PORTFOLIOS 
+                ON INFO.PK_PORTFOLIO = PORTFOLIOS.PK_ID
+            '''
+    params = [val_id]
+    cursor = connection.cursor()
+    cursor.execute(query, params)
+
+    ans = []
+    result_set = [_ for _ in cursor.fetchall()]
+    for itm in result_set:
+        pk_portfolio = itm[0] 
+        user_login = itm[1]
+        risk = itm[2]
+
+        dct = {'pk_portfolio' : pk_portfolio, 'user_login' : user_login, 'risk' : risk}
+
+        ans.append(dct)
+
+    return ans
 
 
 def get_register(user_login):
