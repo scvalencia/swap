@@ -335,7 +335,7 @@ def stats(number):
 
 
 		print tabulate(table, headers, tablefmt="grid")
-		
+
 	def stats_R2():
 		values = [random.choice(values_freqs) for _ in range(20)]
 		value_types = [random.choice(['0', '1']) for _ in range(20)]
@@ -563,7 +563,7 @@ def stats(number):
 			print itm
 	
 
-	def distribution_analisis(number):
+	def distribution_analysis(number):
 		number = (number % 5)
 		if number < 2:
 			stats_R1()
