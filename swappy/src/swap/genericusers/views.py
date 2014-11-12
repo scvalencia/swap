@@ -341,18 +341,13 @@ def get_movement_info2(value_id, val_type, rent_type, active_login, passive_logi
     return ans
 
 def get_portfolio_bound(value_type, bound):
-    # TODO
-    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
-    # DONDE DADO EL TIPO DEL VALOR (USTED DECIDA QUE TIPOS DEBEN LLEGARLE) Y UN
-    # MONTO MINIMO, DEVUELVA LA LOS PORTAFOLIOS QUE CONTIENEN VALORES DE ESE TIPO
-    # Y QUE HAN TENIDO OPERACIONES CON MONTO MAYOR A ESE MONTO.
+    # value_type in ['0', '1']
+    # bound is a number bigger than or equal 0
     pass
 
 def get_portfolios_value(value_id):
-    # TODO
-    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
-    # DONDE DADO EL ID DEL VALOR, DEVUELVA LA INFORMACION DE LOS PORTAFOLIOS EN LOS 
-    # QUE HA ESTADO INVOLUCRADO.
+    # value_id is an id value
+    # Take care if was present
     pass
 
 
