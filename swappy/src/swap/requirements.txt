@@ -9,6 +9,7 @@ djangorestframework==2.4.3
 gunicorn==19.1.1
 oauthlib==0.6.3
 psycopg2==2.5.4
+pygal==1.5.1
 python-memcached==1.53
 requests==2.1.0
 requests-oauthlib==0.4.0
