@@ -18,6 +18,8 @@ from .forms import LoginForm, SignupForm
 import json
 import random
 
+import timeTracker
+
 
 ############################################################################
 ################################## VIEWS ###################################
@@ -172,38 +174,6 @@ class IdView(View):
 ################################ FUNCTIONS #################################
 ############################################################################
 
- 
-def getMovViewInfo(inicio, fin, num, criVal, follow):
-    # TODO
-    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
-    # DONDE DADO UNA FECHA DE INICIO, UN FECHA FIN (RANGO DE FECHAS), UN TIPO DE
-    # CRITERIO (NUM) QUE USTED DECIDE COMO MANEJAR PERO DOCUMENTE COMO MANEJO
-    # (EJEMPLO PUEDE DECIRME QUE num=1 ES TIPO DE VALOR, num=2 ES TIPO DE RENTA Y ASI),
-    # UN VALOR PARA ESE CRITERIO (cryVal) Y UNA OPCION FOLLOW QUE PUEDE SER SI O NO,
-    # ESA OPCION FOLLOW SIGNIFICA QUE SI ESTA PUESTA CON VALOR "Si", ENTONCES BUSCARA
-    # LOS MOVIMIENTOS DE VALORES (TRANSACCIONES) QUE HAYAN SIDO REALIZADOS EN ESE RANGO
-    # DE FECHA Y TENGAN VALORES CON ESE CRITERIO, EN CASO DE QUE FOLLOW SEA "No", SERA
-    # IGUAL PERO SERAN VALORES QUE NO TENGAN ESE CRITERIO.
-    return []
-
-
-def getPorViewInfo(valType, minVal):
-    # TODO
-    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
-    # DONDE DADO EL TIPO DEL VALOR (USTED DECIDA QUE TIPOS DEBEN LLEGARLE) Y UN
-    # MONTO MINIMO, DEVUELVA LA LOS PORTAFOLIOS QUE CONTIENEN VALORES DE ESE TIPO
-    # Y QUE HAN TENIDO OPERACIONES CON MONTO MAYOR A ESE MONTO.
-    return []
-
-
-def getIdViewInfo(idVal):
-    # TODO
-    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
-    # DONDE DADO EL ID DEL VALOR, DEVUELVA LA INFORMACION DE LOS PORTAFOLIOS EN LOS 
-    # QUE HA ESTADO INVOLUCRADO.
-    return []
-
-
 def validate_login(request, in_data):
     user_login = in_data['user']
     user_password = in_data['password']
@@ -222,6 +192,168 @@ def validate_login(request, in_data):
         return True
     else:
         return False
+
+def get_movement_info1(value_id, val_type, rent_type, active_login, passive_login, date1, date2):
+    # Formato fecha 'yyyy-mm-dd', cuidado con los rangos de fecha, cuidar bounds de cada dato
+    # val_type es '0', o '1', punto, igual rent_type
+    # los login son simplemente strings
+    query = ''' SELECT SOLICITUDE, VAL, VAL_TYPE, CREATED_AT, ACTIVE_LOGIN, PASSIVE_REGISTER, USER_LOGIN, RENT_TYPE, VAL_NAME 
+                FROM
+                    (
+                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, PASSIVES.PASSIVE_REGISTER, USER_LOGIN, VAL_NAME 
+                        FROM  
+                            (
+                                SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVESPASSIVES.ACTIVE_LOGIN, PASSIVE_REGISTER, VAL_NAME
+                                FROM
+                                    (
+                                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, VAL_NAME  
+                                        FROM
+                                            (
+                                                SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, VAL_NAME 
+                                                FROM 
+                                                    (
+                                                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, VAL_NAME
+                                                        FROM
+                                                        (
+                                                            SOLICITUDES_VAL INNER JOIN VALS 
+                                                            ON VALS.PK_ID = SOLICITUDES_VAL.VAL
+                                                        )
+                                                    ) 
+                                                SOLICITUDES_INFO INNER JOIN SOLICITUDES 
+                                                ON SOLICITUDES_INFO.SOLICITUDE = SOLICITUDES.PK_ID
+                                            ) 
+                                        INFO1 INNER JOIN ACTIVES 
+                                        ON INFO1.ACTIVE_LOGIN = ACTIVES.USER_LOGIN
+                                    ) 
+                                INFO2 INNER JOIN ACTIVESPASSIVES 
+                                ON ACTIVESPASSIVES.ACTIVE_LOGIN = INFO2.ACTIVE_LOGIN
+                            ) 
+                        INFO3 INNER JOIN PASSIVES 
+                        ON PASSIVES.PASSIVE_REGISTER = INFO3.PASSIVE_REGISTER
+                    ) 
+                INFO4 INNER JOIN RENTS 
+                ON INFO4.RENT_ID = RENTS.PK_ID
+                WHERE   
+                    val = %s AND 
+                    VAL_TYPE = %s AND 
+                    RENT_TYPE = %s AND
+                    ACTIVE_LOGIN = %s AND
+                    USER_LOGIN = %s AND 
+                    CREATED_AT >= TO_TIMESTAMP(%s,'yyyy-mm-dd') AND 
+                    CREATED_AT < TO_TIMESTAMP(%s,'yyyy-mm-dd')
+        '''
+    params = [value_id, val_type, rent_type, active_login, passive_login, date1, date2]
+    cursor = connection.cursor()
+    cursor.execute(query, params)
+    ans = []
+    result_set = [_ for _ in cursor.fetchall()]
+    for itm in result_set:
+        solicitude = itm[0]
+        value_id = itm[1]
+        val_type = itm[2] 
+        created_at = itm[3]
+        active_login = itm[4]
+        passive_register = itm[5]
+        user_login = itm[6]
+        rent_type = itm[7]
+        val_name = itm[8]
+
+        dct = {'solicitude_id' : solicitude, 'value_id' : value_id, 'value_type' : val_type,
+               'created_at' : created_at, 'active_login' : active_login, 'rent_type' : rent_type,
+               'passive_register' : passive_register, 'user_login' : user_login, 'value_name' : val_name}
+
+        ans.append(dct)
+
+    return ans
+
+def get_movement_info2(value_id, val_type, rent_type, active_login, passive_login, date1, date2):
+    # Formato fecha 'yyyy-mm-dd', cuidado con los rangos de fecha, cuidar bounds de cada dato
+    # val_type es '0', o '1', punto, igual rent_type
+    # los login son simplemente strings
+    query = ''' SELECT SOLICITUDE, VAL, VAL_TYPE, CREATED_AT, ACTIVE_LOGIN, PASSIVE_REGISTER, USER_LOGIN, RENT_TYPE, VAL_NAME 
+                FROM
+                    (
+                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, PASSIVES.PASSIVE_REGISTER, USER_LOGIN, VAL_NAME 
+                        FROM  
+                            (
+                                SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVESPASSIVES.ACTIVE_LOGIN, PASSIVE_REGISTER, VAL_NAME
+                                FROM
+                                    (
+                                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, VAL_NAME  
+                                        FROM
+                                            (
+                                                SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, VAL_NAME 
+                                                FROM 
+                                                    (
+                                                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, VAL_NAME
+                                                        FROM
+                                                        (
+                                                            SOLICITUDES_VAL INNER JOIN VALS 
+                                                            ON VALS.PK_ID = SOLICITUDES_VAL.VAL
+                                                        )
+                                                    ) 
+                                                SOLICITUDES_INFO INNER JOIN SOLICITUDES 
+                                                ON SOLICITUDES_INFO.SOLICITUDE = SOLICITUDES.PK_ID
+                                            ) 
+                                        INFO1 INNER JOIN ACTIVES 
+                                        ON INFO1.ACTIVE_LOGIN = ACTIVES.USER_LOGIN
+                                    ) 
+                                INFO2 INNER JOIN ACTIVESPASSIVES 
+                                ON ACTIVESPASSIVES.ACTIVE_LOGIN = INFO2.ACTIVE_LOGIN
+                            ) 
+                        INFO3 INNER JOIN PASSIVES 
+                        ON PASSIVES.PASSIVE_REGISTER = INFO3.PASSIVE_REGISTER
+                    ) 
+                INFO4 INNER JOIN RENTS 
+                ON INFO4.RENT_ID = RENTS.PK_ID
+                WHERE   
+                    val <> %s AND 
+                    VAL_TYPE <> %s AND 
+                    RENT_TYPE <> %s AND
+                    ACTIVE_LOGIN <> %s AND
+                    USER_LOGIN <> %s AND 
+                    CREATED_AT >= TO_TIMESTAMP(%s,'yyyy-mm-dd') AND 
+                    CREATED_AT < TO_TIMESTAMP(%s,'yyyy-mm-dd')
+        '''
+    params = [value_id, val_type, rent_type, active_login, passive_login, date1, date2]
+    cursor = connection.cursor()
+    cursor.execute(query, params)
+
+    ans = []
+    result_set = [_ for _ in cursor.fetchall()]
+    for itm in result_set:
+        solicitude = itm[0]
+        value_id = itm[1]
+        val_type = itm[2] 
+        created_at = itm[3]
+        active_login = itm[4]
+        passive_register = itm[5]
+        user_login = itm[6]
+        rent_type = itm[7]
+        val_name = itm[8]
+
+        dct = {'solicitude_id' : solicitude, 'value_id' : value_id, 'value_type' : val_type,
+               'created_at' : created_at, 'active_login' : active_login, 'rent_type' : rent_type,
+               'passive_register' : passive_register, 'user_login' : user_login, 'value_name' : val_name}
+
+        ans.append(dct)
+
+    return ans
+
+def get_portfolio_bound(value_type, bound):
+    # TODO
+    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
+    # DONDE DADO EL TIPO DEL VALOR (USTED DECIDA QUE TIPOS DEBEN LLEGARLE) Y UN
+    # MONTO MINIMO, DEVUELVA LA LOS PORTAFOLIOS QUE CONTIENEN VALORES DE ESE TIPO
+    # Y QUE HAN TENIDO OPERACIONES CON MONTO MAYOR A ESE MONTO.
+    return []
+
+def get_portfolios_value(value_id):
+    # TODO
+    # ACA DEBE RETORNAR UN ARREGLO DE DICCIONARIOS QUE YO CONVERTIRE ARRIBA A JSON
+    # DONDE DADO EL ID DEL VALOR, DEVUELVA LA INFORMACION DE LOS PORTAFOLIOS EN LOS 
+    # QUE HA ESTADO INVOLUCRADO.
+    return []
 
 
 def get_register(user_login):
