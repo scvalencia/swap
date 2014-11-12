@@ -56,48 +56,48 @@ def R1(value, val_type, rent_type, active_login, passive_login, date1, date2):
 	cursor.execute(query, params)
 
 def R2(value, val_type, rent_type, active_login, passive_login, date1, date2):
-	query = ''' SELECT SOLICITUDE, VAL, VAL_TYPE, CREATED_AT, ACTIVE_LOGIN, PASSIVE_REGISTER, USER_LOGIN, RENT_TYPE 
-				FROM
-					(
-						SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, PASSIVES.PASSIVE_REGISTER, USER_LOGIN 
-						FROM  
-							(
-								SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVESPASSIVES.ACTIVE_LOGIN, PASSIVE_REGISTER
-								FROM
-									(
-										SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN  
-										FROM
-											(
-												SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN 
-												FROM 
-													(
-														SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID
-														FROM
-														(
-															SOLICITUDES_VAL INNER JOIN VALS 
-															ON VALS.PK_ID = SOLICITUDES_VAL.VAL
-														)
-													) 
-												SOLICITUDES_INFO INNER JOIN SOLICITUDES 
-												ON SOLICITUDES_INFO.SOLICITUDE = SOLICITUDES.PK_ID
-											) 
-										INFO1 INNER JOIN ACTIVES 
-										ON INFO1.ACTIVE_LOGIN = ACTIVES.USER_LOGIN
-									) 
-								INFO2 INNER JOIN ACTIVESPASSIVES 
-								ON ACTIVESPASSIVES.ACTIVE_LOGIN = INFO2.ACTIVE_LOGIN
-							) 
-						INFO3 INNER JOIN PASSIVES 
-						ON PASSIVES.PASSIVE_REGISTER = INFO3.PASSIVE_REGISTER
-					) 
-				INFO4 INNER JOIN RENTS 
-				ON INFO4.RENT_ID = RENTS.PK_ID
-				WHERE	
-					val = %s AND 
-					VAL_TYPE = %s AND 
-					RENT_TYPE = %s AND
-  					ACTIVE_LOGIN = %s AND
-  					USER_LOGIN = %s AND 
+	query = ''' SELECT SOLICITUDE, VAL, VAL_TYPE, CREATED_AT, ACTIVE_LOGIN, PASSIVE_REGISTER, USER_LOGIN, RENT_TYPE, VAL_NAME 
+                FROM
+                    (
+                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, PASSIVES.PASSIVE_REGISTER, USER_LOGIN, VAL_NAME 
+                        FROM  
+                            (
+                                SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVESPASSIVES.ACTIVE_LOGIN, PASSIVE_REGISTER, VAL_NAME
+                                FROM
+                                    (
+                                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, VAL_NAME  
+                                        FROM
+                                            (
+                                                SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, CREATED_AT, ACTIVE_LOGIN, VAL_NAME 
+                                                FROM 
+                                                    (
+                                                        SELECT SOLICITUDE, VAL, VAL_TYPE, RENT_ID, VAL_NAME
+                                                        FROM
+                                                        (
+                                                            SOLICITUDES_VAL INNER JOIN VALS 
+                                                            ON VALS.PK_ID = SOLICITUDES_VAL.VAL
+                                                        )
+                                                    ) 
+                                                SOLICITUDES_INFO INNER JOIN SOLICITUDES 
+                                                ON SOLICITUDES_INFO.SOLICITUDE = SOLICITUDES.PK_ID
+                                            ) 
+                                        INFO1 INNER JOIN ACTIVES 
+                                        ON INFO1.ACTIVE_LOGIN = ACTIVES.USER_LOGIN
+                                    ) 
+                                INFO2 INNER JOIN ACTIVESPASSIVES 
+                                ON ACTIVESPASSIVES.ACTIVE_LOGIN = INFO2.ACTIVE_LOGIN
+                            ) 
+                        INFO3 INNER JOIN PASSIVES 
+                        ON PASSIVES.PASSIVE_REGISTER = INFO3.PASSIVE_REGISTER
+                    ) 
+                INFO4 INNER JOIN RENTS 
+                ON INFO4.RENT_ID = RENTS.PK_ID
+                WHERE 	
+					val <> %s AND 
+					VAL_TYPE <> %s AND 
+					RENT_TYPE <> %s AND
+  					ACTIVE_LOGIN <> %s AND
+  					USER_LOGIN <> %s AND 
 				  	CREATED_AT >= TO_TIMESTAMP(%s,'yyyy-mm-dd') AND 
 				  	CREATED_AT < TO_TIMESTAMP(%s,'yyyy-mm-dd')
 		'''
@@ -574,7 +574,8 @@ def stats(number):
 		else:
 			stats_R4()
 
-	distribution_analisis(number)
+	distribution_analysis(number)
 
 
-stats(1)
+stats(2)
+time()
