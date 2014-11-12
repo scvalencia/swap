@@ -420,6 +420,7 @@ def get_portfolios_value(value_id):
     params = [val_id]
     cursor = connection.cursor()
     cursor.execute(query, params)
+    dates = sorted([random_date() for _ in range(20)])
 
     ans = []
     result_set = [_ for _ in cursor.fetchall()]
@@ -427,11 +428,27 @@ def get_portfolios_value(value_id):
         pk_portfolio = itm[0] 
         user_login = itm[1]
         risk = itm[2]
+        active = random.choice([True, False, False])
+        date1, date2 = '', ''
+        if not active:
+            date1 = random_date()
+            date2 = random_date()
 
-        dct = {'pk_portfolio' : pk_portfolio, 'user_login' : user_login, 'risk' : risk}
+        dates = sorted([date1, date2])
+
+        dct = {'pk_portfolio' : pk_portfolio, 'user_login' : user_login, 'risk' : risk,
+               'active' : active, 'date1' : date1, 'date2' : date2}
 
         ans.append(dct)
 
+    return ans
+
+def random_date():
+    ans = ''
+    ans += '2014-'
+    ans += str(random.choice(range(10, 12)))
+    dates = map(lambda _ : '0' + str(_) if _ < 10 else str(_), [_ for _ in range(20)])
+    ans += '-' + dates[random.choice(range(20))]
     return ans
 
 
