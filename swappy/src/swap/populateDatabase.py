@@ -786,46 +786,46 @@ def main():
 	printer = True
 	reporter = True
 
-	Users = UsersPopulator(debugging, 5000000, printer)
+	Users = UsersPopulator(debugging, 1, printer)
 	Users.populate()
 
-	Actives = ActivesPopulator(debugging, 250000, printer) 
+	Actives = ActivesPopulator(debugging, 1, printer) 
 	Actives.populate()
 
-	Passives = PassivesPopulator(debugging, 250000, printer)
+	Passives = PassivesPopulator(debugging, 1, printer)
 	Passives.populate()
 
-	Investors = InvestorPopulator(debugging, 100, printer)
+	Investors = InvestorPopulator(debugging, 1, printer)
 	Investors.populate()
 
-	Legals = LegalPopulator(debugging, 200, printer)
+	Legals = LegalPopulator(debugging, 1, printer)
 	Legals.populate()
 
-	ActivesPassives = ActivesPassivesPopulator(debugging, 250000, printer)
+	ActivesPassives = ActivesPassivesPopulator(debugging, 1, printer)
 	ActivesPassives.populate()
 
-	Portfolios = PortfolioPopulator(debugging, 250000, printer)
+	Portfolios = PortfolioPopulator(debugging, 1, printer)
 	Portfolios.populate()
 
-	Offerants = OfferantPopulator(debugging, 1000, printer)
+	Offerants = OfferantPopulator(debugging, 1, printer)
 	Offerants.populate()
 
-	Rents = RentPopulator(debugging, 1000, printer)
+	Rents = RentPopulator(debugging, 1, printer)
 	Rents.populate()	
 
-	Vals = ValPopulator(debugging, 1000, printer)
+	Vals = ValPopulator(debugging, 1, printer)
 	Vals.populate()	
 
-	PortfolioVals = PortfolioValPopulator(debugging, 1000000, printer)
+	PortfolioVals = PortfolioValPopulator(debugging, 1, printer)
 	PortfolioVals.populate()
 
-	Solicitudes = SolicitudePopulator(debugging, 300000, printer)
+	Solicitudes = SolicitudePopulator(debugging, 1, printer)
 	Solicitudes.populate()
 
-	Transactions = SwapTransactionsPopulator(debugging, 250000, printer)
+	Transactions = SwapTransactionsPopulator(debugging, 1, printer)
 	Transactions.populate()
 
-	SolicitudeVal = SolicitudeValPopulator(debugging, 500000, printer)
+	SolicitudeVal = SolicitudeValPopulator(debugging, 1, printer)
 	SolicitudeVal.populate()
 
 	if reporter:
