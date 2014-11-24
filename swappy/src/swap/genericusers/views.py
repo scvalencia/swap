@@ -855,7 +855,7 @@ def dynamic_values(date1, date2):
 
         Returns:
             (list of Vals): list of value object representing each single
-            element in the list
+            element in the list, each item in the list is a dictionary
     '''
 
     from django.db import connection
