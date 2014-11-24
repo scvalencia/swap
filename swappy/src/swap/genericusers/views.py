@@ -695,19 +695,10 @@ def reset_portfolio(new_portfolio_object):
                     'pk_id' : value,
                     'values' : 
                         [
-                            {
-                                'pk_id' : value,
-                                'pk_val' : value,
-                            },
-                            {
-                                'pk_id' : value,
-                                'pk_val' : value,
-                            },
-                            {
-                                'pk_id' : value,
-                                'pk_val' : value,
-                            },
-                            ...
+                            value1,
+                            value2,
+                            ...,
+                            valuen
                         ]
                 }
 
@@ -757,10 +748,7 @@ def reset_portfolio(new_portfolio_object):
             # Buy: add to my portfolio
             for itm in new_portfolio_object['values']:
 
-                association_id = itm['pk_id']
-                pk_val = itm['pk_val']
-
-                bought = buy_value(pk_val, portfolio_id, association_id)
+                bought = buy_value(pk_val, portfolio_id)
 
                 if not bought:
                     wrong_values.append(pk_val)
@@ -816,7 +804,7 @@ def sell_value(portfolio_id):
 
     return ans
 
-def buy_value(value_id, portfolio_id, association_id):
+def buy_value(value_id, portfolio_id):
     ''' Adds the given value to the given portfolio
         with the association value as the given parameters
 
@@ -840,7 +828,8 @@ def buy_value(value_id, portfolio_id, association_id):
 
     cursor = connection.cursor()
     query = '''INSERT INTO PORTFOLIOS_VALS VALUES(%s, %s, %s)'''
-    params = [random_generator(14, '0123456789'), portfolio_id, value_id]
+    params = [random_generator(20, '0123456789'), portfolio_id, value_id]
+
     try:
         cursor.execute(query, params)
         ans = True
