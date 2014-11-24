@@ -931,7 +931,7 @@ def dynamic_values(date1, date2):
         if value_object:
             ans.append(value_object)
 
-    return ans
+    return [itm.__dict__ for itm in ans]
 
 def process_value(val_object):
     bare_sct = val_object.__dict__
