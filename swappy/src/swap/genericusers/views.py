@@ -838,6 +838,101 @@ def buy_value(value_id, portfolio_id):
 
     return ans
 
+def drop_intermediate(user_id):
+    pass
+
+def dynamic_values(date1, date2):
+    ''' Get the more dynamic values in Swap in a given
+        range of dates, that is the more frequent values
+        in solicitudes in a given date.
+
+        Args:
+            date1: (string) a string representing the lower bound
+            of the date. its format should 'yyyy-mm-dd'
+
+            dates: (string) a string representing the upper bound
+            of the date. The format is the same as above
+
+        Returns:
+            (list of Vals): list of value object representing each single
+            element in the list
+    '''
+
+    from django.db import connection
+
+    ans = []
+
+    cursor = connection.cursor()
+    query = ''' SELECT VALS.*
+                FROM
+                    VALS
+                INNER JOIN
+                    (SELECT rela.val, freq, solicitude 
+                    FROM   
+                        (
+                            SELECT VAL, COUNT(VAL) AS FREQ 
+                            FROM 
+                                (
+                                        SOLICITUDES_VAL 
+                                    INNER JOIN 
+                                        SOLICITUDES 
+                                    ON SOLICITUDES.PK_ID = SOLICITUDES_VAL.SOLICITUDE
+                                ) 
+                            GROUP BY VAL
+                            ORDER BY COUNT(VAL) DESC
+                        ) rela
+                    INNER JOIN
+                        (
+                            SELECT SOLICITUDE, VAL
+                            FROM 
+                                (
+                                        SOLICITUDES_VAL 
+                                    INNER JOIN 
+                                        SOLICITUDES 
+                                    ON SOLICITUDES.PK_ID = SOLICITUDES_VAL.SOLICITUDE
+                                )
+                            WHERE 
+                                (
+                                    CREATED_AT >= TO_TIMESTAMP(%s,'yyyy-mm-dd') 
+                                    AND 
+                                    CREATED_AT < TO_TIMESTAMP(%s,'yyyy-mm-dd')
+                                )
+                        ) relb
+                    ON rela.val = relb.val
+                    WHERE FREQ IN 
+                        (
+                            SELECT MAX(freq)
+                            FROM
+                            (
+                                SELECT VAL, COUNT(VAL) AS FREQ 
+                                FROM 
+                                        (
+                                                SOLICITUDES_VAL 
+                                            INNER JOIN 
+                                                SOLICITUDES 
+                                            ON SOLICITUDES.PK_ID = SOLICITUDES_VAL.SOLICITUDE
+                                        ) 
+                                GROUP BY VAL
+                                ORDER BY COUNT(VAL) DESC
+                            )
+                        )
+                    ORDER BY freq DESC) infreq
+                ON infreq.val = VALS.PK_ID
+            '''
+
+    params = [date1, date2]
+    cursor.execute(query, params)
+
+    result_set = [_ for _ in cursor.fetchall()]
+
+    for itm in result_set:
+        pk = itm[0]
+        value_object = ValDao().find_by_id(pk)
+        if value_object:
+            ans.append(value_object)
+
+    return ans
+
 def process_value(val_object):
     bare_sct = val_object.__dict__
     pk_id = bare_sct['pk_id']
