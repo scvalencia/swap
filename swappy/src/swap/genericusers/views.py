@@ -740,7 +740,7 @@ def reset_portfolio(new_portfolio_object):
     result_set = [_ for _ in cursor.fetchall()]
     if len(result_set) == 0:
         # Wrong parameters
-        ans[1] = 'The given parameters are invalid for the transaction'
+        ans[1] = 'The given parameters are invalid for the transaction::imposible'
     else:
         # Parameters in table
 
@@ -751,7 +751,7 @@ def reset_portfolio(new_portfolio_object):
         sold = sell_values(portfolio_id)
 
         if not sold:
-            ans[1] = 'Impossible to sell the values'
+            ans[1] = 'Impossible to sell the values::imposible'
 
         else:
             # Buy: add to my portfolio
@@ -788,11 +788,66 @@ def random_generator(size, seed):
     return ''.join(random.choice(seed) for _ in range(size))
 
 def sell_value(portfolio_id):
-    # TODO: Sell the values associated with some portfolio
-    return True
+    ''' Deletes all the values associated with the
+        portfolio_id in the table PORTFOLIOS_VALS
+
+        Args:
+            portfolio_id: the id of the portfolio associated with
+            the transaction
+
+        Returns:
+            (bool): a flag for show the failure of success of the
+            transaction
+
+    '''
+
+    from django.db import connection
+
+    ans = True
+
+    cursor = connection.cursor()
+    query = '''DELETE FORM PORTFOLIOS_VALS WHERE pk_portfolio = %s'''
+    params = [portfolio_id]
+    try:
+        cursor.execute(query, params)
+        ans = True
+    except:
+        ans = False    
+
+    return ans
 
 def buy_value(value_id, portfolio_id, association_id):
-    return True
+    ''' Adds the given value to the given portfolio
+        with the association value as the given parameters
+
+        Args:
+            value_id: the id of the value, that should exists
+            in the database
+
+            portfolio_id: the id of the portfolio, should be in
+            in the database
+
+            association_id: the id of the association
+
+        Returns:
+            (bool): a flag for the success of the transaction
+
+    '''
+
+    from django.db import connection
+
+    ans = True
+
+    cursor = connection.cursor()
+    query = '''INSERT INTO PORTFOLIOS_VALS VALUES(%s, %s, %s)'''
+    params = [random_generator(14, '0123456789'), portfolio_id, value_id]
+    try:
+        cursor.execute(query, params)
+        ans = True
+    except:
+        ans = False    
+
+    return ans
 
 def process_value(val_object):
     bare_sct = val_object.__dict__
