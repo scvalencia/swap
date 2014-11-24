@@ -676,6 +676,123 @@ def process_portfolio(portfolio_object):
 def process_active(active_object):
     return active_object.__dict__
 
+def reset_portfolio(new_portfolio_object):
+    ''' Resets the portfolio as described in RF14, for Swap
+        just for swap. It should sell the current values in
+        the portfolio and reset the portfolio with the values
+        in the new_portfolio_object.
+
+        Args:
+            new_portfolio_object: a hash map, indicating the
+            composition of the new portfolio, whose ID should
+            already exists in Swap.
+
+            It's structure should be as in:
+
+                {
+                    'user_login' : value,
+                    'risk' : value,
+                    'pk_id' : value,
+                    'values' : 
+                        [
+                            {
+                                'pk_id' : value,
+                                'pk_val' : value,
+                            },
+                            {
+                                'pk_id' : value,
+                                'pk_val' : value,
+                            },
+                            {
+                                'pk_id' : value,
+                                'pk_val' : value,
+                            },
+                            ...
+                        ]
+                }
+
+            The values 'user_login', 'risk', 'pk_id', should exists in
+            the respective tables. And the value of values['pk_val'] 
+            should exists in the values table.
+
+        Returns:
+            (bool, string) : a bool flag for the success of the process
+                             a string message showing the associated
+                             message and containing the confirmation
+                             number. The structure of the message is:
+
+                             <MESSAGE>:<NUMBER>:<STATE> 
+    '''
+
+    from django.db import connection
+
+    portfolio_user = new_portfolio_object['user_login']
+    portfolio_risk = new_portfolio_object['risk']
+    portfolio_id = new_portfolio_object['pk_id']
+
+    ans = [False, None]
+
+
+    cursor = connection.cursor()
+    query = '''SELECT * FROM PORTFOLIOS WHERE user_login = %s AND risk = %s AND pk_id = %s'''
+    params = [portfolio_user, portfolio_risk, portfolio_id]
+    cursor.execute(query, params)
+    result_set = [_ for _ in cursor.fetchall()]
+    if len(result_set) == 0:
+        # Wrong parameters
+        ans[1] = 'The given parameters are invalid for the transaction'
+    else:
+        # Parameters in table
+
+        flag = True
+        wrong_values = []
+
+        # Sell
+        sold = sell_values(portfolio_id)
+
+        if not sold:
+            ans[1] = 'Impossible to sell the values'
+
+        else:
+            # Buy: add to my portfolio
+            for itm in new_portfolio_object['values']:
+
+                association_id = itm['pk_id']
+                pk_val = itm['pk_val']
+
+                bought = buy_value(pk_val, portfolio_id, association_id)
+
+                if not bought:
+                    wrong_values.append(pk_val)
+
+                flag = flag and bought
+
+            if not flag:
+                ans[1] = 'The following values were not in the portfolio ' + str(portfolio_id) '. '
+
+                for value in wrong_values:
+                    ans[1] += str(value) + ', '
+
+                ans[1] += '::pendiente por confirmar'
+
+            else:
+                ans[0] = flag
+                ans[1] = 'Succesful transaction, the confirmation number is: '
+                ans[1] += random_generator(10, ':0123456789')
+                ans[1] += ':registrada'
+
+    return tuple(ans)
+
+def random_generator(size, seed):
+    import random
+    return ''.join(random.choice(seed) for _ in range(size))
+
+def sell_value(portfolio_id):
+    # TODO: Sell the values associated with some portfolio
+    return True
+
+def buy_value(value_id, portfolio_id, association_id):
+    return True
 
 def process_value(val_object):
     bare_sct = val_object.__dict__
