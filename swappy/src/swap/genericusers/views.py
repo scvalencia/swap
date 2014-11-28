@@ -676,6 +676,17 @@ def process_portfolio(portfolio_object):
 def process_active(active_object):
     return active_object.__dict__
 
+
+#===============================================================================#  
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#===============================================================================#
+
 def reset_portfolio(new_portfolio_object):
     ''' Resets the portfolio as described in RF14, for Swap
         just for swap. It should sell the current values in
@@ -863,8 +874,7 @@ def drop_intermediate(user_id):
             user_id: the id of the passive to be removed
 
         Returns:
-            (bool, string): a message indicating the final
-                            result of the transaction
+            (bool, string): the email of the replacement
 
     '''
     # Seleccionar pasivo menos solicitado
@@ -926,7 +936,7 @@ def drop_intermediate(user_id):
 
     cursor.execute(query, params)
 
-    return (True, 'Transaccion exitosa')
+    return (True, new_passive_login + '@swap.in')
 
 def dynamic_values(date1, date2):
     ''' Get the more dynamic values in Swap in a given
@@ -1019,6 +1029,16 @@ def dynamic_values(date1, date2):
             ans.append(value_object)
 
     return [itm.__dict__ for itm in ans]
+
+#===============================================================================#  
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#                                                                               #
+#===============================================================================#
 
 def process_value(val_object):
     bare_sct = val_object.__dict__
