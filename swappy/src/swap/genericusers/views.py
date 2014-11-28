@@ -768,7 +768,7 @@ def reset_portfolio(new_portfolio_object):
 
         else:
             # Buy: add to my portfolio
-            for itm in new_portfolio_object['values']:
+            for pk_val in new_portfolio_object['values']:
 
                 bought = buy_value(pk_val, portfolio_id)
 
