@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import pika
+import random
 
 queue_name = 'SC'
 
@@ -40,7 +41,15 @@ def process_query(kind, number, args):
 
 	if kind == QUESTION:
 		if number == 1:
-			return 'QUESTION 1'
+
+			args = [_ for _ in args.split(':')]
+
+			email = args[0]
+			id_portfolio = args[1]
+			values = args[2]
+
+			return process_Q1(email, id_portfolio, values)
+
 		elif number == 2:
 			return 'QUESTION 2'
 		elif number == 3:
@@ -57,6 +66,20 @@ def process_query(kind, number, args):
 			return 'ANSWER 3'
 		elif number == 4:
 			return 'ANSWER 4'
+
+def process_Q1(email, id_portfolio, args):
+	ans = {'user_login' : None, 'risk' : None, 'pk_id' : None, 'values' : []}
+
+	ans['user_login'] = email
+	ans['risk'] = random.choice(['M', 'H', 'L'])
+	ans['pk_id'] = id_portfolio
+
+	values = [_.split(',')[1] for _ in args.split('|')]
+
+	for value in values:
+		ans['values'].append(value)
+		
+	return ans
 
 
 while True:
