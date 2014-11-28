@@ -9,9 +9,9 @@ connection = None
 
 if not local:
 
-	username = 'scvalencia'
+	username = 'valencia'
 	password = 'admin123'
-	foreign_ip = '157.253.220.84' 
+	foreign_ip = '157.253.220.130' 
 
 	credentials = pika.PlainCredentials(username, password)
 	parameters = pika.ConnectionParameters(foreign_ip, PORT, '/', credentials)
