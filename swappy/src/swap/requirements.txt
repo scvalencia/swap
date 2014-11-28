@@ -12,6 +12,7 @@ mock==1.0.1
 nose==1.3.4
 numpy==1.9.1
 oauthlib==0.6.3
+pika==0.9.14
 plotly==1.4.2
 psycopg2==2.5.4
 pygal==1.5.1
