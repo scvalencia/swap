@@ -712,7 +712,18 @@ def reset_portfolio(new_portfolio_object):
                              message and containing the confirmation
                              number. The structure of the message is:
 
-                             <MESSAGE>:<NUMBER>:<STATE> 
+                             <MESSAGE>:<NUMBER>:<STATE>
+
+        MQ:
+            email_activo1
+            email_passive1
+            email_activo2
+            email_activo2
+            nombre_valor
+            nit_valor
+            riesgo
+            cantidad
+            precio 
     '''
 
     from django.db import connection
@@ -839,7 +850,83 @@ def buy_value(value_id, portfolio_id):
     return ans
 
 def drop_intermediate(user_id):
-    pass
+    ''' Removes a passive user from the Swap,
+        the remotion proceeds as follows:
+
+            1.  Find for a lazy passive, that is
+                a passive that has minimum work at present
+            2.  Assigns to all the actives under the passive
+                whose user id is user_id the found lazy passive
+            3.  Remove the passive from the system
+
+        Args:
+            user_id: the id of the passive to be removed
+
+        Returns:
+            (bool, string): a message indicating the final
+                            result of the transaction
+
+    '''
+    # Seleccionar pasivo menos solicitado
+    # Asignar a todos los activos de este pasivo (el dado)
+    # el nuevo hallado. Borrar dado de pasiives, users
+
+    from django.db import connection
+    import random
+
+    cursor = connection.cursor()
+
+    query = ''' SELECT USER_LOGIN, A.PASSIVE_REGISTER
+                FROM 
+                    PASSIVES INNER JOIN
+                                (
+                                    SELECT PASSIVE_REGISTER, COUNT(PASSIVE_REGISTER) AS FREQ
+                                    FROM ACTIVESPASSIVES
+                                    GROUP BY PASSIVE_REGISTER
+                                ) 
+                    A
+                    ON A.PASSIVE_REGISTER = PASSIVES.PASSIVE_REGISTER
+                WHERE FREQ IN 
+                    (
+                        SELECT MIN(FREQ) 
+                        FROM 
+                            (
+                                SELECT PASSIVE_REGISTER, COUNT(PASSIVE_REGISTER) AS FREQ
+                                FROM ACTIVESPASSIVES
+                                GROUP BY PASSIVE_REGISTER
+                            )
+                    )
+                AND A.PASSIVE_REGISTER <> %s
+            '''
+
+    params = [user_id]
+    cursor.execute(query, params)
+    result_set = [_ for _ in cursor.fetchall()]
+
+    new_passive = random.choice(result_set)
+
+    new_passive_login = new_passive[0]
+    new_passive_register = new_passive[1]
+
+    query = ''' UPDATE ACTIVESPASSIVES
+                SET PASSIVE_REGISTER = %s
+                WHERE PASSIVE_REGISTER = %s
+            '''
+
+    params = [new_passive_register, user_id]
+
+    cursor = connection.cursor()
+
+    cursor.execute(query, params)
+
+    query = '''DELETE FROM PASSIVES WHERE PASSIVE_REGISTER = %s'''
+    params = [user_id]
+
+    cursor = connection.cursor()
+
+    cursor.execute(query, params)
+
+    return (True, 'Transaccion exitosa')
 
 def dynamic_values(date1, date2):
     ''' Get the more dynamic values in Swap in a given
