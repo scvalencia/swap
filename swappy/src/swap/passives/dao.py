@@ -45,6 +45,23 @@ class PassiveDao(object):
                 return []
         self.rs.set(ans)        
         return ans
+
+    def find_by_login(self, arg, test = False):
+        arg = str(arg)
+        ans = []
+        if not test:
+            try:
+                query = "SELECT * FROM passives WHERE user_login = %s"
+                params = [arg]
+                self.cursor.execute(query, params)
+                result_set = [item for item in self.cursor.fetchall()]
+                for itm in result_set:
+                    ans.append(self.process_row(itm))
+            except Exception as e:
+                print e
+                return []
+        self.rs.set(ans)        
+        return ans
     
     def insert(self, reg, login, test = False):
         reg = str(reg)
