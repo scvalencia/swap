@@ -1,3 +1,24 @@
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.db import transaction, connection
+from django.views.generic import View
+
+from genericusers.dao import GenericUserDao
+from actives.dao import ActiveDao
+from passives.dao import PassiveDao
+from offerants.dao import OfferantDao
+from investors.dao import InvestorDao
+from portfolios.dao import PortfolioDao
+from solicitudes.dao import SolicitudeDao
+from genericusers.dao import GenericUserDao
+from swaptransactions.dao import SwapTransactionDao
+from vals.dao import RentDao
+from vals.dao import ValDao
+import json
+import random
+
+import timeTracker
+
 def reset_portfolio(new_portfolio_object):
     ''' Resets the portfolio as described in RF14, for Swap
         just for swap. It should sell the current values in
@@ -72,7 +93,7 @@ def reset_portfolio(new_portfolio_object):
         wrong_values = []
 
         # Sell
-        sold = sell_values(portfolio_id)
+        sold = sell_value(portfolio_id)
 
         if not sold:
             ans[1] = 'Impossible to sell the values::imposible'
@@ -89,7 +110,7 @@ def reset_portfolio(new_portfolio_object):
                 flag = flag and bought
 
             if not flag:
-                ans[1] = 'The following values were not in the portfolio ' + str(portfolio_id) '. '
+                ans[1] = 'The following values were not in the portfolio ' + str(portfolio_id) + '. '
 
                 for value in wrong_values:
                     ans[1] += str(value) + ', '
@@ -127,12 +148,13 @@ def sell_value(portfolio_id):
     ans = True
 
     cursor = connection.cursor()
-    query = '''DELETE FORM PORTFOLIOS_VALS WHERE pk_portfolio = %s'''
+    query = '''DELETE FROM PORTFOLIOS_VALS WHERE pk_portfolio = %s'''
     params = [portfolio_id]
     try:
         cursor.execute(query, params)
         ans = True
-    except:
+    except Exception, err:
+        print traceback.format_exc()
         ans = False    
 
     return ans
