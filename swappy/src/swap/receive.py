@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import pika
 import random
+import tasks.logic
+from portfolios.dao import PortfolioDao
+from passives.dao import PassiveDao
 
 queue_name = 'SC'
 
@@ -51,7 +54,13 @@ def process_query(kind, number, args):
 			return process_Q1(email, id_portfolio, values)
 
 		elif number == 2:
-			return 'QUESTION 2'
+
+			if '@' in args:
+
+				arroba = args.index('@')
+				login = args[:arroba]
+				return process_Q2(login)
+
 		elif number == 3:
 			return 'QUESTION 3'
 		elif number == 4:
@@ -68,18 +77,41 @@ def process_query(kind, number, args):
 			return 'ANSWER 4'
 
 def process_Q1(email, id_portfolio, args):
+
 	ans = {'user_login' : None, 'risk' : None, 'pk_id' : None, 'values' : []}
 
-	ans['user_login'] = email
-	ans['risk'] = random.choice(['M', 'H', 'L'])
-	ans['pk_id'] = id_portfolio
+	portfolio_object = PortfolioDao().find_by_id(id_portfolio)
 
-	values = [_.split(',')[1] for _ in args.split('|')]
+	if len(portfolio_object) != 0:
 
-	for value in values:
-		ans['values'].append(value)
-		
-	return ans
+		portfolio_object = PortfolioDao().find_by_id(id_portfolio)[0]
+
+		ans['pk_id'] = portfolio_object.pk_id
+		ans['user_login'] = portfolio_object.user_login
+		ans['risk'] = portfolio_object.risk
+
+		values = [_.split(',')[1] for _ in args.split('|')]
+
+		for value in values:
+			ans['values'].append(int(value))
+
+		return tasks.logic.reset_portfolio(ans)
+
+	else:
+		return 'The given portfolio is not on Swap'
+
+def process_Q2(login):
+
+	passive_object = PassiveDao().find_by_login(login)
+
+	if len(passive_object) != 0:
+
+		passive_object = PassiveDao().find_by_login(login)[0]
+		register = passive_object.passive_register	
+		return tasks.logic.drop_intermediate(register)
+
+	else:
+		return 'There is not a passive user with such email'
 
 
 while True:
