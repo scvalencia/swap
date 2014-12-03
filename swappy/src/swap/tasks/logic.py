@@ -362,3 +362,40 @@ def dynamic_values(date1, date2):
             ans.append(value_object)
 
     return [itm.__dict__ for itm in ans]
+
+def get_movement(nomvalue, rent, active_login, date1, date2):
+
+    from django.db import connection
+
+    ans = []
+
+    cursor = connection.cursor()
+    query = ''' SELECT VAL, VAL_NAME, VAL_TYPE 
+                FROM
+                    (
+                        SELECT VAL, VAL_NAME, VAL_TYPE, RENT_ID
+                        FROM
+                            (
+                                SELECT VAL, SOLICITUDE, ACTIVE_LOGIN
+                                FROM
+                                SOLICITUDES u INNER JOIN SOLICITUDES_VAL b 
+                                ON u.PK_ID = b.SOLICITUDE
+                                WHERE 
+                                    (
+                                        CREATED_AT >= TO_TIMESTAMP(%s,'yyyy-mm-dd') AND 
+                                        CREATED_AT < TO_TIMESTAMP(%s,'yyyy-mm-dd')AND 
+                                        ACTIVE_LOGIN = %s
+                                    )
+                            ) 
+                        c INNER JOIN VALS d 
+                        ON c.val = d.pk_id
+                    ) 
+                l INNER JOIN RENTS 
+                ON RENTS.PK_ID = l.RENT_ID
+                WHERE RENT_TYPE = %s AND VAL_NAME = %s
+            ''' 
+
+    params = [date1, date2, active_login, rent, nomvalue]
+    cursor.execute(query, params)
+
+    result_set = [_ for _ in cursor.fetchall()]   
