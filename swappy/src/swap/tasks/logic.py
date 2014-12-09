@@ -356,12 +356,9 @@ def dynamic_values(date1, date2):
     result_set = [_ for _ in cursor.fetchall()]
 
     for itm in result_set:
-        pk = itm[0]
-        value_object = ValDao().find_by_id(pk)
-        if value_object:
-            ans.append(value_object)
+        ans.append((itm[0], itm[3]))
 
-    return [itm.__dict__ for itm in ans]
+    return ans
 
 def get_movement(nomvalue, rent, active_login, date1, date2):
 
@@ -383,7 +380,7 @@ def get_movement(nomvalue, rent, active_login, date1, date2):
                                 WHERE 
                                     (
                                         CREATED_AT >= TO_TIMESTAMP(%s,'yyyy-mm-dd') AND 
-                                        CREATED_AT < TO_TIMESTAMP(%s,'yyyy-mm-dd')AND 
+                                        CREATED_AT < TO_TIMESTAMP(%s,'yyyy-mm-dd') AND 
                                         ACTIVE_LOGIN = %s
                                     )
                             ) 
@@ -398,4 +395,10 @@ def get_movement(nomvalue, rent, active_login, date1, date2):
     params = [date1, date2, active_login, rent, nomvalue]
     cursor.execute(query, params)
 
-    result_set = [_ for _ in cursor.fetchall()]   
+    result_set = [_ for _ in cursor.fetchall()]
+    ans = []
+
+    for itm in result_set:
+        ans.append((itm[0], itm[-1]))
+
+    return ans 
