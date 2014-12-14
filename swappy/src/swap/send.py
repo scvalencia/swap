@@ -118,10 +118,12 @@ if u == user and p == password:
 			while val != '0':
 				val = raw_input('ID valor: ')
 				values.append(val)
+				
 			print send_R1(email, id_portfolio, values)
 
 		if value == '2':
 			email = raw_input('Introduzca el email: ')
+
 			print send_R2(email)
 
 		if value == '3':
